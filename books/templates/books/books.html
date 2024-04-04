@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% block content%}
+
+<h1> Hello, you are on the page of books. </h1>
+<hr>
+<h1>Books</h1>
+<ul>
+    {% for book in books%}
+        <li>Title : <a href="{% url 'book' book.id%}">{{book.title}}</a> --- {{book.description}}</li>
+    {% endfor %}
+</ul>
+{% endblock content%}
