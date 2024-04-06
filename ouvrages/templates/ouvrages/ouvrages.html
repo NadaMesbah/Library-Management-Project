@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+{% block content%}
+
+<h1>Ouvrages</h1>
+
+<table style="border:1px solid gray">
+    <tr>
+        <th>ID</th>
+        <th>Ouvrage</th>
+        <th>Auteurs</th>
+        <th>Votes Positive</th>
+        <th>Votes</th>
+        <th>Date d'ajout</th>
+        <th>Options</th>
+    </tr>
+    {% for ouvrage in ouvrages%}
+        <tr>
+            <td>{{ouvrage.id}}</td>
+            <td>{{ouvrage.titre}}</td>
+            <td>{%for auteur in ouvrage.auteurs.all%}
+                    {{auteur}}
+                {%endfor%}
+            </td>
+            <td>{{ouvrage.vote_ratio}}%</td>
+            <td>{{ouvrage.vote_total}}</td>
+            <td>{{ouvrage.date_achat}}</td>
+            <td><a href="/ouvrage/{{ouvrage.id}}">View</a></td>
+            <td><a href="/update-ouvrage/{{ouvrage.id}}">Edit</a></td>
+            <td><a href="/delete-ouvrage/{{ouvrage.id}}">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock content%}

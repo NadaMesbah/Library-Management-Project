@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+{% block content%}
+<h1>{{ouvrage.titre}}</h1>
+<br>
+<hr>
+{%for categorie in ouvrage.categories.all%}
+    <span style="border:1px solid gray">{{categorie}}</span>
+{%endfor%}
+<hr>
+<hr>
+<h2>Auteurs : </h2> 
+{%for auteur in ouvrage.auteurs.all%}
+    <p>{{auteur}}</p>
+{%endfor%}
+<hr>
+<h2>Description : </h2> 
+<p>{{ouvrage.description}}</p>
+{% endblock content%}
