@@ -2,7 +2,6 @@
 {% block content%}
 
 <h1>Ouvrages</h1>
-<a href="{% url 'create-ouvrage'%}">Add Ouvrage</a>
 <br>
 <br>
 <table>
@@ -12,9 +11,7 @@
         <th>Votes Positive</th>
         <th>Votes</th>
         <th>Date d'ajout</th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th>Options</th>
     </tr>
     {% for ouvrage in ouvrages%}
         <tr>
@@ -26,9 +23,9 @@
             <td>{{ouvrage.vote_ratio}}%</td>
             <td>{{ouvrage.vote_total}}</td>
             <td>{{ouvrage.date_achat}}</td>
-            <td><a href="{% url 'update-ouvrage' ouvrage.id%}">Edit</a></td>
-            <td><a href="{% url 'delete-ouvrage' ouvrage.id%}">Delete</a></td>
-            <td><a href="{% url 'ouvrage' ouvrage.id%}">View</a></td>
+            <td><a href="{% url 'update-ouvrage' ouvrage.id%}">Edit</a>
+            <a href="{% url 'delete-ouvrage' ouvrage.id%}">Delete</a>
+            <a href="{% url 'ouvrage' ouvrage.id%}">View</a></td>
         </tr>
     {% endfor %}
 </table>
