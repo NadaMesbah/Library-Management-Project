@@ -18,7 +18,7 @@ def ouvrage(request, pk):
 def createOuvrage(request):
     form = OuvrageForm()
     if request.method == 'POST':
-        form = OuvrageForm(request.POST)
+        form = OuvrageForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('ouvrages')
@@ -29,7 +29,7 @@ def updateOuvrage(request, pk):
     ouvrage = get_object_or_404(Ouvrage, id=pk)
     form = OuvrageForm(instance=ouvrage)
     if request.method == 'POST':
-        form = OuvrageForm(request.POST, instance=ouvrage)
+        form = OuvrageForm(request.POST, request.FILES ,instance=ouvrage)
         if form.is_valid():
             form.save()
             return redirect('ouvrages')

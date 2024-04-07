@@ -33,6 +33,7 @@ class Ouvrage(models.Model):
     titre = models.CharField(max_length=200)
     #cover_image = models.ImageField(upload_to='img', blank=True, null=True)
     auteurs = models.ManyToManyField('Auteur', blank=True)
+    featured_image = models.ImageField(null=True, blank=True, default="default.jpg")
     description = models.TextField(blank=True)
     categories = models.ManyToManyField('Categorie', blank=True)
     recommended = models.BooleanField(default=False, blank=True)
