@@ -1,0 +1,50 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    .home-container {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+    }
+</style>
+
+
+<div class="home-container">
+
+    <div>
+        <h1>Chercher Ouvrages</h1>
+        <hr>
+        <ul>
+            <li>
+              <a href="{% url 'home' %}">All <span>{{categories.count}}</span></a>
+            </li>
+            {% for categorie in categories %}
+            <li>
+              <a href="{% url 'home' %}?q={{categorie.name}}">{{ categorie.name }} <span>{{categorie.ouvrage_set.all.count}}</span></a>
+            </li>
+            {% endfor %}
+  
+          </ul>
+    </div>
+
+    <div>
+        <h3>{{ouvrage_count}} ouvrages disponibles</h3>
+        {%for ouvrage in ouvrages%}
+        <div>
+            <p>{{ouvrage.titre}}</p>
+            <img style="max-width: 100px" src="{{ ouvrage.featured_image.url }}">
+            <p>{{ouvrage.description}}</p>
+            <p>{{ouvrage.date_achat}}</p>
+            {%for auteur in ouvrage.auteurs.all%}
+                <p>{{auteur}}</p>
+            {%endfor%}
+            {%for categorie in ouvrage.categories.all%}
+                <span style="border:1px solid gray">{{categorie}}</span>
+            {%endfor%} 
+        </div>
+        {%endfor%}
+    </div>
+</div>
+
+{% endblock content %}

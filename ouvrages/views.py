@@ -1,8 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Ouvrage
+from .models import Ouvrage, Categorie
 from .forms import OuvrageForm
+from django.db.models import Q
 # Business Logic
 
+def home(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    ouvrages = Ouvrage.objects.filter(
+        Q(categories__name__icontains=q) |
+        Q(titre__icontains=q) |
+        Q(description__icontains=q)
+    )
+    #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
+    #ouvrages = Ouvrage.objects.all()
+    categories = Categorie.objects.all()
+    ouvrage_count = ouvrages.count()
+
+    context = {'ouvrages': ouvrages, 'categories': categories,
+               'ouvrage_count': ouvrage_count}
+    return render(request, 'ouvrages/home.html', context)
+    
 def ouvrages(request):
     ouvrages = Ouvrage.objects.all()
     context = {'ouvrages': ouvrages}
