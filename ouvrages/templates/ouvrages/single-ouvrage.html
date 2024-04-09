@@ -1,21 +1,20 @@
 {% extends "main.html" %}
 {% block content%}
 
-<img style="max-width: 500px" src="{{ ouvrage.featured_image.url }}">
-
+<img style="max-width: 300px" src="{{ ouvrage.featured_image.url }}">
 <h1>{{ouvrage.titre}}</h1>
-<br>
 <hr>
 {%for categorie in ouvrage.categories.all%}
     <span style="border:1px solid gray">{{categorie}}</span>
 {%endfor%}
 <hr>
-<hr>
-<h2>Auteurs : </h2> 
+<h3>Auteurs : </h3> 
 {%for auteur in ouvrage.auteurs.all%}
     <p>{{auteur}}</p>
 {%endfor%}
 <hr>
-<h2>Description : </h2> 
+<h3>Description : </h3> 
 <p>{{ouvrage.description}}</p>
+<h3>Date d'achat : </h3> 
+<p>{{ouvrage.date_achat}}</p>
 {% endblock content%}

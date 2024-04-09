@@ -9,9 +9,7 @@
     }
 </style>
 
-
 <div class="home-container">
-    
     <div>
         <h1>Browse Ouvrages</h1>
         <hr>
@@ -27,12 +25,11 @@
     
             </ul>
     </div>
-
     <div>
         <h3>{{ouvrage_count}} ouvrages disponibles</h3>
         {%for ouvrage in ouvrages%}
         <div>
-            <p>{{ouvrage.titre}}</p>
+            <a href="{% url 'ouvrage' ouvrage.id%}"><p>{{ouvrage.titre}}</p></a>
             <img style="max-width: 100px" src="{{ ouvrage.featured_image.url }}">
             <p>{{ouvrage.description}}</p>
             <p>{{ouvrage.date_achat}}</p>
