@@ -1,3 +1,7 @@
 {%load static%}
 <h1>Logo</h1>
+<form method="GET" action="{% url 'home' %}">
+    <input type="text" placeholder="Search Ouvrages..." name="q">
+    <button type="submit">Search</button>
+</form>
 <hr>

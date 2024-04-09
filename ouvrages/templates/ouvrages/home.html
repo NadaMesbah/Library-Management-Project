@@ -11,21 +11,21 @@
 
 
 <div class="home-container">
-
+    
     <div>
-        <h1>Chercher Ouvrages</h1>
+        <h1>Browse Ouvrages</h1>
         <hr>
         <ul>
             <li>
-              <a href="{% url 'home' %}">All <span>{{categories.count}}</span></a>
+                <a href="{% url 'home' %}">All <span>{{categories.count}}</span></a>
             </li>
             {% for categorie in categories %}
             <li>
-              <a href="{% url 'home' %}?q={{categorie.name}}">{{ categorie.name }} <span>{{categorie.ouvrage_set.all.count}}</span></a>
+                <a href="{% url 'home' %}?q={{categorie.name}}">{{ categorie.name }} <span>{{categorie.ouvrage_set.all.count}}</span></a>
             </li>
             {% endfor %}
-  
-          </ul>
+    
+            </ul>
     </div>
 
     <div>
