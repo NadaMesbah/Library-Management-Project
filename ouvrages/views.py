@@ -15,12 +15,8 @@ def index(request):
     #ouvrages = Ouvrage.objects.all()
     categories = Categorie.objects.all()
     ouvrage_count = ouvrages.count()
-    if ouvrages.count() == 0:
-        message = "Sorry, no results found."  
-    else:
-        message =""
     context = {'ouvrages': ouvrages, 'categories': categories,
-               'ouvrage_count': ouvrage_count, 'message' : message}
+               'ouvrage_count': ouvrage_count}
     return render(request, 'ouvrages/index.html', context)
 
 def browse(request):
@@ -46,8 +42,6 @@ def topicsListing(request):
 
 def contact(request):
     return render(request, 'ouvrages/contact.html')
-
-
 
 def home(request):
     keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
