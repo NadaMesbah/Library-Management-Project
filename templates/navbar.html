@@ -48,7 +48,14 @@
             </ul>
 
             <div class="d-none d-lg-block">
-                <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link navbar-icon bi-person smoothscroll" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+
+                    <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'ouvrages:index'%}">Login</a></li>
+                        <li><a class="dropdown-item active" href="{% url 'ouvrages:index'%}">Register</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
