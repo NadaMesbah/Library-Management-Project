@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 
 {% block content %}
-
+{% load static %}
 <style>
     .home-container {
         display: grid;
@@ -15,11 +15,11 @@
         <hr>
         <ul>
             <li>
-                <a href="{% url 'home' %}">All <span>{{categories.count}}</span></a>
+                <a href="{% url 'ouvrages:home' %}">All <span>{{categories.count}}</span></a>
             </li>
             {% for categorie in categories %}
             <li>
-                <a href="{% url 'home' %}?q={{categorie.name}}">{{ categorie.name }} <span>{{categorie.ouvrage_set.all.count}}</span></a>
+                <a href="{% url 'ouvrages:home' %}?q={{categorie.name}}">{{ categorie.name }} <span>{{categorie.ouvrage_set.all.count}}</span></a>
             </li>
             {% endfor %}
     
@@ -29,7 +29,7 @@
         <h3>{{ouvrage_count}} ouvrages disponibles</h3>
         {%for ouvrage in ouvrages%}
         <div>
-            <a href="{% url 'ouvrage' ouvrage.id%}"><p>{{ouvrage.titre}}</p></a>
+            <a href="{% url 'ouvrages:ouvrage' ouvrage.id%}"><p>{{ouvrage.titre}}</p></a>
             <img style="max-width: 100px" src="{{ ouvrage.featured_image.url }}">
             <p>{{ouvrage.description}}</p>
             <p>{{ouvrage.date_achat}}</p>

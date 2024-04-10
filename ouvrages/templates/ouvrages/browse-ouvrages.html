@@ -1,0 +1,138 @@
+{% extends "main.html" %}
+{% block content%}
+{% load static %}
+<style>
+    .home-container {
+        display: flex;
+        flex-direction:column;
+    }
+</style>
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="col-12 text-center">
+                    <h3 class="text-white text-center ">Ouvrages disponibles <span class="badge bg-design rounded-pill ms-auto">{{ouvrage_count}}</span></h3> 
+                </div>
+                <form method="GET"  action="{% url 'ouvrages:browse' %}" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2" role="search">
+                    <div class="container">
+                        <div class="row">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}">All<span>({{categories.count}})</span></a>
+                                </li>
+                                {% for categorie in categories %}
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}?keyword={{categorie.name}}">{{ categorie.name }}<span>({{categorie.ouvrage_set.all.count}})</span></a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bi-search" id="basic-addon1">
+                            
+                        </span>
+
+                        <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Search Ouvrages..." aria-label="Search">
+
+                        <button type="submit" class="form-control">Search</button>
+                    </div>
+                </form>
+                {% if ouvrage_count == 0 %}
+                    <div class="d-flex justify-content-center align-items-center pt-5">
+                        <h3 class="text-white text-center">Sorry, no results found :/ </h3>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+<section class="featured-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            {%for ouvrage in ouvrages%}
+                <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
+                    <div class="custom-block bg-white shadow-lg">
+                        <a href="{% url 'ouvrages:topics-detail'%}">
+                            <div class="d-flex">
+                                <div>
+                                    <h5 class="mb-2">{{ouvrage.titre}}</h5>
+                                    <p class="mb-0">{{ouvrage.date_achat}}</p>
+                                </div>
+                            </div>
+                            <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
+                            <div class="d-flex flex-row justify-content-start align-items-end mt-4">
+                                {%for categorie in ouvrage.categories.all%}
+                                <span class="badge bg-design me-1">{{categorie}}</span>
+                                {%endfor%} 
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {%endfor%}       
+        </div>
+    </div>
+</section>
+
+{% comment %} <section class="explore-section section-padding mt-0" id="section_2">
+    <div class="container">
+            <div class="col-12 text-center">
+                <h4>ouvrages disponibles <span class="badge bg-design rounded-pill ms-auto">{{ouvrage_count}}</span></h4> 
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" aria-selected="true" href="{% url 'ouvrages:browse' %}">All<span>({{categories.count}})</span></a>
+                </li>
+                {% for categorie in categories %}
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" aria-selected="false" href="{% url 'ouvrages:browse' %}?keyword={{categorie.name}}">{{ categorie.name }}<span>({{categorie.ouvrage_set.all.count}})</span></a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="tab-content" id="myTabContent"> 
+                    <div class="tab-pane fade show active" role="tabpanel" tabindex="0">
+                        <div class="row">
+                            {%for ouvrage in ouvrages%}
+                            <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
+                                <div class="custom-block bg-white shadow-lg">
+                                    <a href="{% url 'ouvrages:topics-detail'%}">
+                                        <div class="d-flex">
+                                            <div>
+                                                <h5 class="mb-2">{{ouvrage.titre}}</h5>
+                                                <p class="mb-0">{{ouvrage.date_achat}}</p>
+                                            </div>
+                                        </div>
+                                        <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
+                                        <div class="d-flex flex-row justify-content-start align-items-end mt-4">
+                                            {%for categorie in ouvrage.categories.all%}
+                                            <span class="badge bg-design me-1">{{categorie}}</span>
+                                            {%endfor%} 
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            {%endfor%}                    
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <p>{{ message }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> {% endcomment %}
+{% endblock content%}

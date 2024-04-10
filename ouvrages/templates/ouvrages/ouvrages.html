@@ -1,9 +1,9 @@
 {% extends "main.html" %}
 {% block content%}
-
+{% load static %}
 <h1>Ouvrages</h1>
 <br>
-<a href="{% url 'create-ouvrage'%}">Add Ouvrage</a>
+<a href="{% url 'ouvrages:create-ouvrage'%}">Add Ouvrage</a>
 <br>
 <table>
     <tr>
@@ -24,9 +24,9 @@
             <td>{{ouvrage.vote_ratio}}%</td>
             <td>{{ouvrage.vote_total}}</td>
             <td>{{ouvrage.date_achat}}</td>
-            <td><a href="{% url 'update-ouvrage' ouvrage.id%}">Edit</a>
-            <a href="{% url 'delete-ouvrage' ouvrage.id%}">Delete</a>
-            <a href="{% url 'ouvrage' ouvrage.id%}">View</a></td>
+            <td><a href="{% url 'ouvrages:update-ouvrage' ouvrage.id%}">Edit</a>
+            <a href="{% url 'ouvrages:delete-ouvrage' ouvrage.id%}">Delete</a>
+            <a href="{% url 'ouvrages:ouvrage' ouvrage.id%}">View</a></td>
         </tr>
     {% endfor %}
 </table>

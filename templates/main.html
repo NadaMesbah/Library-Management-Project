@@ -1,20 +1,28 @@
-<!DOCTYPE html>
+<!Doctype html>
+<html lang="en">
 {% load static %}
-<html>
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Bibliotheque</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!--  <link rel="stylesheet" href=""> -->
-    </head>
-    <body>
-        {% include 'navbar.html' %}
+        <meta name="viewport" content="width=device-width, initial-scale=1">      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">               
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+        <link href="{% static 'css/templatemo-topic-listing.css' %}" rel="stylesheet">   
+        <title>Bibliotheque</title>   
+</head>
+<body class="topics-listing-page" id="top">
+    <main>
+    {% include 'navbar.html' %}
+    {% block content %}
 
-        {% block content %}
-
-        {% endblock content %}
-        <h2>Footer</h2>
-    </body>
+    {% endblock content %}
+    </main>
+    {% include 'footer.html' %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/jquery.sticky.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
 </html>

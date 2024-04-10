@@ -4,18 +4,62 @@ from .forms import OuvrageForm
 from django.db.models import Q
 # Business Logic
 
-def home(request):
-    q = request.GET.get('q') if request.GET.get('q') != None else ''
+def index(request):
+    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
     ouvrages = Ouvrage.objects.filter(
-        Q(categories__name__icontains=q) |
-        Q(titre__icontains=q) |
-        Q(description__icontains=q)
+        Q(categories__name__icontains=keyword) |
+        Q(titre__icontains=keyword) |
+        Q(description__icontains=keyword)
     )
     #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
     #ouvrages = Ouvrage.objects.all()
     categories = Categorie.objects.all()
     ouvrage_count = ouvrages.count()
+    if ouvrages.count() == 0:
+        message = "Sorry, no results found."  
+    else:
+        message =""
+    context = {'ouvrages': ouvrages, 'categories': categories,
+               'ouvrage_count': ouvrage_count, 'message' : message}
+    return render(request, 'ouvrages/index.html', context)
 
+def browse(request):
+    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
+    ouvrages = Ouvrage.objects.filter(
+        Q(categories__name__icontains=keyword) |
+        Q(titre__icontains=keyword) |
+        Q(description__icontains=keyword)
+    )
+    #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
+    #ouvrages = Ouvrage.objects.all()
+    categories = Categorie.objects.all()
+    ouvrage_count = ouvrages.count()
+    context = {'ouvrages': ouvrages, 'categories': categories,
+               'ouvrage_count': ouvrage_count}
+    return render(request, 'ouvrages/browse-ouvrages.html', context)
+
+def topicsDetail(request):
+    return render(request, 'ouvrages/topics-detail.html')
+
+def topicsListing(request):
+    return render(request, 'ouvrages/topics-listing.html')
+
+def contact(request):
+    return render(request, 'ouvrages/contact.html')
+
+
+
+def home(request):
+    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
+    ouvrages = Ouvrage.objects.filter(
+        Q(categories__name__icontains=keyword) |
+        Q(titre__icontains=keyword) |
+        Q(description__icontains=keyword)
+    )          
+    #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
+    #ouvrages = Ouvrage.objects.all()
+    categories = Categorie.objects.all()
+    ouvrage_count = ouvrages.count()
     context = {'ouvrages': ouvrages, 'categories': categories,
                'ouvrage_count': ouvrage_count}
     return render(request, 'ouvrages/home.html', context)

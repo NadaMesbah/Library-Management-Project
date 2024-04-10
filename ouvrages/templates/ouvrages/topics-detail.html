@@ -1,0 +1,185 @@
+{% extends "main.html" %}
+{% block content%}
+{% load static %}
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+
+            <div class="col-lg-5 col-12 mb-5">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page">Web Design</li>
+                    </ol>
+                </nav>
+
+                <h2 class="text-white">Introduction to <br> Web Design 101</h2>
+
+                <div class="d-flex align-items-center mt-5">
+                    <a href="{% url 'ouvrages:topics-detail'%}" class="btn custom-btn custom-border-btn smoothscroll me-4">Read More</a>
+
+                    <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-12">
+                <div class="topics-detail-block bg-white shadow-lg">
+                    
+                    <img src="{% static 'images/topics/undraw_Remote_design_team_re_urdx.png' %}" class="topics-detail-block-image img-fluid">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<section class="topics-detail-section pt-5" id="topics-detail">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-8 col-12 m-auto">
+                <h3 class="mb-4">Description</h3>
+
+                <p>So how can you stand out, do something unique and interesting, build an online business, and get paid enough to change life. Please visit TemplateMo website to download free website templates.</p>
+
+                <p><strong>There are so many ways to make money online</strong>. Below are several platforms you can use to find success. Keep in mind that there is no one path everyone can take. If that were the case, everyone would have a million dollars.</p>
+
+                <blockquote>
+                    Pour reserver vous devez vous connecter...
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-12 text-center">
+                <h3 class="mb-4">Exemplaires de cet ouvrage</h3>
+            </div>
+
+            <div class="col-lg-8 col-12 mt-3 mx-auto">
+                <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
+                    <div class="d-flex">
+                        <img src="{% static 'images/topics/undraw_Remote_design_team_re_urdx.png' %}" class="custom-block-image img-fluid" alt="">
+
+                        <div class="custom-block-topics-listing-info d-flex">
+                            <div>
+                                <h5 class="mb-2">Web Design</h5>
+
+                                <p class="mb-0">Topic Listing includes home, listing, detail and contact pages. Feel free to modify this template for your custom websites.</p>
+
+                                <a href="{% url 'ouvrages:topics-detail'%}" class="btn custom-btn mt-3 mt-lg-4">Learn More</a>
+                            </div>
+
+                            <span class="badge bg-design rounded-pill ms-auto">14</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
+                    <div class="d-flex">
+                        <img src="{% static 'images/topics/undraw_online_ad_re_ol62.png' %}" class="custom-block-image img-fluid" alt="">
+
+                        <div class="custom-block-topics-listing-info d-flex">
+                            <div>
+                                <h5 class="mb-2">Advertising</h5>
+
+                                <p class="mb-0">Visit TemplateMo website to download free CSS templates. Lorem ipsum dolor, sit amet consectetur adipisicing elit animi necessitatibus</p>
+
+                                <a href="{% url 'ouvrages:topics-detail'%}" class="btn custom-btn mt-3 mt-lg-4">Learn More</a>
+                            </div>
+
+                            <span class="badge bg-advertising rounded-pill ms-auto">30</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
+                    <div class="d-flex">
+                        <img src="{% static 'images/topics/undraw_Podcast_audience_re_4i5q.png' %}" class="custom-block-image img-fluid" alt="">
+
+                        <div class="custom-block-topics-listing-info d-flex">
+                            <div>
+                                <h5 class="mb-2">Podcast</h5>
+
+                                <p class="mb-0">Lorem ipsum dolor, sit amet consectetur adipisicing elit animi necessitatibus</p>
+
+                                <a href="{% url 'ouvrages:topics-detail'%}" class="btn custom-btn mt-3 mt-lg-4">Learn More</a>
+                            </div>
+
+                            <span class="badge bg-music rounded-pill ms-auto">20</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-12">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">Prev</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">4</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">5</a>
+                        </li>
+                        
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% comment %} <section class="section-padding section-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-5 col-12">
+                <img src="{% static 'images/rear-view-young-college-student.jpg' %}" class="newsletter-image img-fluid" alt="">
+            </div>
+
+            <div class="col-lg-5 col-12 subscribe-form-wrap d-flex justify-content-center align-items-center">
+                <form class="custom-form subscribe-form" action="#" method="post" role="form">
+                    <h4 class="mb-4 pb-2">Get Newsletter</h4>
+
+                    <input type="email" name="subscribe-email" id="subscribe-email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email Address" required="">
+
+                    <div class="col-lg-12 col-12">
+                        <button type="submit" class="form-control">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section> {% endcomment %}
+
+{% endblock content%}
