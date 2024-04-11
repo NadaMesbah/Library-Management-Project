@@ -15,13 +15,13 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-lg-5 me-lg-auto">
+            <ul class="navbar-nav ms-lg-5 me-lg-5">
                 <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_1">Home</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Trending Books</a>
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Trending</a>
                 </li>
 
                 <li class="nav-item">
@@ -32,31 +32,28 @@
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_4">FAQs</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_5">Contact</a>
-                </li>
-
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
+                    <a class="nav-link dropdown-toggle" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Ouvrages</a>
 
                     <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{% url 'ouvrages:browse'%}">Browse Books</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ouvrages:browse'%}">Browse</a></li>
                         {% comment %} <li><a class="dropdown-item" href="{% url 'ouvrages:topics-listing'%}">Exemplaires</a></li> {% endcomment %}
                         <li><a class="dropdown-item active" href="{% url 'ouvrages:contact'%}">Reclamation</a></li>
                     </ul>
                 </li>
             </ul>
-
-            <div class="d-none d-lg-block">
+            <div class="d-none d-lg-block ms-lg-5">
                 <div class="nav-item dropdown">
-                    <a class="nav-link navbar-icon bi-person smoothscroll" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
-
+                    <a class="nav-link" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><span class="navbar-icon bi-person smoothscroll"></span></a>
+                    
                     <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{% url 'ouvrages:index'%}">Login</a></li>
-                        <li><a class="dropdown-item active" href="{% url 'ouvrages:index'%}">Register</a></li>
+                        <li><a class="dropdown-item" href="#">Login</a></li>
+                        <li><a class="dropdown-item" href="#">Register</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Login as Admin</a></li>
                     </ul>
                 </div>
-            </div>
+            </div>     
         </div>
     </div>
 </nav>

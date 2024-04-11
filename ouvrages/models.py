@@ -26,7 +26,7 @@ class Auteur(models.Model):
     birth_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.title} {self.nomComplet}"
+        return f"{self.title}. {self.nomComplet}"
     
 class Ouvrage(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)

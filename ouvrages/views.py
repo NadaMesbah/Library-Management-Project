@@ -15,8 +15,10 @@ def index(request):
     #ouvrages = Ouvrage.objects.all()
     categories = Categorie.objects.all()
     ouvrage_count = ouvrages.count()
+    best_ouvrage = Ouvrage.objects.exclude(vote_total=0).order_by('-vote_ratio').first()
+    newest_ouvrage = Ouvrage.objects.order_by('-date_achat').first()
     context = {'ouvrages': ouvrages, 'categories': categories,
-               'ouvrage_count': ouvrage_count}
+               'ouvrage_count': ouvrage_count, 'best_ouvrage' : best_ouvrage, 'newest_ouvrage': newest_ouvrage}
     return render(request, 'ouvrages/index.html', context)
 
 def browse(request):
@@ -28,6 +30,7 @@ def browse(request):
     )
     #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
     #ouvrages = Ouvrage.objects.all()
+    
     categories = Categorie.objects.all()
     ouvrage_count = ouvrages.count()
     context = {'ouvrages': ouvrages, 'categories': categories,
