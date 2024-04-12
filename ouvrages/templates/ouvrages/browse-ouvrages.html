@@ -59,7 +59,27 @@
                             <div class="d-flex">
                                 <div>
                                     <h5 class="mb-2">{{ouvrage.titre}}</h5>
-                                    <p class="mb-0">{{ouvrage.date_achat}}</p>
+                                    <p class="fst-italic">
+                                        {% if ouvrage.auteurs.all.count == 1 %}
+                                            By {% for auteur in ouvrage.auteurs.all %}
+                                                    {{ auteur }}
+                                            {% endfor %}
+                                        {% else %}
+                                            By
+                                            {% for auteur in ouvrage.auteurs.all %}
+                                                {{ auteur }}
+                                                {% if not forloop.last %}
+                                                    &amp; <!-- Separator -->
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </p>
+                                    {% if ouvrage.vote_total != 0 %}
+                                        <p class="">
+                                            <span style="font-weight: bold;">{{ouvrage.vote_ratio}}%</span> Postitive
+                                                Feedback ({{ouvrage.vote_total}} votes)
+                                        </p>
+                                    {%endif%}
                                 </div>
                             </div>
                             <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">

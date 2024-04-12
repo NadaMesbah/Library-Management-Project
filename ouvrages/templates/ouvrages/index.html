@@ -17,16 +17,22 @@
 
 <section class="featured-section">
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row">
 
-            <div class="col-lg-4 col-12 mb-4 mb-lg-0">
-                <div class="custom-block bg-white shadow-lg">
+            <div class="col-lg-6 col-md-6 col-12 mb-4 mb-lg-0">
+                <div class="custom-block bg-white shadow-lg d-inline-block">
                     <a href="{% url 'ouvrages:ouvrage' best_ouvrage.id%}">
-                        <div class="d-flex">
+                        <div class="d-flex flex-column">
+                            <div class="d-flex flex-row justify-content-between">
+                                <h4 class="text-black-50 mb-2">{{best_ouvrage.titre}} </h4>
+                                <span class="badge bg-design rounded-pill ms-auto mt-0 mb-3">Top</span>
+                            </div>
+                            
+                            <div class="overflow-hidden mb-3">
+                                <img class="img-fluid" style="object-fit: cover;object-position: top center;" src="{{ best_ouvrage.featured_image.url }}"alt="">
+                            </div>
                             <div>
-                                <h5 class="mb-2">{{best_ouvrage.titre}} </h5>
-
-                                <p class="mb-0">
+                                <p class="mb-0 fst-italic">
                                 {% if best_ouvrage.auteurs.all.count == 1 %}
                                     By {% for auteur in best_ouvrage.auteurs.all %}
                                             {{ auteur }}
@@ -41,32 +47,33 @@
                                     {% endfor %}
                                 {% endif %}
                                 </p>
-                                {% if newest_ouvrage.vote_total != 0 %}
+                                {% if best_ouvrage.vote_total != 0 %}
                                     <p class="mb-0">
-                                        <span style="font-weight: bold;">{{newest_ouvrage.vote_ratio}}%</span> Postitive
-                                            Feedback ({{newest_ouvrage.vote_total}} votes)
+                                        <span style="font-weight: bold;">{{best_ouvrage.vote_ratio}}%</span> Postitive
+                                            Feedback ({{best_ouvrage.vote_total}} votes)
                                     </p>
                                 {%endif%}
+                                <h5 class="text-black-50 mt-2">Description:</h5>
+                                <p class="">{{best_ouvrage.description}}</p>
                             </div>
-
-                            <span class="badge bg-design rounded-pill ms-auto">Top</span>
                         </div>
-                         {% comment %} object-position: top center; {% endcomment %}
-                        <img style="height: 25rem; object-fit: cover;" src="{{ best_ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
+                         {% comment %} object-position: top center; {% endcomment %}                     
                     </a>
                 </div>
             </div>
 
-            <div class="col-lg-6 col-12">
+            <div class="col-lg-6 col-md-6 col-12">
                 <div class="custom-block custom-block-overlay">
-                    <div class="d-flex flex-column h-100">
-                        <img style="object-fit: cover;" src="{{ newest_ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
-
+                    <div class="d-flex flex-column">
+                        <div class="section-overlay"></div>
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" style="height: 50rem; object-fit: cover;" src="{{ newest_ouvrage.featured_image.url }}" alt="">
+                        </div>
                         <div class="custom-block-overlay-text d-flex">
                             <div>
                                 <h5 class="text-white mb-2">{{newest_ouvrage.titre}}</h5>
 
-                                <p class="text-white">
+                                <p class="text-white fst-italic">
                                     {% if newest_ouvrage.auteurs.all.count == 1 %}
                                         By {% for auteur in newest_ouvrage.auteurs.all %}
                                                 {{ auteur }}
@@ -87,6 +94,8 @@
                                             Feedback ({{newest_ouvrage.vote_total}} votes)
                                     </p>
                                 {%endif%}
+                                <h5 class="text-white mb-2">Description:</h5>
+                                <p class="text-white mb-2">{{newest_ouvrage.description}}</p>
                                 <a href="{% url 'ouvrages:ouvrage' newest_ouvrage.id%}" class="btn custom-btn mt-2 mt-lg-3">Consulter</a>
                             </div>
 
@@ -104,13 +113,10 @@
                                 <li class="social-icon-item">
                                     <a href="#" class="social-icon-link bi-facebook"></a>
                                 </li>
-                        </div>
-
-                        <div class="section-overlay"></div>
+                        </div>   
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
