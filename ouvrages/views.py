@@ -9,7 +9,8 @@ def index(request):
     ouvrages = Ouvrage.objects.filter(
         Q(categories__name__icontains=keyword) |
         Q(titre__icontains=keyword) |
-        Q(description__icontains=keyword)
+        Q(description__icontains=keyword) |
+        Q(auteurs__nomComplet__icontains=keyword)
     )
     #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
     #ouvrages = Ouvrage.objects.all()
@@ -28,7 +29,8 @@ def browse(request):
     ouvrages = Ouvrage.objects.filter(
         Q(categories__name__icontains=keyword) |
         Q(titre__icontains=keyword) |
-        Q(description__icontains=keyword)
+        Q(description__icontains=keyword) |
+        Q(auteurs__nomComplet__icontains=keyword)
     )
     #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
     #ouvrages = Ouvrage.objects.all()

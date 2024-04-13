@@ -1,13 +1,8 @@
 {% extends "main.html" %}
 {% block content%}
 {% load static %}
-<style>
-    .home-container {
-        display: flex;
-        flex-direction:column;
-    }
-</style>
-<section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
+
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px;padding-bottom: 140px;">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-12 mx-auto">
@@ -19,7 +14,7 @@
                         <div class="row">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}">All<span>({{categories.count}})</span></a>
+                                    <a class="nav-link" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}#main">All<span>({{categories.count}})</span></a>
                                 </li>
                                 {% for categorie in categories %}
                                 <li class="nav-item" role="presentation">
@@ -34,22 +29,24 @@
                             
                         </span>
 
-                        <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Search Ouvrages..." aria-label="Search">
+                        <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Search Ouvrages by Title, Category, Author..." aria-label="Search">
 
                         <button type="submit" class="form-control">Search</button>
                     </div>
                 </form>
                 {% if ouvrage_count == 0 %}
-                    <div class="d-flex justify-content-center align-items-center pt-5">
-                        <h3 class="text-white text-center">Sorry, no results found :/ </h3>
-                    </div>
-                {% endif %}
+                <div class="d-flex flex-column justify-content-center align-items-center pt-5 mb-0 mb-lg-0">  
+                    <h4 class="text-white text-center">No Results Found : </h4>
+                    <img src="{% static 'images/pic.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem" >
+                    <h5 class="text-white text-center mt-3" ><strong>Don't be sad! We can find it!</strong></h5>
+                </div>
+            {% endif %}
             </div>
 
         </div>
     </div>
 </section>
-<section class="featured-section">
+<section class="featured-section" id="main">
     <div class="container">
         <div class="row justify-content-center">
             {%for ouvrage in ouvrages%}
