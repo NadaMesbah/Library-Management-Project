@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center align-items-center">
 
-            <div class="col-lg-5 col-12 mb-5">
+            <div class="col-lg-5 col-12 mb-5 ms-lg-5">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
@@ -44,13 +44,13 @@
                 <a href="#reservation" class="btn custom-btn mt-3 mt-lg-4">Bookmark <span href="#" class="bi-bookmark smoothscroll"></span></a>
             </div>
 
-            <div class="col-lg-5 col-12">
-                <div class="topics-detail-block bg-white shadow-lg">
-                    
-                    <img src="{{ ouvrage.featured_image.url }}" class="topics-detail-block-image img-fluid">
+            <div class="col-lg-5 col-12 ms-lg-5">
+                <div class="topics-detail-block bg-white shadow-lg bg-opacity-0 h-auto" style="width: 22rem">         
+                    <img src="{{ ouvrage.featured_image.url }}" class="topics-detail-block-image shadow-lg img-fluid w-100 h-100" >
                 </div>
+    
             </div>
-
+            
         </div>
     </div>
 </header>
