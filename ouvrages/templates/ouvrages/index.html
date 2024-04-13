@@ -17,9 +17,9 @@
 
 <section class="featured-section">
     <div class="container">
-        <div class="row">
+        <div class="row justify-content-center">
 
-            <div class="col-lg-6 col-md-6 col-12 mb-4 mb-lg-0">
+            <div class="col-lg-4 col-12 mb-4 mb-lg-0">
                 <div class="custom-block bg-white shadow-lg d-inline-block">
                     <a href="{% url 'ouvrages:ouvrage' best_ouvrage.id%}">
                         <div class="d-flex flex-column">
@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6 col-md-6 col-12">
+            <div class="col-lg-6 col-12">
                 <div class="custom-block custom-block-overlay">
                     <div class="d-flex flex-column">
                         <div class="section-overlay"></div>
@@ -88,12 +88,12 @@
                                         {% endfor %}
                                     {% endif %}
                                 </p>
-                                {% if newest_ouvrage.vote_total != 0 %}
+                                {% comment %} {% if newest_ouvrage.vote_total != 0 %} {% endcomment %}
                                     <p class="text-white">
                                         <span style="font-weight: bold;">{{newest_ouvrage.vote_ratio}}%</span> Postitive
                                             Feedback ({{newest_ouvrage.vote_total}} votes)
                                     </p>
-                                {%endif%}
+                                {% comment %} {%endif%} {% endcomment %}
                                 <h5 class="text-white mb-2">Description:</h5>
                                 <p class="text-white mb-2">{{newest_ouvrage.description}}</p>
                                 <a href="{% url 'ouvrages:ouvrage' newest_ouvrage.id%}" class="btn custom-btn mt-2 mt-lg-3">Consulter</a>

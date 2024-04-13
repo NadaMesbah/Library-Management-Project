@@ -11,25 +11,27 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
 
-                        <li class="breadcrumb-item active" aria-current="page">{{ouvrage.titre}}  
-                            {% if ouvrage.auteurs.all.count == 1 %}
-                                By {% for auteur in ouvrage.auteurs.all %}
-                                        {{ auteur }}
-                                {% endfor %}
-                            {% else %}
-                                By
-                                {% for auteur in ouvrage.auteurs.all %}
-                                    {{ auteur }}
-                                    {% if not forloop.last %}
-                                        &amp; <!-- Separator -->
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ouvrage.titre}}</li>
                     </ol>
                 </nav>
 
                 <h2 class="text-white">{{ouvrage.titre}}</h2>
+                <p class="mb-0 text-white fst-italic">
+                    {% if ouvrage.auteurs.all.count == 1 %}
+                        By {% for auteur in ouvrage.auteurs.all %}
+                                {{ auteur }}
+                        {% endfor %}
+                    {% else %}
+                        By
+                        {% for auteur in ouvrage.auteurs.all %}
+                            {{ auteur }}
+                            {% if not forloop.last %}
+                                &amp; <!-- Separator -->
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </p>
+                
                 <div class="d-flex flex-row justify-content-start align-items-end mt-4">
                     {%for categorie in ouvrage.categories.all%}
                     <span class="badge bg-music me-1">{{categorie}}</span>
