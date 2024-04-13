@@ -19,7 +19,7 @@
     <div class="container">
         <div class="row justify-content-center">
 
-            <div class="col-lg-4 col-12 mb-4 mb-lg-0">
+            <div class="col-lg-4 col-12 mb-lg-0" style="height: 610px;">
                 <div class="custom-block bg-white shadow-lg d-inline-block">
                     <a href="{% url 'ouvrages:ouvrage' best_ouvrage.id%}">
                         <div class="d-flex flex-column">
@@ -32,7 +32,7 @@
                                 <img class="img-fluid" style="object-fit: cover;object-position: top center;" src="{{ best_ouvrage.featured_image.url }}"alt="">
                             </div>
                             <div>
-                                <p class="mb-0 fst-italic">
+                                <p class="mb-2 fst-italic" style="font-weight: bold;">
                                 {% if best_ouvrage.auteurs.all.count == 1 %}
                                     By {% for auteur in best_ouvrage.auteurs.all %}
                                             {{ auteur }}
@@ -53,8 +53,8 @@
                                             Feedback ({{best_ouvrage.vote_total}} votes)
                                     </p>
                                 {%endif%}
-                                <h5 class="text-black-50 mt-2">Description:</h5>
-                                <p class="">{{best_ouvrage.description}}</p>
+                                {% comment %} <h5 class="text-black-50 mt-2">Description:</h5>
+                                <p class="">{{best_ouvrage.description}}</p> {% endcomment %}
                             </div>
                         </div>
                          {% comment %} object-position: top center; {% endcomment %}                     
@@ -63,7 +63,7 @@
             </div>
 
             <div class="col-lg-6 col-12">
-                <div class="custom-block custom-block-overlay">
+                <div class="custom-block custom-block-overlay" style="height: 610px;">
                     <div class="d-flex flex-column">
                         <div class="section-overlay"></div>
                         <div class="overflow-hidden">
@@ -71,9 +71,9 @@
                         </div>
                         <div class="custom-block-overlay-text d-flex">
                             <div>
-                                <h5 class="text-white mb-2">{{newest_ouvrage.titre}}</h5>
+                                <h5 class="text-white mb-3">{{newest_ouvrage.titre}}</h5>
 
-                                <p class="text-white fst-italic">
+                                <p style="font-weight: bold;" class="text-white fst-italic mb-3">
                                     {% if newest_ouvrage.auteurs.all.count == 1 %}
                                         By {% for auteur in newest_ouvrage.auteurs.all %}
                                                 {{ auteur }}
@@ -89,7 +89,7 @@
                                     {% endif %}
                                 </p>
                                 {% comment %} {% if newest_ouvrage.vote_total != 0 %} {% endcomment %}
-                                    <p class="text-white">
+                                    <p class="text-white mt-2">
                                         <span style="font-weight: bold;">{{newest_ouvrage.vote_ratio}}%</span> Postitive
                                             Feedback ({{newest_ouvrage.vote_total}} votes)
                                     </p>
