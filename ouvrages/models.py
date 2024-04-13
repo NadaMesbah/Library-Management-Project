@@ -1,6 +1,5 @@
-from django.db import models
-
-# Create your models here.
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 from django.db import models
 import uuid
 from datetime import datetime, timedelta
@@ -31,7 +30,6 @@ class Auteur(models.Model):
 class Ouvrage(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     titre = models.CharField(max_length=200)
-    #cover_image = models.ImageField(upload_to='img', blank=True, null=True)
     auteurs = models.ManyToManyField('Auteur', blank=True)
     featured_image = models.ImageField(null=True, blank=True, default="default.jpg")
     description = models.TextField(blank=True)
@@ -63,7 +61,7 @@ class Review(models.Model):
         return self.value
 
 class Rayon(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     localisation = models.CharField('Localisation', max_length=200)
 
     def __str__(self):
@@ -81,32 +79,32 @@ class Exemplaire(models.Model):
         (PERDU, 'Perdu'),
         (RETIRE, 'Retiré'),
     ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     ouvrage = models.ForeignKey('Ouvrage', on_delete=models.CASCADE)
     etat = models.CharField(max_length=2, choices=ETAT_CHOICES, default=HORS_PRET)
+    emprunté = models.BooleanField(default=False, blank=True)
+    réservé = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return f"Exemplaire de l'ouvrage {self.ouvrage.titre}"
     
-    def save(self, *args, **kwargs):
-        # Increment the number of exemplaires for the related Ouvrage
-        self.ouvrage.exemplaires_total += 1
-        self.ouvrage.save()
-        super().save(*args, **kwargs)
+@receiver(post_save, sender=Exemplaire)
+def update_ouvrage_on_exemplaire_save(sender, instance, created, **kwargs):
+    if created:
+        instance.ouvrage.exemplaires_total += 1
+        instance.ouvrage.save()
 
-    def delete(self, *args, **kwargs):
-        # Decrement the number of exemplaires for the related Ouvrage
-        self.ouvrage.exemplaires_total -= 1
-        self.ouvrage.save()
-        super().delete(*args, **kwargs)
-
+@receiver(post_delete, sender=Exemplaire)
+def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
+    instance.ouvrage.exemplaires_total -= 1
+    instance.ouvrage.save()
 class Emprunt(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     #emprunteur (Adherant)
     exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE)
     date_emprunt = models.DateTimeField(auto_now_add=True)
     date_retour = models.DateTimeField()
-    rendu = models.BooleanField(default=False)
+    rendu = models.BooleanField(default=False, blank=True)
 
     @property
     def calculer_date_retour(self):
@@ -114,9 +112,12 @@ class Emprunt(models.Model):
     
     def save(self, *args, **kwargs):
         if self.rendu:
-            # Update the exemplaires_total field of the related Ouvrage when the book is returned
-            self.exemplaire.ouvrage.exemplaires_total += 1
-            self.exemplaire.ouvrage.save()
+            # Check if the book is being returned
+            if not self.pk or (self.pk and not Emprunt.objects.get(pk=self.pk).rendu):
+                # Update the exemplaires_total field of the related Ouvrage when the book is returned
+                self.exemplaire.ouvrage.exemplaires_total += 1
+                self.exemplaire.ouvrage.save()
+
         super().save(*args, **kwargs)
 
 #exemple de creation d'un emprunt
@@ -125,10 +126,10 @@ class Emprunt(models.Model):
 #     date_retour=emprunt.calculate_return_date()  
 # )
 class Reservation(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     date_demande =  models.DateTimeField(auto_now_add=True)
     date_reservation = models.DateTimeField()
     #Adherant
     exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE)
-    acceptee = models.BooleanField(default=False)
+    acceptee = models.BooleanField(default=False, blank=True)
 
