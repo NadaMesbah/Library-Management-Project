@@ -17,8 +17,10 @@ def index(request):
     ouvrage_count = ouvrages.count()
     best_ouvrage = Ouvrage.objects.exclude(vote_total=0).order_by('-vote_ratio').first()
     newest_ouvrage = Ouvrage.objects.order_by('-date_achat').first()
+    recommended_ouvrages = Ouvrage.objects.filter(recommended=True)
     context = {'ouvrages': ouvrages, 'categories': categories,
-               'ouvrage_count': ouvrage_count, 'best_ouvrage' : best_ouvrage, 'newest_ouvrage': newest_ouvrage}
+               'ouvrage_count': ouvrage_count, 'best_ouvrage' : best_ouvrage, 
+               'newest_ouvrage': newest_ouvrage , 'recommanded_ouvrages' : recommended_ouvrages}
     return render(request, 'ouvrages/index.html', context)
 
 def browse(request):

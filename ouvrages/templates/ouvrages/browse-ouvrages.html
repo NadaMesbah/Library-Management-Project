@@ -74,12 +74,12 @@
                                             {% endfor %}
                                         {% endif %}
                                     </p>
-                                    {% if ouvrage.vote_total != 0 %}
+                                    {% comment %} {% if ouvrage.vote_total != 0 %} {% endcomment %}
                                         <p class="">
                                             <span style="font-weight: bold;">{{ouvrage.vote_ratio}}%</span> Postitive
                                                 Feedback ({{ouvrage.vote_total}} votes)
                                         </p>
-                                    {%endif%}
+                                    {% comment %} {%endif%} {% endcomment %}
                                 </div>
                             </div>
                             <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
