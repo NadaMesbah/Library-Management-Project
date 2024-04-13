@@ -153,7 +153,7 @@ def deleteExemplaire(request, pk):
     if request.method == 'POST':
         # If the request is POST, delete the ouvrage
         exemplaire.delete()
-        return redirect('exemplaires')
+        return redirect('ouvrages:exemplaires')
     # If the request is not POST, render the confirmation page
     context = {'exemplaire': exemplaire}
     return render(request, 'ouvrages/delete_exemplaire.html', context)
