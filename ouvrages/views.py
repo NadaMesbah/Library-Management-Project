@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Ouvrage, Categorie
-from .forms import OuvrageForm
+from .models import Ouvrage, Categorie, Exemplaire
+from .forms import OuvrageForm, ExemplaireForm
 from django.db.models import Q
 # Business Logic
 
@@ -60,7 +60,8 @@ def home(request):
     context = {'ouvrages': ouvrages, 'categories': categories,
                'ouvrage_count': ouvrage_count}
     return render(request, 'ouvrages/home.html', context)
-    
+ 
+## CRUD FOR OUVRAGES   
 def ouvrages(request):
     ouvrages = Ouvrage.objects.all()
     context = {'ouvrages': ouvrages}
@@ -79,7 +80,7 @@ def createOuvrage(request):
         form = OuvrageForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('ouvrages')
+            return redirect('ouvrages:ouvrages')
     context = {'form': form}
     return render(request, 'ouvrages/ouvrage_form.html', context)
 
@@ -90,7 +91,7 @@ def updateOuvrage(request, pk):
         form = OuvrageForm(request.POST, request.FILES ,instance=ouvrage)
         if form.is_valid():
             form.save()
-            return redirect('ouvrages')
+            return redirect('ouvrages:ouvrages')
     context = {'form': form}
     return render(request, 'ouvrages/ouvrage_form.html', context)
 
@@ -103,3 +104,56 @@ def deleteOuvrage(request, pk):
     # If the request is not POST, render the confirmation page
     context = {'ouvrage': ouvrage}
     return render(request, 'ouvrages/delete_ouvrage.html', context)
+
+## CRUD FOR EXEMPLAIRES
+def exemplaires(request):
+    exemplaires = Exemplaire.objects.all()
+    context = {'exemplaires': exemplaires}
+    return render(request, 'ouvrages/exemplaires.html', context)
+
+def exemplaire(request, pk):
+    exemplaireObj = Exemplaire.objects.get(id=pk)
+    context = {'exemplaire': exemplaireObj}
+    return render(request, 'ouvrages/single-exemplaire.html', context)
+
+def createExemplaire(request):
+    form = ExemplaireForm()
+    if request.method == 'POST':
+        form = ExemplaireForm(request.POST)
+        if form.is_valid():
+            quantite = form.cleaned_data['quantite']
+            ouvrage_instance = form.cleaned_data['ouvrage']
+
+            exemplaires_data = [
+                {'ouvrage': ouvrage_instance,
+                 'etat': form.cleaned_data['etat'],
+                 'emprunte': form.cleaned_data['emprunte'],
+                 'reserve': form.cleaned_data['reserve']}
+                for _ in range(quantite)
+            ]
+            
+            Exemplaire.objects.bulk_create([Exemplaire(**data) for data in exemplaires_data])
+            return redirect('ouvrages:exemplaires')
+    context = {'form': form}
+    return render(request, 'ouvrages/exemplaire_form.html', context)
+
+def updateExemplaire(request, pk):
+    exemplaire = get_object_or_404(Exemplaire, id=pk)
+    form = ExemplaireForm(instance=exemplaire)
+    if request.method == 'POST':
+        form = ExemplaireForm(request.POST ,instance=exemplaire)
+        if form.is_valid():
+            form.save()
+            return redirect('ouvrages:exemplaires')
+    context = {'form': form}
+    return render(request, 'ouvrages/exemplaire_form.html', context)
+
+def deleteExemplaire(request, pk):
+    exemplaire = get_object_or_404(Exemplaire, id=pk)
+    if request.method == 'POST':
+        # If the request is POST, delete the ouvrage
+        exemplaire.delete()
+        return redirect('exemplaires')
+    # If the request is not POST, render the confirmation page
+    context = {'exemplaire': exemplaire}
+    return render(request, 'ouvrages/delete_exemplaire.html', context)

@@ -16,4 +16,10 @@ urlpatterns = [
     path('topics-detail/', views.topicsDetail, name="topics-detail"),
     path('topics-listing/', views.topicsListing, name="topics-listing"),
     path('contact/', views.contact, name="contact"),
+    path('exemplaires/', views.exemplaires, name="exemplaires"),
+    path('exemplaire/<str:pk>', views.exemplaire, name="exemplaire"),
+    #other options: <int:pk>, <id:pk>, <slug:pk>
+    path('create-exemplaire/', views.createExemplaire, name="create-exemplaire"),
+    path('update-exemplaire/<str:pk>', views.updateExemplaire, name="update-exemplaire"),
+    path('delete-exemplaire/<str:pk>', views.deleteExemplaire, name="delete-exemplaire"),
 ]

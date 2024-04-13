@@ -82,8 +82,8 @@ class Exemplaire(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     ouvrage = models.ForeignKey('Ouvrage', on_delete=models.CASCADE)
     etat = models.CharField(max_length=2, choices=ETAT_CHOICES, default=HORS_PRET)
-    emprunté = models.BooleanField(default=False, blank=True)
-    réservé = models.BooleanField(default=False, blank=True)
+    emprunte = models.BooleanField(default=False, blank=True)
+    reserve = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return f"Exemplaire de l'ouvrage {self.ouvrage.titre}"
@@ -98,6 +98,15 @@ def update_ouvrage_on_exemplaire_save(sender, instance, created, **kwargs):
 def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
     instance.ouvrage.exemplaires_total -= 1
     instance.ouvrage.save()
+    
+#Code for creating multiple instances of exemplaires at once :
+# exemplaires_data = [
+#     {'ouvrage': ouvrage_instance1, 'etat': 'DI', 'emprunté': False, 'réservé': False},
+#     {'ouvrage': ouvrage_instance2, 'etat': 'DI', 'emprunté': False, 'réservé': False},
+#     ...
+# ]
+
+# Exemplaire.objects.bulk_create([Exemplaire(**data) for data in exemplaires_data])
 class Emprunt(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     #emprunteur (Adherant)

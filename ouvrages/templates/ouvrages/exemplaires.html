@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+{% block content%}
+{% load static %}
+<h1>Exemplaires</h1>
+<br>
+<a href="{% url 'ouvrages:create-exemplaire'%}">Add Exemplaire(s)</a>
+<br>
+<table>
+    <tr>
+        <th>Exemplaire</th>
+        <th>Etat</th>
+        <th>Reserve ?</th>
+        <th>Emprunte ?</th>
+        <th>Options</th>
+    </tr>
+    {% for exemplaire in exemplaires%}
+        <tr>
+            <td>{{exemplaire.ouvrage.titre}}</td>
+            <td>{{exemplaire.etat}}</td>
+            <td>{{exemplaire.reserve}}</td>
+            <td>{{exemplaire.emprunte}}</td>
+            <td><a href="{% url 'ouvrages:update-exemplaire' exemplaire.id%}">Edit</a>
+            <a href="{% url 'ouvrages:delete-exemplaire' exemplaire.id%}">Delete</a>
+            <a href="{% url 'ouvrages:exemplaire' exemplaire.id%}">View</a></td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock content%}
