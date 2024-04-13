@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'ouvrages:index'%}">
+        <a class="navbar-brand" href="{% url 'ouvrages:index'%}#section_1">
             <i class="bi-back"></i>
             <span>Bibliotheque</span>
         </a>
@@ -16,12 +16,12 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-lg-5 me-lg-5">
-                <li class="nav-item">
+                {% comment %} <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_1">Home</a>
-                </li>
+                </li> {% endcomment %}
 
                 <li class="nav-item">
-                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Recommanded</a>
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Recommanded Books</a>
                 </li>
 
                 <li class="nav-item">
