@@ -1,11 +1,23 @@
 {% extends "main.html" %}
 {% block content %}
 {% load static %}
-<h1>Ouvrage Form</h1>
-<form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit">
-</form>
+
+<section class="section-padding col-12 col-lg-8 justify-content-center align-items-center">
+    <div style="width: 95%; max-width: 85rem; margin: 0 auto;">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form%}
+            <!-- Input:Text -->
+            <div style=" margin-top: 1.5rem;margin-bottom: 1.5rem;">
+                <label class="fw-bold fs-4">{{field.label}}:</label>
+                {{field}}
+                {% comment %} <input class="input input--text" id="formInput#text" type="text" name="text"
+                    placeholder="Enter text" /> {% endcomment %}
+            </div>
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">Create</button>
+        </form>
+    </div>  
+</section>
 
 {% endblock content %}
