@@ -40,7 +40,7 @@
                     <img src="{% static 'images/pic.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem" >
                     <h5 class="text-white text-center mt-3" ><strong>Don't be sad! We can find it!</strong></h5>
                 </div>
-            {% endif %}
+                {% endif %}
             </div>
 
         </div>
@@ -53,8 +53,13 @@
                 <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
                     <div class="custom-block bg-white shadow-lg">
                         <a href="{% url 'ouvrages:ouvrage' ouvrage.id%}">
+                        <img src="{{ ouvrage.featured_image.url }}" class="topics-detail-block-image img-thumbnail w-100 mb-lg-4" style="height: 22rem;" >
                             <div class="d-flex">
                                 <div>
+                                    {%for categorie in ouvrage.categories.all%}
+                                    {% comment %} <span class="badge bg-design me-1">{{categorie}}</span> {% endcomment %}
+                                    <span class="tag bg-design me-1 mb-lg-3">{{categorie}}</span>
+                                    {%endfor%}
                                     <h5 class="mb-2">{{ouvrage.titre}}</h5>
                                     <p class="fst-italic">
                                         {% if ouvrage.auteurs.all.count == 1 %}
@@ -79,12 +84,9 @@
                                     {% comment %} {%endif%} {% endcomment %}
                                 </div>
                             </div>
-                            <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
-                            <div class="d-flex flex-row justify-content-start align-items-end mt-4">
-                                {%for categorie in ouvrage.categories.all%}
-                                <span class="badge bg-design me-1">{{categorie}}</span>
-                                {%endfor%} 
-                            </div>
+                            {% comment %} <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt=""> {% endcomment %}
+                            {% comment %} <div class="d-flex flex-row justify-content-start align-items-end mt-4"> {% endcomment %} 
+                            {% comment %} </div> {% endcomment %}
                         </a>
                     </div>
                 </div>

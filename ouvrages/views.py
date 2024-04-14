@@ -34,11 +34,11 @@ def browse(request):
     )
     #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
     #ouvrages = Ouvrage.objects.all()
-    
+    #exemplaires = ouvrage.exemplaire_set.all()
     categories = Categorie.objects.all()
     ouvrage_count = ouvrages.count()
     context = {'ouvrages': ouvrages, 'categories': categories,
-               'ouvrage_count': ouvrage_count}
+               'ouvrage_count': ouvrage_count, 'exemplaires': exemplaires}
     return render(request, 'ouvrages/browse-ouvrages.html', context)
 
 def topicsDetail(request):

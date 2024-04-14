@@ -169,11 +169,10 @@
                             </div>
                         </div>
                         <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
-                        <div class="d-flex flex-row justify-content-start align-items-end mt-4">
-                            {%for categorie in ouvrage.categories.all%}
-                            <span class="badge bg-design me-1">{{categorie}}</span>
-                            {%endfor%} 
-                        </div>
+                        {%for categorie in ouvrage.categories.all%}
+                        {% comment %} <span class="badge bg-design me-1">{{categorie}}</span> {% endcomment %}
+                            <span class="tag bg-design me-1 mt-lg-3">{{categorie}}</span>
+                        {%endfor%}
                     </a>
                 </div>
             </div>
