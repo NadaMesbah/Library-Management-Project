@@ -136,11 +136,107 @@
                     </ul>
                 </nav>
             </div>
-            <div class="col-lg-8 col-12 m-auto mt-lg-5" id="reservation">
+            <div class="col-lg-10 col-12 m-auto mt-lg-5" id="reservation">
                 <blockquote>
-                    <a href="#" class="custom-icon bi-lock-fill smoothscroll"></a> Pour reserver vous devez vous connecter... 
+                    Pour reserver vous devez vous connecter... <a href="#" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a> 
                 </blockquote>
+            </div>        
+        </div>
+    </div>
+</section>
+<section>
+    <div class="pt-lg-5 pb-lg-5 section-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                <div class="w-100 col-12">
+                    <h3 class="mb-3 pb-2">Feedback</h3>
+                    <p class="mb-lg-4">
+                    <span style="font-weight: bold;">{{ouvrage.vote_ratio}}%</span> Postitive
+                    Feedback ({{ouvrage.vote_total}} vote{{ ouvrage.vote_total|pluralize:"s" }})
+                    </p>
+                </div>
+
+                <div class="w-100 col-12 mt-lg-2">
+                    <form action="#" method="post" class="custom-form contact-form" role="form">
+                        <div class="col">
+                        <div class="col-lg-12 col-12">
+                        
+                            <div class="form-floating">
+                                <textarea class="form-control" id="message" name="message" placeholder="Write your comments here..."></textarea>
+                                
+                                <label for="floatingTextarea">Write your comment here...</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 ms-0">
+                            <button type="submit" class="form-control">Submit</button>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+                </div>
+
+                <div class="col">
+                <div class="commentList w-100 col-12 mt-lg-2 ms-lg-5">
+                    <div class="comment">
+                        <a href="#">
+                            <img class="avatar avatar--sm"
+                                src="{% static 'images/pfp.jpg'%}" alt="user" />
+                        </a>
+                        <div class="comment__details">
+                            <a href="#" class="comment__author">Sulamita Ivanov</a>
+                            <p class="comment__info">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit alias numquam perferendis
+                            mollitia minus minima exercitationem possimus ab deserunt qui, soluta iusto doloribus eveniet
+                            similique consequuntur ratione, dignissimos ut magni laborum quo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="comment">
+                        <a href="#">
+                        <img class="avatar avatar--sm" src="{% static 'images/pfp.jpg'%}" alt="user" />
+                        </a>
+                        <div class="comment__details">
+                            <a href="#" class="comment__author">Dennis Ivanov</a>
+                            <p class="comment__info">
+                                Consectetur adipisicing elit. Reprehenderit alias numquam perferendis mollitia minus minima
+                                exercitationem possimus ab deserunt qui, ratione, dignissimos ut magni laborum quo.
+                            </p>
+                        </div>
+                    </div> 
+                </div> 
+                <div class="w-100 col-12 mt-lg-2 ms-lg-5">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">Prev</span>
+                                </a>
+                            </li>
+    
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
+            </div> 
         </div>
     </div>
 </section>

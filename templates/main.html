@@ -31,6 +31,52 @@
                 cursor: pointer;
                 color: white;
             }
+            .avatar {
+                border-radius: 50%;
+                border: 2px solid #7bbfcc;
+                object-fit: cover;
+            }
+              
+            .avatar--xl {
+            height: 20rem;
+            width: 20rem;
+            }
+            
+            .avatar--lg {
+            height: 15rem;
+            width: 15rem;
+            }
+            
+            .avatar--md {
+            height: 7rem;
+            width: 7rem;
+            }
+            
+            .avatar--sm {
+            height: 3rem;
+            width: 3rem;
+            } 
+            
+            .commentList {
+            margin: 3rem 0;
+            }
+            
+            .comment {
+            display: flex;
+            gap: 1rem;
+            }
+            
+            .comment:not(:last-child) {
+            margin-bottom: 2rem;
+            }
+            
+            .comment__author {
+            font-size: 1.2rem;
+            }
+            
+            .comment__info {
+            font-size: 0.9rem;
+            }             
         </style>
     {% include 'navbar.html' %}
     {% block content %}

@@ -60,7 +60,7 @@
                                 {% comment %} {% if best_ouvrage.vote_total != 0 %} {% endcomment %}
                                     <p class="mb-0">
                                         <span style="font-weight: bold;">{{best_ouvrage.vote_ratio}}%</span> Postitive
-                                            Feedback ({{best_ouvrage.vote_total}} votes)
+                                            Feedback ({{best_ouvrage.vote_total}} vote{{ best_ouvrage.vote_total|pluralize:"s" }})
                                     </p>
                                 {% comment %} {%endif%} {% endcomment %}
                                 {% comment %} <h5 class="text-black-50 mt-2">Description:</h5>
@@ -101,7 +101,7 @@
                                 {% comment %} {% if newest_ouvrage.vote_total != 0 %} {% endcomment %}
                                     <p class="text-white mt-2">
                                         <span style="font-weight: bold;">{{newest_ouvrage.vote_ratio}}%</span> Postitive
-                                            Feedback ({{newest_ouvrage.vote_total}} votes)
+                                        Feedback ({{newest_ouvrage.vote_total}} vote{{ newest_ouvrage.vote_total|pluralize:"s" }})
                                     </p>
                                 {% comment %} {%endif%} {% endcomment %}
                                 <h5 class="text-white mb-2">Description:</h5>
@@ -164,7 +164,7 @@
                                     </p>
                                     <p class="mb-0">
                                         <span style="font-weight: bold;">{{ouvrage.vote_ratio}}%</span> Postitive
-                                            Feedback ({{ouvrage.vote_total}} votes)
+                                        Feedback ({{ouvrage.vote_total}} vote{{ ouvrage.vote_total|pluralize:"s" }})
                                     </p>   
                             </div>
                         </div>

@@ -79,7 +79,7 @@
                                     {% comment %} {% if ouvrage.vote_total != 0 %} {% endcomment %}
                                         <p class="">
                                             <span style="font-weight: bold;">{{ouvrage.vote_ratio}}%</span> Postitive
-                                                Feedback ({{ouvrage.vote_total}} votes)
+                                            Feedback ({{ouvrage.vote_total}} vote{{ ouvrage.vote_total|pluralize:"s" }})
                                         </p>
                                     {% comment %} {%endif%} {% endcomment %}
                                 </div>
