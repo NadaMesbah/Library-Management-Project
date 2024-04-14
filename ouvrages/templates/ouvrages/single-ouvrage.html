@@ -14,15 +14,14 @@
                         <li class="breadcrumb-item active" aria-current="page">{{ouvrage.titre}}</li>
                     </ol>
                 </nav>
-
                 <h2 class="text-white">{{ouvrage.titre}}</h2>
+                <h5 class="text-black-50">Auteur{{ ouvrage.auteurs.all.count|pluralize:"s" }}:</h5>
                 <p class="mb-0 text-white fst-italic">
                     {% if ouvrage.auteurs.all.count == 1 %}
-                        By {% for auteur in ouvrage.auteurs.all %}
+                        {% for auteur in ouvrage.auteurs.all %}
                                 {{ auteur }}
                         {% endfor %}
                     {% else %}
-                        By
                         {% for auteur in ouvrage.auteurs.all %}
                             {{ auteur }}
                             {% if not forloop.last %}

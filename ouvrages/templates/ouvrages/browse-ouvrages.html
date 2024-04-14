@@ -60,20 +60,20 @@
                                     {% comment %} <span class="badge bg-design me-1">{{categorie}}</span> {% endcomment %}
                                     <span class="tag bg-design me-1 mb-lg-3">{{categorie}}</span>
                                     {%endfor%}
-                                    <h5 class="mb-2">{{ouvrage.titre}}</h5>
-                                    <p class="fst-italic">
+                                    <h4 class="mb-2 text-black">{{ouvrage.titre}}</h4>
+                                    <h5 class="text-black-50">Auteur{{ ouvrage.auteurs.all.count|pluralize:"s" }}:</h5>
+                                    <p class="mb-0 fst-italic mb-2">
                                         {% if ouvrage.auteurs.all.count == 1 %}
-                                            By {% for auteur in ouvrage.auteurs.all %}
-                                                    {{ auteur }}
-                                            {% endfor %}
-                                        {% else %}
-                                            By
                                             {% for auteur in ouvrage.auteurs.all %}
                                                 {{ auteur }}
-                                                {% if not forloop.last %}
-                                                    &amp; <!-- Separator -->
-                                                {% endif %}
                                             {% endfor %}
+                                        {% else %}
+                                        {% for auteur in ouvrage.auteurs.all %}
+                                            {{ auteur }}
+                                            {% if not forloop.last %}
+                                                &amp; <!-- Separator -->
+                                            {% endif %}
+                                        {% endfor %}
                                         {% endif %}
                                     </p>
                                     {% comment %} {% if ouvrage.vote_total != 0 %} {% endcomment %}
