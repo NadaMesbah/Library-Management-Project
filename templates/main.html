@@ -76,7 +76,25 @@
             
             .comment__info {
             font-size: 0.9rem;
-            }             
+            }
+
+            .stars {
+                display: inline-block;
+                margin-bottom: 2rem;
+            }
+    
+            .star {
+                color: hsl(0, 0%, 100%); 
+                cursor: pointer;
+                padding: 0.3rem;
+                width : 5rem;
+                -webkit-text-stroke-width: 0.1rem; 
+                -webkit-text-stroke-color: #ffc107;
+            }
+    
+            .star.checked { 
+                color: gold;
+            }
         </style>
     {% include 'navbar.html' %}
     {% block content %}
