@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('home', views.home, name="home"),
     path('browse', views.browse, name="browse"),
+    path('categories/', views.categories, name="categories"),
     path('ouvrages', views.ouvrages, name="ouvrages"),
     path('ouvrage/<str:pk>', views.ouvrage, name="ouvrage"),
     #other options: <int:pk>, <id:pk>, <slug:pk>

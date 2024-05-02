@@ -14,13 +14,18 @@
                         <div class="row">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}#main">All<span>({{categories.count}})</span></a>
+                                    <a class="nav-link nav-ist" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}#main">All<span>({{categories.count}})</span></a>
                                 </li>
                                 {% for categorie in categories %}
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}?keyword={{categorie.name}}">{{ categorie.name }}<span>({{categorie.ouvrage_set.all.count}})</span></a>
+                                    <a class="nav-link nav-ist" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}?keyword={{categorie.name}}">{{ categorie.name }}<span>({{categorie.ouvrage_set.all.count}})</span></a>
                                 </li>
                                 {% endfor %}
+                                <li class="nav-item d-flex w-auto h-auto" role="presentation">
+                                    <a  class="nav-link nav-ist d-flex flex-row" aria-selected="false" href="{% url 'ouvrages:categories' %}" >
+                                        <p style="color: #005792;">More</p><span class="custom-icon bi-chevron-down ms-2 w-auto h-auto" style="font-size: 1.3rem; font-weight: 800;color: #005792;"></span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

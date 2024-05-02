@@ -1,0 +1,42 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<section class="hero-section d-flex justify-content-center align-items-center" style="padding-top: 120px;padding-bottom: 140px;">
+    <section class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto d-flex flex-row justify-content-start align-items-center">
+                <a href="{% url 'ouvrages:browse'%}" class="custom-icon bi-box-arrow-in-left smoothscroll align-self-center mb-1" style="font-size: 2.5rem"></a>
+                <h3 class="text-white ms-3">Browse Categories</h3>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-12 mx-auto">
+        <form method="GET"  action="{% url 'ouvrages:browse' %}" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2" role="search">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bi-search">
+                    
+                </span>
+
+                <input name="q" type="search" class="form-control" id="q" placeholder="Search Categories" aria-label="Search">
+
+                <button type="submit" class="form-control">Search</button>
+            </div>
+        </form>
+        <div class="container-fluid">
+            <div class="col">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <a class="nav-link" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}#main">All<span>({{categories.count}})</span></a>
+                    </li>
+                       {% for categorie in categories %}
+                      <li class="nav-item" role="presentation">
+                          <a class="nav-link" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}?keyword={{categorie.name}}">{{ categorie.name }}<span>({{categorie.ouvrage_set.all.count}})</span></a>
+                      </li>
+                      {% endfor %}
+                  </ul>
+            </div>
+        </div>
+      </div>
+</section>
+
+{% endblock content %}

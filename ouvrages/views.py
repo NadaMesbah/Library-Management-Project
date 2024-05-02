@@ -41,6 +41,15 @@ def browse(request):
                'ouvrage_count': ouvrage_count, 'exemplaires': exemplaires}
     return render(request, 'ouvrages/browse-ouvrages.html', context)
 
+def categories(request):
+    keyword = request.GET.get('q') if request.GET.get('q') != None else ''
+    categories = Categorie.objects.filter(
+        Q(name__icontains=keyword)
+    )
+    categorie_count = categories.count()
+    context = {'categories': categories}
+    return render(request, 'ouvrages/categories.html', context)
+
 def topicsDetail(request):
     return render(request, 'ouvrages/topics-detail.html')
 

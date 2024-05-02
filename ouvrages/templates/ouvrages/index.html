@@ -105,7 +105,7 @@
                                     </p>
                                 {% comment %} {%endif%} {% endcomment %}
                                 <h5 class="text-white mb-2">Description:</h5>
-                                <p class="text-white mb-2">{{newest_ouvrage.description}}</p>
+                                <p class="text-white mb-2">{{newest_ouvrage.description|slice:"300"}}</p>
                                 <a href="{% url 'ouvrages:ouvrage' newest_ouvrage.id%}" class="btn custom-btn mt-2 mt-lg-3">Consulter</a>
                             </div>
 
@@ -166,9 +166,11 @@
                                         <span style="font-weight: bold;">{{ouvrage.vote_ratio}}%</span> Postitive
                                         Feedback ({{ouvrage.vote_total}} vote{{ ouvrage.vote_total|pluralize:"s" }})
                                     </p>   
+                                    <h6 class="mt-2 text-black-50 mb-2">Description:</h6>
+                                    <p class="mt-2">{{ouvrage.description|slice:"150"}}</p>
                             </div>
                         </div>
-                        <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
+                        <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid mt-lg-0 mt-0" alt="">
                         {%for categorie in ouvrage.categories.all%}
                         {% comment %} <span class="badge bg-design me-1">{{categorie}}</span> {% endcomment %}
                             <span class="tag bg-design me-1 mt-lg-3">{{categorie}}</span>

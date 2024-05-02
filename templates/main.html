@@ -95,10 +95,14 @@
             .star.checked { 
                 color: gold;
             }
+            .nav-ist:hover {
+                border-bottom-color: color: #005792;
+                color: color: #005792;
+            }
         </style>
     {% include 'navbar.html' %}
     {% block content %}
-
+    {% if user.is_authenticated %}<p>Welcome {{ request.user.username }}</p>{% endif %}
     {% endblock content %}
     </main>
     {% include 'footer.html' %}

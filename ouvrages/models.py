@@ -3,7 +3,8 @@ from django.dispatch import receiver
 from django.db import models
 import uuid
 from datetime import datetime, timedelta
-# Create your models here.
+from django.db.models.deletion import CASCADE
+from adherants.models import Profile
 
 class Categorie(models.Model):
     name = models.CharField(max_length=200)
@@ -45,7 +46,8 @@ class Ouvrage(models.Model):
         return self.titre
     
 class Review(models.Model):
-    #adherant
+    owner = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, null=True, blank=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     ouvrage = models.ForeignKey('Ouvrage', on_delete=models.CASCADE)
     VOTE_TYPE =(
@@ -109,7 +111,7 @@ def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
 # Exemplaire.objects.bulk_create([Exemplaire(**data) for data in exemplaires_data])
 class Emprunt(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
-    #emprunteur (Adherant)
+    emprunteur = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE)
     date_emprunt = models.DateTimeField(auto_now_add=True)
     date_retour = models.DateTimeField()
@@ -138,7 +140,7 @@ class Reservation(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     date_demande =  models.DateTimeField(auto_now_add=True)
     date_reservation = models.DateTimeField()
-    #Adherant
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE)
     acceptee = models.BooleanField(default=False, blank=True)
 

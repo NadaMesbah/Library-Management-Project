@@ -1,0 +1,203 @@
+{% extends "main.html" %}
+{% block title %}Create Your Account{% endblock %}
+
+{% block content %}
+
+{% if page == 'register' %}
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Register</li>
+                    </ol>
+                </nav>
+                <h2 class="text-white">Create Your Account</h2>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="section-padding section-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-12 mx-auto">
+                    {% if user_form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        Please correct the errors below.
+                    </div>
+                    {% endif %}
+                    <div class="alert alert-info" role="alert">
+                        Please sign up using the following form :
+                    </div>
+                <form action="{% url 'register' %}" method="post" class="custom-form contact-form" role="form">
+                    {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" name="username" id="username" class="form-control" required>
+                                <!-- Display username field errors -->
+                                {% for error in user_form.username.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First name</label>
+                                <input type="text" name="first_name" id="first_name" class="form-control" required>
+                                {% for error in user_form.first_name.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last name</label>
+                                <input type="text" name="last_name" id="last_name" class="form-control" required>
+                                {% for error in user_form.last_name.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cin" class="form-label">CIN</label>
+                                <input type="text" name="cin" id="cin" class="form-control" required>
+                                {% for error in user_form.cin.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="gender" class="form-label">Gender</label>
+                                <input type="text" name="gender" id="gender" class="form-control" required>
+                                {% for error in user_form.gender.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" name="email" id="email" class="form-control" required>
+                                {% for error in user_form.email.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="phonenumber" class="form-label">Phone number</label>
+                                <input type="text" name="phonenumber" id="phonenumber" class="form-control" required>
+                                {% for error in user_form.phonenumber.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password1" class="form-label">Password</label>
+                                <input type="password" name="password1" id="password1" class="form-control" required>
+                                <!-- Display password field errors -->
+                                {% for error in user_form.password1.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password2" class="form-label">Confirm Password</label>
+                                <input type="password" name="password2" id="password2" class="form-control" required>
+                                <!-- Display password confirmation errors -->
+                                {% for error in user_form.password2.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Display non-field errors -->
+                    {% for error in user_form.non_field_errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{%elif page == 'login' %}
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Login</li>
+                    </ol>
+                </nav>
+                <h2 class="text-white">Login</h2>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="section-padding section-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-12 mx-auto">
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        Please check your username or password.
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        Please use the following form to login. If you don't have an account <a href="{% url 'register' %}">register here</a>
+                    </div>
+                {% endif %}
+                <form action="{% url 'login' %}" method="post" class="custom-form contact-form" role="form">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" name="username" id="username" class="form-control" required>
+                        <!-- Display username field errors -->
+                        {% for error in form.username.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" required>
+                        <!-- Display password field errors -->
+                        {% for error in form.password.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <!-- Display non-field errors (e.g., invalid username/password) -->
+                    {% for error in form.non_field_errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div class="mt-3">
+                    <a href="{% url 'password_reset' %}">Forgot password?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}
