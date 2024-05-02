@@ -70,21 +70,16 @@ class Rayon(models.Model):
         return self.localisation
     
 class Exemplaire(models.Model):
-    HORS_PRET = 'HP'
-    DISPONIBLE = 'DI'
-    PERDU = 'PE'
-    RETIRE = 'RE'
-
+    
     ETAT_CHOICES = [
-        (HORS_PRET, 'Hors Prêt'),
-        (DISPONIBLE, 'Disponible'),
-        (PERDU, 'Perdu'),
-        (RETIRE, 'Retiré'),
+        ('HORS_PRET', 'Hors Prêt'),
+        ('DISPONIBLE', 'Disponible'),
+        ('PERDU', 'Perdu'),
+        ('RETIRE', 'Retiré'),
     ]
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     ouvrage = models.ForeignKey('Ouvrage', on_delete=models.CASCADE)
-    etat = models.CharField(max_length=2, choices=ETAT_CHOICES, default=HORS_PRET)
-    emprunte = models.BooleanField(default=False, blank=True)
+    etat = models.CharField(max_length=20, choices=ETAT_CHOICES, default='DISPONIBLE')
     reserve = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
@@ -141,6 +136,16 @@ class Reservation(models.Model):
     date_demande =  models.DateTimeField(auto_now_add=True)
     date_reservation = models.DateTimeField()
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
-    exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE)
-    acceptee = models.BooleanField(default=False, blank=True)
-
+    ouvrage = models.ForeignKey('Ouvrage', on_delete=models.CASCADE, null=True)  # Lier à Ouvrage
+    
+    STATUT_CHOICES = (
+        ('en_attente', 'En attente'),
+        ('acceptee', 'Acceptée'),
+        ('annulee', 'Annulée'),
+    )
+    
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    date_retour_prevue = models.DateField(null=True, blank=True)
+    
+    def _str_(self):
+        return f"Réservation {self.id}"

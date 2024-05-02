@@ -36,11 +36,19 @@
                     <span class="badge bg-music me-1">{{categorie}}</span>
                     {%endfor%} 
                 </div>
+                {% if not user.is_authenticated %}
                 <div class="d-flex align-items-center mt-4">
                     <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-2">Details</a>
-                    <a href="#reservation" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver un exemplaire</a>
+                    <a href="#reservation" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver</a>
                 </div>
                 <a href="#reservation" class="btn custom-btn mt-3 mt-lg-4">Bookmark <span href="#" class="bi-bookmark smoothscroll"></span></a>
+                {% else %}
+                <div class="d-flex align-items-center mt-4">
+                    <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-2">Details</a>
+                    <a href="{% url 'ouvrages:make-reservation' ouvrage.id%}" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver</a>
+                </div>
+                <a href="#reservation" class="btn custom-btn mt-3 mt-lg-4">Bookmark <span href="#" class="bi-bookmark smoothscroll"></span></a>
+                {%endif%}
             </div>
 
             <div class="col-lg-5 col-12 ms-lg-5">
@@ -157,7 +165,13 @@
                     Feedback ({{ouvrage.vote_total}} vote{{ ouvrage.vote_total|pluralize:"s" }})
                     </p>
                 </div>
-
+                {% if not user.is_authenticated %}
+                <div class="col-lg-10 col-12 m-auto" id="reservation">
+                    <blockquote>
+                    Connectez-vous pour laisser un Feedback... <a href="{% url 'login' %}" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a> 
+                    </blockquote>
+                </div>    
+                {% else %}   
                 <div class="w-100 col-12 mt-lg-2">
                     <form action="#" method="post" class="custom-form contact-form" role="form">
                         <div class="col">
@@ -255,27 +269,28 @@
                         </ul>
                     </nav>
                 </div>
+                {% endif %}
             </div>
             </div> 
         </div>
     </div>
 </section> 
+{% if not user.is_authenticated %}
 <section class="section-padding">
     <div class="container">
         <div class="d-flex row justify-content-center align-items-center">
-
             <div class="col-lg-4 col-12">
                 <img src="{% static 'images/rear-view-young-college-student.jpg' %}" class="newsletter-image img-fluid" alt="">
             </div>
-       
             <div class="col-lg-8 col-12 m-auto" id="reservation">
                 <blockquote>
-                    Pour reserver vous devez vous connecter... <a href="#" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a> 
+                Pour reserver vous devez vous connecter... <a href="{% url 'login' %}" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a> 
                 </blockquote>
-            </div>         
+            </div>                   
         </div>
     </div>
 </section>
+{% endif %}
 {% comment %} <section class="section-padding section-bg">
     <div class="container">
         <div class="row justify-content-center">

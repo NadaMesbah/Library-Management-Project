@@ -33,7 +33,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_5">Contact</a>
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_5">Equipe</a>
                 </li>
 
                 <li class="nav-item dropdown">
@@ -64,6 +64,7 @@
                     {% if user.is_authenticated %}
                         <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                             <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ouvrages:user-reservations' %}">Reservations</a></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
                     {% else %}

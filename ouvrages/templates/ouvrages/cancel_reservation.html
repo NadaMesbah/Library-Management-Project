@@ -1,0 +1,55 @@
+{% extends "main.html" %}
+{% block title %}Reservations{% endblock %}
+{%load static%}
+{% block content %}
+
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index' %}">Homepage</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Cancel Reservation</li>
+                    </ol>
+                </nav>
+                <h2 class="text-white">Cancel Reservation Confirmation</h2>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="section-padding section-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 m-auto">
+                <h3 class="mb-4">Are you sure you want to cancel this reservation ?</h3>
+            </div>
+            <div class="col-lg-8 col-12 mt-3 mx-auto">
+                <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
+                    <div class="d-flex">
+                        <img src="{{ reservation.ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
+
+                        <div class="custom-block-topics-listing-info d-flex">
+                            <div>
+                                <h5 class="mb-2 p-2">Reservation de : {{ reservation.ouvrage }}</h5>
+                                <p class="mb-0 p-2">Date Reservation: {{ reservation.date_reservation }}</p>
+                                <p class="mb-0 p-2">Date de retour prevue: {{ reservation.date_retour_prevue }}</p>
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <a class="btn mybtn mt-3 mt-lg-4" href="{% url 'ouvrages:user-reservations' %}">Go Back</a>
+                                    <button class="btn custom-btn mt-3 mt-lg-4" type="submit">Confirm Cancelation</button>
+                                </form>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section> 
+
+
+
+{% endblock content%}

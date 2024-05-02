@@ -23,4 +23,9 @@ urlpatterns = [
     path('create-exemplaire/', views.createExemplaire, name="create-exemplaire"),
     path('update-exemplaire/<str:pk>', views.updateExemplaire, name="update-exemplaire"),
     path('delete-exemplaire/<str:pk>', views.deleteExemplaire, name="delete-exemplaire"),
+    #reservations
+    path('myreservations/', views.user_reservations, name="user-reservations"),
+    path('make-reservation/<str:pk>', views.makeReservation, name="make-reservation"),
+    path('edit-reservation/<str:pk>', views.editReservation, name="edit-reservation"),
+    path('cancel-reservation/<str:pk>', views.cancelReservation, name="cancel-reservation"),
 ]

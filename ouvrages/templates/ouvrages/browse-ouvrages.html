@@ -22,9 +22,7 @@
                                 </li>
                                 {% endfor %}
                                 <li class="nav-item d-flex w-auto h-auto" role="presentation">
-                                    <a  class="nav-link nav-ist d-flex flex-row" aria-selected="false" href="{% url 'ouvrages:categories' %}" >
-                                        <p style="color: #005792;">More</p><span class="custom-icon bi-chevron-down ms-2 w-auto h-auto" style="font-size: 1.3rem; font-weight: 800;color: #005792;"></span>
-                                    </a>
+                                    <a  class="nav-link nav-ist d-flex flex-row" style="color: #005792;" aria-selected="false" href="{% url 'ouvrages:categories' %}" >More</a>
                                 </li>
                             </ul>
                         </div>
@@ -43,7 +41,7 @@
                 <div class="d-flex flex-column justify-content-center align-items-center pt-5 mb-0 mb-lg-0">  
                     <h4 class="text-white text-center">No Results Found : </h4>
                     <img src="{% static 'images/pic.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem" >
-                    <h5 class="text-white text-center mt-3" ><strong>Don't be sad! We can find it!</strong></h5>
+                    <h5 class="text-white text-center mt-3" ><strong>Don't be sad!</strong></h5>
                 </div>
                 {% endif %}
             </div>

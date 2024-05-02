@@ -12,7 +12,8 @@ from django.core.exceptions import ObjectDoesNotExist
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=200, blank=True, null=True)
+    prenom = models.CharField(max_length=255, blank=True, null=True)
+    nom = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=500, blank=True, null=True)
     username = models.CharField(max_length=200, blank=True, null=True)
     CNI = models.CharField(max_length=200, blank=True, null=True)
@@ -40,16 +41,26 @@ class Profile(models.Model):
             url = ''
         return url
     
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     try:
-#         instance.profile.save()
-#     except ObjectDoesNotExist:
-#         Profile.objects.create(user=instance)
+    # @classmethod
+    # def get_info(self, email, password):
+    #     try:
+    #         abonnee = Abonnee.objects.get(email=email, password=password)
+    #         return [abonnee.prenom, abonnee.nom, abonnee.email, abonnee.type_abonnement, abonnee.type_abonnee, abonnee.date_start, abonnee.numero_credit_carte, abonnee.password, abonnee.image]
+    #     except Abonnee.DoesNotExist:
+    #         return None
+    # def check_password(self, password):
+    #     return password == self.password
+    
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    try:
+        instance.profile.save()
+    except ObjectDoesNotExist:
+        Profile.objects.create(user=instance)
 
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     instance.profile.save()
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 class Message(models.Model):
     sender = models.ForeignKey(

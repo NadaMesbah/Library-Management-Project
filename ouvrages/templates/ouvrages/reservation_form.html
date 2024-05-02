@@ -1,0 +1,60 @@
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index' %}">Homepage</a></li>
+                        {% if page == 'edit' %}
+                        <li class="breadcrumb-item active" aria-current="page">Edit Reservation</li>
+                        {% endif %}
+                        {% if page == 'make' %}
+                        <li class="breadcrumb-item active" aria-current="page">Make Reservation</li>
+                        {% endif %}
+                    </ol>
+                </nav>
+                <h2 class="text-white">Reservation Details </h2>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="section-padding section-bg col-12 col-lg-12 d-flex justify-content-center align-items-center">
+    <div class="container col-6">
+        <!-- reservation_form.html -->
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            <!-- Input:Text -->
+            <div style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+                <label class="fw-bold fs-4">{{ field.label }}:</label>
+                {{ field }}
+            </div>
+            {% endfor %}
+            <button class="btn mybtn mt-3 mt-lg-4" type="submit">Submit</button>
+        </form>
+{% comment %}         
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const reservationDateField = document.querySelector('#id_date_reservation');
+                const returnDateField = document.querySelector('#id_date_retour_prevue');
+        
+                reservationDateField.addEventListener('change', function () {
+                    const selectedDate = new Date(this.value);
+                    const returnDate = new Date(selectedDate);
+                    returnDate.setDate(selectedDate.getDate() + 14); // Adding 14 days for a two-week return period
+        
+                    // Format return date as YYYY-MM-DD (same as Django DateField format)
+                    const formattedReturnDate = returnDate.toISOString().split('T')[0];
+        
+                    returnDateField.value = formattedReturnDate;
+                });
+            });
+        </script> {% endcomment %}
+    </div>  
+</section>
+{% endblock content %}
+

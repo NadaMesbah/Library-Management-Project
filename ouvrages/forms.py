@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Ouvrage, Exemplaire
+from .models import Ouvrage, Exemplaire, Reservation
 from django import forms
 class OuvrageForm(ModelForm):
     class Meta:
@@ -17,13 +17,42 @@ class OuvrageForm(ModelForm):
         self.fields['exemplaires_total'].widget.attrs.update({'class': 'form-control'})
         
 
-class ExemplaireForm(ModelForm):
+# class ExemplaireForm(ModelForm):
+#     quantite = forms.IntegerField(label='Quantité')
+#     class Meta:
+#         model = Exemplaire
+#         fields = ['ouvrage', 'etat', 'emprunte', 'reserve']
+        
+#     def __init__(self, *args, **kwargs):
+#         super(ExemplaireForm, self).__init__(*args, **kwargs)
+#         self.fields['ouvrage'].widget.attrs.update({'class': 'form-control'})
+#         self.fields['etat'].widget.attrs.update({'class': 'form-control'}) 
+      
+class ExemplaireForm(forms.ModelForm):
     quantite = forms.IntegerField(label='Quantité')
+    exemplaire = forms.ModelChoiceField(queryset=Exemplaire.objects.filter(reserve=False, etat='DISPONIBLE'), label='Exemplaire')
     class Meta:
         model = Exemplaire
-        fields = ['ouvrage', 'etat', 'emprunte', 'reserve']
-        
+        fields = ['exemplaire', 'ouvrage', 'etat', 'reserve']
+
     def __init__(self, *args, **kwargs):
-        super(ExemplaireForm, self).__init__(*args, **kwargs)
+        super(ExemplaireForm, self)._init_(*args, **kwargs)
+        self.fields['Exemplaire'] = forms.ModelChoiceField(queryset=Exemplaire.objects.filter(reserve=False, etat='DISPONIBLE'), label='Exemplaire')
+        self.fields['Exemplaire'].widget.attrs.update({'class': 'form-control'})
         self.fields['ouvrage'].widget.attrs.update({'class': 'form-control'})
         self.fields['etat'].widget.attrs.update({'class': 'form-control'})  
+        
+class ReservationForm(forms.ModelForm):
+    class Meta:
+        model = Reservation
+        fields = ['date_reservation', 'date_retour_prevue', 'ouvrage']  # Include 'ouvrage' field in the form fields
+        
+    def __init__(self, *args, ouvrage_instance=None, **kwargs):  # Add ouvrage_instance as a parameter with default None
+        super().__init__(*args, **kwargs)
+        self.fields['date_reservation'].widget = forms.SelectDateWidget(attrs={'id': 'id_date_reservation'})
+        self.fields['date_retour_prevue'].widget = forms.SelectDateWidget(attrs={'id': 'id_date_retour_prevue'})
+        
+        if ouvrage_instance:
+            self.fields['ouvrage'].queryset = Ouvrage.objects.filter(pk=ouvrage_instance.pk)
+            self.fields['ouvrage'].initial = ouvrage_instance.titre
+            self.fields['ouvrage'].widget = forms.TextInput(attrs={'readonly': True})

@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Ouvrage, Categorie, Exemplaire
-from .forms import OuvrageForm, ExemplaireForm
+from .models import Ouvrage, Categorie, Exemplaire, Reservation
+from adherants.models import Profile
+from django.contrib import messages
+from .forms import OuvrageForm, ExemplaireForm, ReservationForm
 from django.db.models import Q
 # Business Logic
 
@@ -170,3 +172,74 @@ def deleteExemplaire(request, pk):
     # If the request is not POST, render the confirmation page
     context = {'exemplaire': exemplaire}
     return render(request, 'ouvrages/delete_exemplaire.html', context)
+
+def makeReservation(request, pk):
+    page = 'make'
+    ouvrage = get_object_or_404(Ouvrage, id=pk)
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.ouvrage = ouvrage
+            reservation.owner = request.user.profile
+            reservation.save()
+            messages.success(request, "Your reservation has been successfully created.")
+            return redirect('ouvrages:user-reservations')
+    else:
+        # Pass instance argument to the form for better handling of related fields
+        form = ReservationForm(initial={'ouvrage': ouvrage}, ouvrage_instance=ouvrage)
+    context = {'form': form, 'page' : page}
+    return render(request, 'ouvrages/reservation_form.html', context)
+
+def editReservation(request, pk):
+    # Retrieve the existing reservation instance
+    page = 'edit'
+    reservation = get_object_or_404(Reservation, id=pk)
+    if request.method == 'POST':
+        form = ReservationForm(request.POST, instance=reservation)  # Pass instance to edit existing reservation
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your reservation has been successfully updated.")
+            return redirect('ouvrages:user-reservations')
+    else:
+        # Pass instance argument to the form for better handling of related fields
+        form = ReservationForm(instance=reservation)
+    
+    context = {'form': form, 'page': page}
+    return render(request, 'ouvrages/reservation_form.html', context)
+
+def cancelReservation(request, pk):
+    reservation = get_object_or_404(Reservation, id=pk)
+    if request.method == 'POST':
+        # If the request is POST, delete the ouvrage
+        reservation.delete()
+        return redirect('ouvrages:user-reservations')
+    # If the request is not POST, render the confirmation page
+    context = {'reservation': reservation}
+    return render(request, 'ouvrages/cancel_reservation.html', context)
+
+def user_reservations(request):
+    reservations = Reservation.objects.filter(owner=request.user.profile)
+    return render(request, 'ouvrages/myreservations.html', {'reservations': reservations})
+# def reserver(request):
+#     if request.method == 'POST':
+#         owner = Profile.objects.get(email=request.user.email)
+
+#         reservation_date_str = request.POST.get('datepicker')
+
+#         reservation_date = datetime.strptime(reservation_date_str, '%m/%d/%Y')
+
+#         day_name = reservation_date.strftime("%A")
+        
+#         print("Adherant: ", owner.email)
+#         print("day_name: ", day_name)
+
+#         Reservation.objects.create(
+#              owner=owner,
+#              date_reservation=reservation_date,
+#         )
+#         messages.success(
+#             request, "Your reservation has been successfully created.")
+#         return redirect('panel')
+#     else:
+#         return render(request, 'panel.html')
