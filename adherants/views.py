@@ -2,11 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import login as auth_login
 from .forms import *
-from django.contrib.auth import login
 
 
 def homepage(request):
@@ -33,6 +34,7 @@ def register(request):
     user_form = RegisterForm()
     return render(request, 'adherants/login_register.html', {'user_form': user_form, 'page' : page})
 
+
 def login(request):
     page = 'login'
     if request.user.is_authenticated:
@@ -49,10 +51,12 @@ def login(request):
 
         user = authenticate(request, username=username, password=password)
 
+        # if user is not None:
+        #     login(request, user)
+        #     return redirect(request.GET['next'] if 'next' in request.GET else 'profile')
         if user is not None:
-            login(request, user)
-            return redirect(request.GET['next'] if 'next' in request.GET else 'account')
-
+            auth_login(request, user)  # Rename login function call to auth_login
+            return redirect(request.GET.get('next', 'profile'))
         else:
             messages.error(request, 'Username OR password is incorrect')
     return render(request, 'adherants/login_register.html', {'page' : page})
@@ -61,36 +65,30 @@ def password_reset(request):
     return render(request, 'adherants/password_reset.html')
 
 def logout(request):
-    auth.logout(request)
+    auth_logout(request)
     messages.info(request, 'User was logged out!')
     return redirect('homepage')
 
 @login_required
 def profile(request):
-    user = request.user  # Retrieve the current user
+    profile = request.user.profile
+    context = {
+        'profile': profile,
+    }
+    return render(request, 'adherants/profile.html', context)
+
+@login_required
+def editProfile(request):
+    profile = request.user.profile
+    form = ProfileForm(instance=profile)
 
     if request.method == 'POST':
-        profile_form = ProfileForm(request.POST, request.FILES, instance=user.profile)
-        user_form = UserForm(request.POST, instance=user)
-        if profile_form.is_valid() and user_form.is_valid():
-            profile = profile_form.save(commit=False)
-            profile.user = user  # Associate the profile with the current user
-            profile.save()
-            user_form.save()
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+
             return redirect('profile')
-    else:
-        # Check if the user has a profile instance, create one if not
-        if hasattr(user, 'profile'):
-            profile_form = ProfileForm(instance=user.profile)
-        else:
-            profile_form = ProfileForm()
 
-        user_form = UserForm(instance=user)
-
-    context = {
-        'user': user,
-        'profile_form': profile_form,
-        'user_form': user_form,
-    }
+    context = {'form': form}
     return render(request, 'adherants/profile.html', context)
 

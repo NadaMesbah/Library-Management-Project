@@ -41,12 +41,24 @@ class LoginForm(forms.Form):  # Use forms.Form since this is not a model form
     def clean_password(self):
         password = self.cleaned_data.get('password')
         return password
-
-
-class ProfileForm(forms.ModelForm):
+    
+class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = ['profile_image']
+        fields = ['name', 'email', 'username',
+                  'CNI', 'departement', 'filiere', 'profile_image',
+                  'CNE', 'semestre', 'sexe']
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'input'})
+
+# class ProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ['profile_image']
 
 class UserForm(forms.ModelForm):
     class Meta:

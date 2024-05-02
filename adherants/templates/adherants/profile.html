@@ -23,81 +23,15 @@
         <div class="row">
             <div class="col-lg-6 col-12 mx-auto">
                 <h3>Welcome to your profile {{ user.username }} !</h3>
-                <form method="post" enctype="multipart/form-data" class="custom-form contact-form" role="form">
+                <form class="custom-form contact-form" role="form" method="POST" action="{% url 'edit-profile' %}" enctype="multipart/form-data">
                     {% csrf_token %}
+                    {% for field in form %}
                     <div class="mb-3">
-                        <label for="profile_picture" class="form-label">Profile Picture</label>
-                        <input type="file" name="profile_picture" id="profile_picture" class="form-control">
-                        <!-- Display profile picture field errors -->
-                        {% for error in profile_form.profile_picture.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
+                        <label for="formInput#text">{{field.label}}</label>
+                        {{field}}
                     </div>
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" name="username" id="username" class="form-control" value="{{ user_form.username }}" required>
-                        <!-- Display username field errors -->
-                        {% for error in user_form.username.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="first_name" class="form-label">First name</label>
-                        <input type="text" name="first_name" id="first_name" class="form-control" value="{{ user_form.first_name }}" required>
-                        {% for error in user_form.first_name.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="last_name" class="form-label">Last name</label>
-                        <input type="text" name="last_name" id="last_name" class="form-control" value="{{ user_form.last_name }}" required>
-                        {% for error in user_form.lastname.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" value="{{ user_form.email }}" required>
-                        <!-- Display email field errors -->
-                        {% for error in user_form.email.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="cin" class="form-label">CIN</label>
-                        <input type="text" name="cin" id="cin" class="form-control" value="{{ user_form.cin }}" required>
-                        {% for error in user_form.cin.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="phonenumber" class="form-label">Phone number</label>
-                        <input type="text" name="phonenumber" id="phonenumber" class="form-control" value="{{ user_form.phonenumber }}" required>
-                        {% for error in user_form.phonenumber.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="gender" class="form-label">Gender</label>
-                        <input type="text" name="gender" id="gender" class="form-control" value="{{ user_form.gender }}" required>
-                        {% for error in user_form.gender.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="password1" class="form-label">Password</label>
-                        <input type="password" name="password1" id="password1" class="form-control" value="{{ user_form.password1 }}" required>
-                        {% for error in user_form.password1.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="password2" class="form-label">Repeat Password</label>
-                        <input type="password" name="password2" id="password2" class="form-control" value="{{ user_form.password2 }}" required>
-                        {% for error in user_form.password2.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
+                    {% endfor %}
+    
                     <button type="submit" class="btn btn-primary">Update Profile</button>
                 </form>
             </div>

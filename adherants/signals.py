@@ -6,6 +6,7 @@ from .models import Profile
 
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 # @receiver(post_save, sender=Profile)
 
