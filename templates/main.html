@@ -9,6 +9,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">               
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+        {% comment %} <link href="{% static 'css/_alert.css' %}" rel="stylesheet"> {% endcomment %}
         <link href="{% static 'css/templatemo-topic-listing.css' %}" rel="stylesheet">   
         <title>Bibliotheque</title>   
 </head>
@@ -109,15 +110,72 @@
                 line-height: normal;
                 transition: all 0.3s;
                 padding: 10px 20px;
-              }
+            }
               
-              .mybtn:hover {
+            .mybtn:hover {
                 background: #45244e;
                 color: white;
-              }
+            }
+
         </style>
     {% include 'navbar.html' %}
+
+    {% if messages %}
+        <div class="container"> 
+            {% for message in messages %} 
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                {% if message.tags == 'error' %} 
+                <script>
+                    swal({
+                        title: "Erreur :(",
+                        text: "{{ message|safe }}",
+                        icon: "error",
+                        buttons: 'ok',
+                      });
+                </script>                    
+                 {% elif message.tags == 'warning'%}
+                <script>
+                    swal({
+                        title: "warning !!",
+                        text: '{{ message|safe }}',
+                        icon: "warning",
+                        buttons: 'ok',
+                      });
+                </script>
+                {% elif  message.tags == 'info'%}
+                <script>
+                    swal({
+                        title: "Notification",
+                        text: "{{ message|safe }}",
+                        icon: "info",
+                        buttons: 'ok',
+                      });
+                </script>
+                 {% else %}
+                    <script>
+                        swal({
+                            title: "Cool:)",
+                            text: "Opération effectuée avcéc succés",
+                            icon: "success",
+                            buttons: 'ok',
+                          });
+                    </script>
+                 {% endif %}
+            {% endfor %}
+        </div>  
+    {% endif %} 
+
+    {% comment %} {% for message in messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <p class="mb-0">{{ message }}</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endcomment %}
     {% block content %}
+
+
+
     {% if user.is_authenticated %}<p>Welcome {{ request.user.username }}</p>{% endif %}
     {% endblock content %}
     </main>

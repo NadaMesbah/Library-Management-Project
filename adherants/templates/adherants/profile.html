@@ -1,7 +1,7 @@
 {% extends "main.html" %}
-{% block title %}Profile{% endblock %}
 
 {% block content %}
+
 <header class="site-header d-flex flex-column justify-content-center align-items-center">
     <div class="container">
         <div class="row align-items-center">
@@ -12,7 +12,7 @@
                         <li class="breadcrumb-item active" aria-current="page">Profile</li>
                     </ol>
                 </nav>
-                <h2 class="text-white">Profile</h2>
+                <h2 class="text-white">Profile Details</h2>
             </div>
         </div>
     </div>
@@ -20,22 +20,48 @@
 
 <section class="section-padding section-bg">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-12 mx-auto">
-                <h3>Welcome to your profile {{ user.username }} !</h3>
-                <form class="custom-form contact-form" role="form" method="POST" action="{% url 'edit-profile' %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label for="formInput#text">{{field.label}}</label>
-                        {{field}}
+        <div class="col">
+            <div class="col-lg-8 col-12 m-auto">
+                <h3 class="mb-4">Welcome to your profile {{ profile.username }} !</h3>
+            </div>
+            <div class="col-lg-10 col-12 mx-auto">
+                <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
+                    <div class="d-flex">
+                        <img src="{{profile.imageURL}}" class="avatar avatar--xl" style="" alt="profile picture">
+            
+                        <div class="custom-block-topics-listing-info d-flex">
+                            <div>
+                                <h4 class="mb-2 p-2">Informations :</h4>
+                                <p class="mb-0 p-2"><strong>Nom :</strong> {{profile.nom}}</p>
+                                <p class="mb-0 p-2"><strong>Prenom :</strong> {{profile.prenom}}</p>
+                                <p class="mb-0 p-2"><strong>Email:</strong> {{ profile.email}}</p>
+                                {% if profile.sexe%}
+                                <p class="mb-0 p-2"><strong>Sexe:</strong> {{ profile.sexe}}</p>
+                                {% endif %}
+                                {% if profile.CNI%}
+                                <p class="mb-0 p-2"><strong>CNI:</strong> {{ profile.CNI}}</p>
+                                {% endif %}
+                                {% if profile.departement%}
+                                <p class="mb-0 p-2"><strong>Departement:</strong> {{ profile.departement}}</p>
+                                {% endif %}
+                                {% if profile.filiere%}
+                                <p class="mb-0 p-2"><strong>Filiere:</strong> {{ profile.filiere}}</p>
+                                {% endif %}
+                                {% if profile.CNE%}
+                                <p class="mb-0 p-2"><strong>CNE: </strong>{{ profile.CNE}}</p>
+                                {% endif %}
+                                {% if profile.semestre%}
+                                <p class="mb-0 p-2"><strong>Semestre:</strong> {{ profile.semestre}}</p>
+                                {% endif %}
+                                <a href="{% url 'edit-profile'%}" class="btn mybtn mt-3 mt-lg-4">Edit</a>
+                            </div>
+                        </div>
                     </div>
-                    {% endfor %}
-    
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
-                </form>
+                </div> 
             </div>
         </div>
     </div>
 </section>
-{% endblock %}
+
+{% endblock content%}
+

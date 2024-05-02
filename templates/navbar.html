@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'ouvrages:index'%}">
+        <a class="navbar-brand" href="{% url 'ouvrages:index'%}#section_1">
             <i class="bi-back"></i>
             <span>Bibliotheque</span>
         </a>
@@ -15,10 +15,10 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-lg-5 me-lg-auto">
-                <li class="nav-item">
+            <ul class="navbar-nav ms-lg-5">
+                {% comment %} <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_1">Home</a>
-                </li>
+                </li> {% endcomment %}
 
                 <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Trending Books</a>
@@ -45,15 +45,44 @@
                         <li><a class="dropdown-item active" href="{% url 'ouvrages:contact'%}">Reclamation</a></li>
                     </ul>
                 </li>
+                
             </ul>
+            {% comment %} <div class="nav-item dropdown">
 
-            <div class="d-none d-lg-block">
+
+                {% if user.is_authenticated %}
+                    <a href="#" class="nav-link" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ user.profile.profile_image.url }}">
+                    </a>
+                {% else %}
+                    <a class="nav-link navbar-icon bi-person smoothscroll" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    </a>
+                {% endif %}
+
+               
+                {% if user.is_authenticated %}
+                    <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ouvrages:user-reservations' %}">Reservations</a></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                {% else %}
+                    <!-- If the user is not authenticated, display login and register links -->
+                    <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                        <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                    </ul>
+                {% endif %}
+
+            </div> {% endcomment %}
+
+            <div class="d-none d-lg-block ms-lg-4">
                 <div class="nav-item dropdown">
 
 
                     {% if user.is_authenticated %}
                         <a href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ user.profile.profile_picture.url }}" class="nav-link navbar-icon bi-person smoothscroll">
+                            <img src="{{ user.profile.profile_image.url }}" class="avatar avatar-sm nav-link navbar-icon bi-person smoothscroll">
                         </a>
                     {% else %}
                         <a class="nav-link navbar-icon bi-person smoothscroll" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -76,7 +105,7 @@
                     {% endif %}
 
                 </div>
-            </div>
+            </div> 
         </div>
     </div>
 </nav>
