@@ -28,11 +28,23 @@
                 {% for reservation in reservations %}
                 <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
                     <div class="d-flex">
+                        
                         <img src="{{ reservation.ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
 
                         <div class="custom-block-topics-listing-info d-flex">
                             <div>
-                                <h5 class="mb-2 p-2">Reservation de : {{ reservation.ouvrage }}</h5>
+                                <div class="d-flex flex-row justify-content-lg-between">
+                                    <h5 class="mb-2 p-2">Reservation de : {{ reservation.ouvrage }}</h5>
+                                    {% if reservation.statut == 'acceptee' %}
+                                    <span class="badge bg-education" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{reservation.get_statut_display}}</p></span>
+                                    {% endif %}
+                                    {% if reservation.statut == 'en_attente' %}
+                                    <span class="badge bg-music" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{reservation.get_statut_display}}</p></span>
+                                    {% endif %}
+                                    {% if reservation.statut == 'refusee' %}
+                                    <span class="badge bg-advertising" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{reservation.get_statut_display}}</p></span>
+                                    {% endif %}
+                                </div>
                                 <p class="mb-0 p-2">Date Reservation: {{ reservation.date_reservation }}</p>
                                 <p class="mb-0 p-2">Date de retour prevue: {{ reservation.date_retour_prevue }}</p>
                                 <a href="{% url 'ouvrages:edit-reservation' reservation.id%}" class="btn custom-btn mt-3 mt-lg-4">Edit</a>

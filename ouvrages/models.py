@@ -141,11 +141,10 @@ class Reservation(models.Model):
     STATUT_CHOICES = (
         ('en_attente', 'En attente'),
         ('acceptee', 'Acceptée'),
-        ('annulee', 'Annulée'),
+        ('refusee', 'Refusée'),
     )
-    
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
     date_retour_prevue = models.DateField(null=True, blank=True)
     
-    def _str_(self):
-        return f"Réservation {self.id}"
+    def __str__(self):
+        return f"Réservation de l'ouvrage {self.ouvrage.titre} de la part de {self.owner.username}"
