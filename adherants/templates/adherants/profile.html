@@ -35,6 +35,9 @@
                                 <p class="mb-0 p-2"><strong>Nom :</strong> {{profile.nom}}</p>
                                 <p class="mb-0 p-2"><strong>Prenom :</strong> {{profile.prenom}}</p>
                                 <p class="mb-0 p-2"><strong>Email:</strong> {{ profile.email}}</p>
+                                {% if profile.phonenumber%}
+                                <p class="mb-0 p-2"><strong>Phone Number:</strong> {{ profile.phonenumber}}</p>
+                                {% endif %}
                                 {% if profile.sexe%}
                                 <p class="mb-0 p-2"><strong>Sexe:</strong> {{ profile.sexe}}</p>
                                 {% endif %}

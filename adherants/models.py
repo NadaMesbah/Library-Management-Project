@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from django.core.exceptions import ObjectDoesNotExist
 
 # Create your models here.
 class Profile(models.Model):
@@ -23,15 +22,12 @@ class Profile(models.Model):
     CNE = models.CharField(max_length=200, blank=True, null=True)
     semestre = models.CharField(max_length=200, blank=True, null=True)
     sexe = models.CharField(max_length=200, blank=True, null=True)
+    phonenumber = models.CharField(max_length=200, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
-
     def __str__(self):
         return str(self.username)
-
-    class Meta:
-        ordering = ['created']
 
     @property
     def imageURL(self):
@@ -40,6 +36,17 @@ class Profile(models.Model):
         except:
             url = ''
         return url
+    
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    try:
+        instance.profile.save()
+    except ObjectDoesNotExist:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
     
     # @classmethod
     # def get_info(self, email, password):

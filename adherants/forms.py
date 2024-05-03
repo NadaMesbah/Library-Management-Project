@@ -37,10 +37,6 @@ from .models import Profile, Message
 class RegisterForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-    cin = forms.CharField(label='CIN', max_length=20)  # Adjust max length as needed
-    phonenumber = forms.CharField(label='Phone Number', max_length=20)  # Adjust max length as needed
-    gender = forms.CharField(label='Gender',  max_length=20)  # Assuming you have GENDER_CHOICES in your Profile model
-
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email')
@@ -82,9 +78,11 @@ class LoginForm(forms.Form):  # Use forms.Form since this is not a model form
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = ['nom', 'prenom', 'email', 'username',
-                  'CNI', 'departement', 'filiere', 'profile_image',
-                  'CNE', 'semestre', 'sexe']
+        fields = ['nom', 'prenom', 'sexe', 'CNI', 'phonenumber', 'departement', 'filiere', 'profile_image',
+                  'CNE', 'semestre']
+        widgets = {
+            'sexe': forms.Select(choices=[('male', 'Male'), ('female', 'Female')])
+        }
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
@@ -92,15 +90,11 @@ class ProfileForm(ModelForm):
         for name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control'})
 
-# class ProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ['profile_picture']
-
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email']
+        
 # class RegisterForm(forms.ModelForm):
 #     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
 #     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
