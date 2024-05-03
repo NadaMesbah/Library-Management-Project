@@ -21,22 +21,25 @@
     </div>
 </header>
 
+
 <section class="pt-5 pb-5 section-bg">
+    
     <div class="container">
         <div class="row">
-
+            <!--
             <div class="col-lg-12 col-12">
                 <h3 class="mb-4 pb-2">We'd love to hear from you</h3>
             </div>
-
+            -->
             <div class="col-lg-6 col-12">
-                <form action="#" method="post" class="custom-form contact-form" role="form">
+                <form action="" method="post" class="custom-form contact-form" role="form">
+                    {% csrf_token %}
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-floating">
                                 <input type="text" name="name" id="name" class="form-control" placeholder="Name" required="">
                                 
-                                <label for="floatingInput">Name</label>
+                                <label for="name">Name</label>
                             </div>
                         </div>
 
@@ -44,22 +47,22 @@
                             <div class="form-floating">
                                 <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address" required="">
                                 
-                                <label for="floatingInput">Email address</label>
+                                <label for="email">Email address</label>
                             </div>
                         </div>
 
                         <div class="col-lg-12 col-12">
                             <div class="form-floating">
-                                <input type="text" name="subject" id="name" class="form-control" placeholder="Name" required="">
+                                <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject" required="">
                                 
-                                <label for="floatingInput">Subject</label>
+                                <label for="subject">Subject</label>
                             </div>
-
                             <div class="form-floating">
-                                <textarea class="form-control" id="message" name="message" placeholder="Tell me about the project"></textarea>
-                                
-                                <label for="floatingTextarea">Tell me about the project</label>
+                                <label for="messag">What's on your mind ?</label>
+                                <textarea class="form-control" id="messag" name="message" placeholder="What's on your mind ?" required=""></textarea>
                             </div>
+                            
+                            
                         </div>
 
                         <div class="col-lg-4 col-12 ms-auto">
@@ -71,15 +74,15 @@
             </div>
 
             <div class="col-lg-5 col-12 mx-auto mt-5 mt-lg-0">
-                <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2595.065641062665!2d-122.4230416990949!3d37.80335401520422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858127459fabad%3A0x808ba520e5e9edb7!2sFrancisco%20Park!5e1!3m2!1sen!2sth!4v1684340239744!5m2!1sen!2sth" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3312.826425759196!2d-5.5436823!3d33.868363900000006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda04543d863b571%3A0x596632d1a0a0358d!2sFacult%C3%A9%20des%20sciences%20Meknes%D8%8C%20BP%2011201%20Zitoune%2C%20Mekn%C3%A8s%20-%20MAROC%2C%20Mekn%C3%A8s%2050000!5e0!3m2!1sfr!2sma!4v1714762472268!5m2!1sfr!2sma" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                {% comment %} <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2595.065641062665!2d-122.4230416990949!3d37.80335401520422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858127459fabad%3A0x808ba520e5e9edb7!2sFrancisco%20Park!5e1!3m2!1sen!2sth!4v1684340239744!5m2!1sen!2sth" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> {% endcomment %}
 
-                <h5 class="mt-4 mb-2">Topic Listing Center</h5>
+                <h5 class="mt-4 mb-2">Faculté des sciences Meknes</h5>
 
-                <p>Bay St &amp;, Larkin St, San Francisco, CA 94109, United States</p>
+                <p>BP 11201 Zitoune, Meknès - MAROC, Meknès 50000</p>
             </div>
 
         </div>
     </div>
 </section>
-       
 {% endblock content%}

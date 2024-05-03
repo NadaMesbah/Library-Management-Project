@@ -1,7 +1,9 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from .models import Profile, Message
+from .models import Profile, Message, UserEmail
+from django.conf import settings
+from django.core.mail import send_mail
 
 # class CustomUserCreationForm(UserCreationForm):
 #     class Meta:
@@ -94,6 +96,21 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email']
+        
+class ContactForm(forms.Form):
+    name=forms.CharField(required=True)
+    email=forms.EmailField(required=True)
+    details=forms.CharField(widget=forms.Textarea)
+    
+    def send_email(self):
+        send_mail("some random subject","message body",settings.EMAIL_HOST_USER,[self.cleaned_data['email']],
+        fail_silently=False)
+
+
+class UserEmailForm(forms.ModelForm):
+    class Meta:
+        model = UserEmail
+        fields = ['email']
         
 # class RegisterForm(forms.ModelForm):
 #     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)

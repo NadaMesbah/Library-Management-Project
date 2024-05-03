@@ -19,6 +19,11 @@ urlpatterns = [
     
     path('edit-profile/', views.editProfile, name="edit-profile"),
     path('profile/', views.profile, name="profile"),
+    
+    path('contact/', views.contact, name="contact"),
+    
+    path('contact_succes/', views.contact_succes, name='contact_succes'),
+    path('collect_email/', views.collect_email, name='collect_email'),
 
 ]
 

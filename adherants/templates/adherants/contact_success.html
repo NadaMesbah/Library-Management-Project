@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page de succès</title>
+    <style>
+        body {
+            text-align: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background: #fff; /* Fond blanc */
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 100%;
+            background: rgba(19, 124, 139, 0.1); /* Couleur des bulles */
+        }
+        #my-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em; /* Taille de police plus grande */
+            color: #fff; /* Texte blanc */
+            font-style: italic;
+            z-index: 1;
+            border: 3px solid #fff; /* Cadre blanc autour du texte */
+            padding: 20px;
+            font-family: 'Brush Script MT', cursive; /* Style de police plus décoratif */
+            background: #137C8B; /* Fond du texte de couleur #137C8B */
+        }
+    </style>
+</head>
+<body>
+    <div id="my-text">Votre réclamation a été soumise avec succès et est en cours de révision par notre équipe de service à la clientèle. Nous nous efforçons de traiter toutes les réclamations dans les plus brefs délais. Vous recevrez une mise à jour de notre part dès que possible. Merci de votre patience et de votre compréhension.</div>
+
+    <script>
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            document.body.appendChild(bubble);
+
+            const size = Math.random() * 200 + 100;
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+
+            bubble.style.top = `${Math.random() * 100}%`;
+            bubble.style.left = `${Math.random() * 100}%`;
+
+            const plusMinus = Math.random() > 0.5 ? 1 : -1;
+            bubble.style.setProperty('--left', `${Math.random() * 100 * plusMinus}%`);
+
+            setTimeout(() => {
+                bubble.remove();
+            }, 8000);
+        }
+
+        setInterval(createBubble, 100);
+    </script>
+</body>
+</html>

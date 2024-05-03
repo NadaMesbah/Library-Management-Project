@@ -3,13 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import authenticate
-
+from django.conf import settings
+from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_protect
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
 from django.urls import conf
-from .models import Profile, Message
-from .forms import LoginForm, ProfileForm, UserForm, RegisterForm
+from .models import Profile, Message, Reclamation,UserEmail
+from .forms import LoginForm, ProfileForm, UserForm, RegisterForm, UserEmailForm, ContactForm
 
 def homepage(request):
     return render(request, './templates/main.html', {'section': 'homepage'})
@@ -195,4 +198,71 @@ def editProfile(request):
 
     context = {'form': form}
     return render(request, 'adherants/profile_form.html', context)
+
+# @csrf_protect
+# def list_reservations(request):
+#     # Récupérer toutes les réservations depuis la base de données
+#     reservations = Reservation.objects.all()
+#     # Passer les réservations au template
+#     return render(request, 'ouvrages/list_reservations.html', {'reservations': reservations})
+
+
+def collect_email(request):
+    if request.method == 'POST':
+        form = UserEmailForm(request.POST)
+        if form.is_valid():
+            user_email = form.save()
+
+            # Envoi de l'email
+            send_mail(
+                'Merci pour votre abonnement',
+                'Vous êtes maintenant abonné à notre newsletter.',
+                'info@company.com',
+                [user_email.email],  # Remplacez ceci par le champ email de votre modèle
+                fail_silently=False,
+            )
+
+            return JsonResponse({'success': 'Merci pour votre abonnement! Vous êtes maintenant abonné à notre newsletter.'})
+
+        else:
+            return JsonResponse({'error': 'Une erreur est survenue. Veuillez réessayer.'}, status=400)
+
+    else:
+        form = UserEmailForm()
+        return render(request, 'ouvrages/index.html', {'form': form})
+
+def send_confirmation_email(email, name):
+    subject = 'Confirmation de réception de votre réclamation'
+    message = 'Cher {},\n\nNous avons bien reçu votre réclamation et nous vous répondrons dans les plus brefs délais.\n\nCordialement,\nL\'équipe de support'.format(name)
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [email,]
+    send_mail(subject, message, email_from, recipient_list, fail_silently=False)
+    
+def contact(request):
+    if request.method == 'POST':
+        nom = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        if nom and email and message:  # Vérifiez que toutes les valeurs sont non nulles
+            # Créer une nouvelle réclamation
+            reclamation = Reclamation(nom=nom, email=email, message=message)
+            reclamation.save()
+
+            # Envoyer l'email de confirmation
+            try:
+                send_confirmation_email(email, nom)
+                return render(request, 'adherants/contact_success.html')
+            except Exception as e:
+                return render(request, 'adherants/contact.html', {'error': str(e)})
+        else:
+            # Gérer le cas où une ou plusieurs valeurs sont nulles
+            # Vous pouvez par exemple renvoyer le formulaire avec un message d'erreur
+            return render(request, 'adherants/contact.html', {'error': 'Tous les champs sont obligatoires.'})
+    else: 
+        return render(request, 'adherants/contact.html')
+
+
+def contact_succes(request):
+    return render(request, 'adherants/contact_success.html')
 

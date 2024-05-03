@@ -16,7 +16,7 @@ urlpatterns = [
     path('delete-ouvrage/<str:pk>', views.deleteOuvrage, name="delete-ouvrage"),
     path('topics-detail/', views.topicsDetail, name="topics-detail"),
     path('topics-listing/', views.topicsListing, name="topics-listing"),
-    path('contact/', views.contact, name="contact"),
+    # path('contact/', views.contact, name="contact"),
     path('exemplaires/', views.exemplaires, name="exemplaires"),
     path('exemplaire/<str:pk>', views.exemplaire, name="exemplaire"),
     #other options: <int:pk>, <id:pk>, <slug:pk>

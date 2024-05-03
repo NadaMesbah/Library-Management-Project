@@ -58,8 +58,8 @@ def topicsDetail(request):
 def topicsListing(request):
     return render(request, 'ouvrages/topics-listing.html')
 
-def contact(request):
-    return render(request, 'ouvrages/contact.html')
+# def contact(request):
+#     return render(request, 'adherants/contact.html')
 
 def home(request):
     keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''

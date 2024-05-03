@@ -1,72 +1,112 @@
 {%load static%}
 <footer class="site-footer section-padding">
+    <!-- footer.html -->
+<style>
+        #message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px; /* Taille de la police */
+            width: 80%; /* Largeur de l'élément */
+            max-width: 400px; /* Largeur maximale de l'élément */
+            
+          
+            text-align: center; /* Centrage du texte */
+        }
+</style>
+<script>
+    $(document).ready(function() {
+        $('#ft').on('submit', function(event) {  // Utilisez l'ID de votre formulaire HTML ici
+            event.preventDefault();
+            $.ajax({
+                url: '/collect_email/',  // Utilisez l'URL de votre vue Django ici
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    if (data.error) {
+                        // Affichez le message d'erreur sur la page
+                        $('#message').text(data.error);
+                        $('#message').css('color', 'red');
+                    } else {
+                        // Affichez le message de succès sur la page
+                        $('#message').text(data.success);
+                        $('#message').css('color', 'green');
+                    }
+                    setTimeout(function() {
+                    $('#message').text('');
+                    }, 7000);
+                }
+            });
+        });
+    });
+    </script>
+    
+    <div id="message"></div>  <!-- Ajoutez cette ligne pour afficher les messages -->
+   
+
     <div class="container">
         <div class="row">
-
+            <!-- Company Information -->
             <div class="col-lg-3 col-12 mb-4 pb-2">
+                <h6 class="site-footer-title mb-3">Company</h6>
                 <a class="navbar-brand mb-2" href="{% url 'ouvrages:index'%}">
                     <i class="bi-back"></i>
                     <span>Bibliotheque</span>
                 </a>
             </div>
 
+            <!-- Resources -->
             <div class="col-lg-3 col-md-4 col-6">
                 <h6 class="site-footer-title mb-3">Resources</h6>
-
                 <ul class="site-footer-links">
-                    <li class="site-footer-link-item">
-                        <a href="#" class="site-footer-link">Home</a>
-                    </li>
-
-                    <li class="site-footer-link-item">
-                        <a href="#" class="site-footer-link">How it works</a>
-                    </li>
-
-                    <li class="site-footer-link-item">
-                        <a href="#" class="site-footer-link">FAQs</a>
-                    </li>
-
-                    <li class="site-footer-link-item">
-                        <a href="#" class="site-footer-link">Contact</a>
-                    </li>
+                    <li class="site-footer-link-item"><a href="#" class="site-footer-link">Home</a></li>
+                    <li class="site-footer-link-item"><a href="#" class="site-footer-link">How it works</a></li>
+                    <li class="site-footer-link-item"><a href="#" class="site-footer-link">FAQs</a></li>
+                    <li class="site-footer-link-item"><a href="#" class="site-footer-link">Contact</a></li>
                 </ul>
             </div>
 
+            <!-- Contact Information -->
             <div class="col-lg-3 col-md-4 col-6 mb-4 mb-lg-0">
-                <h6 class="site-footer-title mb-3">Information</h6>
-
+                <h6 class="site-footer-title mb-3">Contact</h6>
                 <p class="text-white d-flex mb-1">
-                    <a href="tel: 305-240-9671" class="site-footer-link">
-                        305-240-9671
-                    </a>
+                    <a href="tel: 05 35 53 68 08" class="site-footer-link">+212 5 35 53 68 08</a>
                 </p>
-
                 <p class="text-white d-flex">
-                    <a href="mailto:info@company.com" class="site-footer-link">
-                        info@company.com
-                    </a>
+                    <a href="mailto: doyen.fs@umi.ac.ma" class="site-footer-link">doyen.fs@umi.ac.ma</a>
                 </p>
+                
             </div>
 
+            <!-- Language Selection and Newsletter -->
             <div class="col-lg-3 col-md-4 col-12 mt-4 mt-lg-0 ms-auto">
+                <h6 class="site-footer-title mb-3">Language</h6>
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    English</button>
-
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">English</button>
                     <ul class="dropdown-menu">
                         <li><button class="dropdown-item" type="button">Thai</button></li>
-
                         <li><button class="dropdown-item" type="button">Myanmar</button></li>
-
                         <li><button class="dropdown-item" type="button">Arabic</button></li>
                     </ul>
                 </div>
 
-                <p class="copyright-text mt-lg-5 mt-4">Copyright © 2048 Topic Listing Center. All rights reserved.
-                <br><br>Design: <a rel="nofollow" href="https://templatemo.com" target="_blank">TemplateMo</a> Distribution <a href="https://themewagon.com">ThemeWagon</a></p>
-                
+                <h6 class="site-footer-title mt-3">Newsletter</h6>
+                <form id="ft" action="{% url 'collect_email' %}" method="post" class="newsletter-form">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="email" id="email" name="email" class="form-control newsletter-input" placeholder="Entrez votre email" aria-label="Entrez votre email" aria-describedby="button-addon2" required>
+                        <button class="btn btn-outline-secondary newsletter-button" type="submit" id="button-addon2">S'abonner</button>
+                    </div>
+                </form>
             </div>
-
+        </div>
+        <!-- Copyright -->
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="copyright-text mt-lg-5 mt-4">Copyright © 2048 Library Pro. All rights reserved.</p>
+            </div>
         </div>
     </div>
 </footer>
