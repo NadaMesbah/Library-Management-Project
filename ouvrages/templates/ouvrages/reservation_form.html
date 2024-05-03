@@ -16,7 +16,12 @@
                         {% endif %}
                     </ol>
                 </nav>
-                <h2 class="text-white">Reservation Details </h2>
+                {% if page == 'make' %}
+                <h2 class="text-white">Enter Reservation Details</h2>
+                {% endif %}
+                {% if page == 'edit' %}
+                <h2 class="text-white">Reservation Details</h2>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -34,7 +39,7 @@
                 {{ field }}
             </div>
             {% endfor %}
-            <button class="btn mybtn mt-3 mt-lg-4" type="submit">Submit</button>
+            <button class="btn mybtn mt-3 mt-lg-4" type="submit">Send</button>
         </form>
 {% comment %}         
         <script>
@@ -56,5 +61,36 @@
         </script> {% endcomment %}
     </div>  
 </section>
+<!-- Include jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- JavaScript code to update date_retour_prevue field -->
+<script>
+    // Function to update date_retour_prevue field based on date_reservation field
+    function updateReturnDate() {
+        // Get the value of date_reservation field
+        var reservationDate = $('#id_date_reservation').val();
+        // Parse the date using JavaScript Date object
+        var reservationDateObj = new Date(reservationDate);
+        // Add 15 days to the reservation date
+        reservationDateObj.setDate(reservationDateObj.getDate() + 15);
+        // Format the return date as yyyy-mm-dd
+        var returnDate = reservationDateObj.toISOString().slice(0, 10);
+        // Update the value of date_retour_prevue field
+        $('#id_date_retour_prevue').val(returnDate);
+    }
+
+     // Call the updateReturnDate function when date_reservation field changes
+     $('#id_date_reservation').change(function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
+        updateReturnDate();
+    });
+
+
+    // Call the updateReturnDate function on page load (in case there's an initial value)
+    $(document).ready(function(event) {
+        event.preventDefault();
+        updateReturnDate();
+    });
+</script>
 {% endblock content %}
 

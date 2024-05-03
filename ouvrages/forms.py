@@ -1,6 +1,9 @@
 from django.forms import ModelForm
 from .models import Ouvrage, Exemplaire, Reservation
 from django import forms
+from django.forms.widgets import DateInput
+from datetime import datetime, timedelta
+
 class OuvrageForm(ModelForm):
     class Meta:
         model = Ouvrage
@@ -42,17 +45,19 @@ class ExemplaireForm(forms.ModelForm):
         self.fields['ouvrage'].widget.attrs.update({'class': 'form-control'})
         self.fields['etat'].widget.attrs.update({'class': 'form-control'})  
         
+            
 class ReservationForm(forms.ModelForm):
     class Meta:
         model = Reservation
-        fields = ['date_reservation', 'date_retour_prevue', 'ouvrage']  # Include 'ouvrage' field in the form fields
+        fields = ['date_reservation', 'date_retour_prevue']  # Include 'return_date' field in the form fields
         
-    def __init__(self, *args, ouvrage_instance=None, **kwargs):  # Add ouvrage_instance as a parameter with default None
+    def __init__(self, *args, ouvrage_instance=None, **kwargs):  
         super().__init__(*args, **kwargs)
-        self.fields['date_reservation'].widget = forms.SelectDateWidget(attrs={'id': 'id_date_reservation'})
-        self.fields['date_retour_prevue'].widget = forms.SelectDateWidget(attrs={'id': 'id_date_retour_prevue'})
+        self.fields['date_reservation'].widget = DateInput(attrs={'type': 'date', 'id': 'id_date_reservation','class': 'form-control'})
+        self.fields['date_retour_prevue'].widget = DateInput(attrs={'type': 'date', 'id': 'id_date_retour_prevue','class': 'form-control'})
         
-        if ouvrage_instance:
-            self.fields['ouvrage'].queryset = Ouvrage.objects.filter(pk=ouvrage_instance.pk)
-            self.fields['ouvrage'].initial = ouvrage_instance.titre
-            self.fields['ouvrage'].widget = forms.TextInput(attrs={'readonly': True})
+        # if ouvrage_instance: 
+        #     self.fields['ouvrage'].queryset = Ouvrage.objects.filter(pk=ouvrage_instance.pk)
+        #     self.fields['ouvrage'].initial = ouvrage_instance.titre
+        #     self.fields['ouvrage'].widget = forms.TextInput(attrs={'disabled': True, 'class': 'form-control'})
+

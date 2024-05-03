@@ -96,14 +96,6 @@ def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
     instance.ouvrage.exemplaires_total -= 1
     instance.ouvrage.save()
     
-#Code for creating multiple instances of exemplaires at once :
-# exemplaires_data = [
-#     {'ouvrage': ouvrage_instance1, 'etat': 'DI', 'emprunté': False, 'réservé': False},
-#     {'ouvrage': ouvrage_instance2, 'etat': 'DI', 'emprunté': False, 'réservé': False},
-#     ...
-# ]
-
-# Exemplaire.objects.bulk_create([Exemplaire(**data) for data in exemplaires_data])
 class Emprunt(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     emprunteur = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
@@ -148,3 +140,4 @@ class Reservation(models.Model):
     
     def __str__(self):
         return f"Réservation de l'ouvrage {self.ouvrage.titre} de la part de {self.owner.username}"
+    

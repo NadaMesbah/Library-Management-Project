@@ -186,8 +186,9 @@ def makeReservation(request, pk):
             messages.success(request, "Your reservation has been successfully created.")
             return redirect('ouvrages:user-reservations')
     else:
-        # Pass instance argument to the form for better handling of related fields
-        form = ReservationForm(initial={'ouvrage': ouvrage}, ouvrage_instance=ouvrage)
+        # Use the form with ouvrage_instance only
+        form = ReservationForm(ouvrage_instance=ouvrage)
+
     context = {'form': form, 'page' : page}
     return render(request, 'ouvrages/reservation_form.html', context)
 
