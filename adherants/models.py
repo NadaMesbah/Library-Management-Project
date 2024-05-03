@@ -2,11 +2,8 @@ from django.db import models
 import uuid
 from datetime import datetime, timedelta
 from django.db.models.deletion import CASCADE
-
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
+
 
 # Create your models here.
 class Profile(models.Model):
@@ -37,38 +34,6 @@ class Profile(models.Model):
             url = ''
         return url
     
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    try:
-        instance.profile.save()
-    except ObjectDoesNotExist:
-        Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-    
-    # @classmethod
-    # def get_info(self, email, password):
-    #     try:
-    #         abonnee = Abonnee.objects.get(email=email, password=password)
-    #         return [abonnee.prenom, abonnee.nom, abonnee.email, abonnee.type_abonnement, abonnee.type_abonnee, abonnee.date_start, abonnee.numero_credit_carte, abonnee.password, abonnee.image]
-    #     except Abonnee.DoesNotExist:
-    #         return None
-    # def check_password(self, password):
-    #     return password == self.password
-    
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    try:
-        instance.profile.save()
-    except ObjectDoesNotExist:
-        Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
 class Message(models.Model):
     sender = models.ForeignKey(
         Profile, on_delete=models.SET_NULL, null=True, blank=True)

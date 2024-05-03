@@ -5,4 +5,5 @@ class AdherantsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'adherants'
     
-    # s
+    def ready(self):
+        import adherants.signals
