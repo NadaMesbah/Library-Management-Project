@@ -205,7 +205,6 @@ def editProfile(request):
 #     # Passer les réservations au template
 #     return render(request, 'ouvrages/list_reservations.html', {'reservations': reservations})
 
-
 def collect_email(request):
     if request.method == 'POST':
         form = UserEmailForm(request.POST)
@@ -224,9 +223,32 @@ def collect_email(request):
             return render(request, 'ouvrages/index.html')
         else:
             messages.error(request, 'Une erreur est survenue. Veuillez réessayer.')
+            return render(request, 'ouvrages/index.html', {'form': form})  # Return the form in case of validation errors
     else:
         form = UserEmailForm()
         return render(request, 'ouvrages/index.html', {'form': form})
+    
+# def collect_email(request):
+#     if request.method == 'POST':
+#         form = UserEmailForm(request.POST)
+#         if form.is_valid():
+#             user_email = form.save()
+
+#             # Envoi de l'email
+#             send_mail(
+#                 'Merci pour votre abonnement',
+#                 'Vous êtes maintenant abonné à notre newsletter.',
+#                 'info@company.com',
+#                 [user_email.email],  # Remplacez ceci par le champ email de votre modèle
+#                 fail_silently=False,
+#             )
+#             messages.success(request, 'Merci pour votre abonnement! Vous êtes maintenant abonné à notre newsletter.')
+#             return render(request, 'ouvrages/index.html')
+#         else:
+#             messages.error(request, 'Une erreur est survenue. Veuillez réessayer.')
+#     else:
+#         form = UserEmailForm()
+#         return render(request, 'ouvrages/index.html', {'form': form})
     
     #    if user is not None:
     #         auth_login(request, user)  # Rename login function call to auth_login

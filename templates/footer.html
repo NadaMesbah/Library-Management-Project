@@ -48,7 +48,7 @@
                 </div>
 
                 <h6 class="site-footer-title mt-3">Newsletter</h6>
-                <form id="ft" action="{% url 'collect_email' %}" method="post" class="newsletter-form">
+                <form action="{% url 'collect_email' %}" method="post" class="newsletter-form">
                     {% csrf_token %}
                     <div class="input-group mb-3">
                         <input type="email" id="email" name="email" class="form-control newsletter-input" placeholder="Entrez votre email" aria-label="Entrez votre email" aria-describedby="button-addon2" required>
