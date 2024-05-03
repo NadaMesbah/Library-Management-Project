@@ -53,8 +53,8 @@ def deleteUser(sender, instance, **kwargs):
     except:
         pass
 
-def envoyer_email_nouvel_ouvrage(instance_id):
-    instance = Ouvrage.objects.get(id=instance_id)
+def envoyer_email_nouvel_ouvrage(pk):
+    instance = Ouvrage.objects.get(id=pk)
     sujet = f'Nouvel ouvrage ajouté : {instance.titre}'
     emails = UserEmail.objects.values_list('email', flat=True)
     contexte = {
