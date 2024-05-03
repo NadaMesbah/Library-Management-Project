@@ -77,9 +77,9 @@
         var returnDate = reservationDateObj.toISOString().slice(0, 10);
         // Update the value of date_retour_prevue field
         $('#id_date_retour_prevue').val(returnDate);
-        $('#id_date_retour_prevue').prop('disabled', true);
+        
     }
-
+    //$('#id_date_retour_prevue').prop('disabled', true);
      // Call the updateReturnDate function when date_reservation field changes
      $('#id_date_reservation').change(function(event) {
         event.preventDefault(); // Prevent default form submission behavior

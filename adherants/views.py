@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
 from django.urls import conf
+from ouvrages.models import *
+from django.db.models import Q
 from .models import Profile, Message, Reclamation,UserEmail
 from .forms import LoginForm, ProfileForm, UserForm, RegisterForm, UserEmailForm, ContactForm
 
@@ -205,7 +207,50 @@ def editProfile(request):
 #     # Passer les réservations au template
 #     return render(request, 'ouvrages/list_reservations.html', {'reservations': reservations})
 
+# #li shuia logic
+# def collect_email(request):
+#     if request.method == 'POST':
+#         form = UserEmailForm(request.POST)
+#         if form.is_valid():
+#             user_email = form.save()
+
+#             # Envoi de l'email
+#             send_mail(
+#                 'Merci pour votre abonnement',
+#                 'Vous êtes maintenant abonné à notre newsletter.',
+#                 'info@company.com',
+#                 [user_email.email],  # Remplacez ceci par le champ email de votre modèle
+#                 fail_silently=False,
+#             )
+
+#             messages.success(request, 'Merci pour votre abonnement! Vous êtes maintenant abonné à notre newsletter.')
+#             return render(request, 'ouvrages/index.html')
+#         else:
+#             messages.error(request, 'Une erreur est survenue. Veuillez réessayer.')
+#             return render(request, 'ouvrages/index.html')
+
+#     else:
+#         form = UserEmailForm()
+#         return render(request, 'ouvrages/index.html', {'form': form})
+
 def collect_email(request):
+    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
+    ouvrages = Ouvrage.objects.filter(
+        Q(categories__name__icontains=keyword) |
+        Q(titre__icontains=keyword) |
+        Q(description__icontains=keyword) |
+        Q(auteurs__nomComplet__icontains=keyword)
+    )
+    #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
+    #ouvrages = Ouvrage.objects.all()
+    categories = Categorie.objects.all()
+    ouvrage_count = ouvrages.count()
+    best_ouvrage = Ouvrage.objects.exclude(vote_total=0).order_by('-vote_ratio').first()
+    newest_ouvrage = Ouvrage.objects.order_by('-date_achat').first()
+    recommended_ouvrages = Ouvrage.objects.filter(recommended=True)
+    context = {'ouvrages': ouvrages, 'categories': categories,
+               'ouvrage_count': ouvrage_count, 'best_ouvrage' : best_ouvrage, 
+               'newest_ouvrage': newest_ouvrage , 'recommanded_ouvrages' : recommended_ouvrages}
     if request.method == 'POST':
         form = UserEmailForm(request.POST)
         if form.is_valid():
@@ -219,14 +264,39 @@ def collect_email(request):
                 [user_email.email],  # Remplacez ceci par le champ email de votre modèle
                 fail_silently=False,
             )
+
             messages.success(request, 'Merci pour votre abonnement! Vous êtes maintenant abonné à notre newsletter.')
-            return render(request, 'ouvrages/index.html')
+            return render(request, 'ouvrages/index.html', context)
         else:
             messages.error(request, 'Une erreur est survenue. Veuillez réessayer.')
-            return render(request, 'ouvrages/index.html', {'form': form})  # Return the form in case of validation errors
+            return render(request, 'ouvrages/index.html', context)
+
     else:
         form = UserEmailForm()
-        return render(request, 'ouvrages/index.html', {'form': form})
+        return render(request, 'ouvrages/index.html', context, {'form': form})
+    
+# def collect_email(request):
+#     if request.method == 'POST':
+#         form = UserEmailForm(request.POST)
+#         if form.is_valid():
+#             user_email = form.save()
+
+#             # Envoi de l'email
+#             send_mail(
+#                 'Merci pour votre abonnement',
+#                 'Vous êtes maintenant abonné à notre newsletter.',
+#                 'info@company.com',
+#                 [user_email.email],  # Remplacez ceci par le champ email de votre modèle
+#                 fail_silently=False,
+#             )
+#             messages.success(request, 'Merci pour votre abonnement! Vous êtes maintenant abonné à notre newsletter.')
+#             return render(request, 'ouvrages/index.html')
+#         else:
+#             messages.error(request, 'Une erreur est survenue. Veuillez réessayer.')
+#             return render(request, 'ouvrages/index.html', {'form': form})  # Return the form in case of validation errors
+#     else:
+#         form = UserEmailForm()
+#         return render(request, 'ouvrages/index.html', {'form': form})
     
 # def collect_email(request):
 #     if request.method == 'POST':
@@ -250,12 +320,7 @@ def collect_email(request):
 #         form = UserEmailForm()
 #         return render(request, 'ouvrages/index.html', {'form': form})
     
-    #    if user is not None:
-    #         auth_login(request, user)  # Rename login function call to auth_login
-    #         return redirect(request.GET.get('next', 'edit-profile'))
-    #     else:
-    #         messages.error(request, 'Username OR password is incorrect')
-    # return render(request, 'adherants/login_register.html', {'page' : page})
+       
 
 def password_reset(request):
     return render(request, 'adherants/password_reset.html')

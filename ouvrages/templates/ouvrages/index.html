@@ -28,7 +28,7 @@
 <section class="featured-section">
     <div class="container">
         <div class="row justify-content-center">
-
+            {% if best_ouvrage and best_ouvrage.id %}
             <div class="col-lg-4 col-12 mb-lg-0" style="height: 610px;">
                 <div class="custom-block bg-white shadow-lg d-inline-block">
                     <a href="{% url 'ouvrages:ouvrage' best_ouvrage.id%}">
@@ -71,7 +71,8 @@
                     </a>
                 </div>
             </div>
-
+            {% endif%}
+            {% if newest_ouvrage and newest_ouvrage.id %}
             <div class="col-lg-6 col-12">
                 <div class="custom-block custom-block-overlay" style="height: 610px;">
                     <div class="d-flex flex-column">
@@ -127,6 +128,7 @@
                     </div>
                 </div>
             </div>
+            {% endif%}
         </div>
     </div>
 </section>

@@ -62,10 +62,10 @@ def envoyer_email_nouvel_ouvrage(pk):
         'auteurs': instance.auteurs,
         'categories': instance.categories,
         'description': instance.description,
-        'lien_details': f"http://localhost:8000/single-ouvrage/{instance.id}"  # Lien vers la page de détails de l'ouvrage
+        'lien_details': f"http://localhost:8000/ouvrages/ouvrage/{instance.id}"  # Lien vers la page de détails de l'ouvrage
     }
-    message = render_to_string('ouvrages/nouvel_ouvrage_email.html', contexte)
-    send_mail(sujet, message, 'votre_email@example.com', emails)
+    message = render_to_string('adherants/nouvel_ouvrage_email.html', contexte)
+    send_mail(sujet, message, 'nada.mesbah@usmba.ac.ma', emails)
 
 @receiver(post_save, sender=Ouvrage)
 def post_save_ouvrage(sender, instance, created, **kwargs):
