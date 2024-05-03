@@ -6,7 +6,6 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_protect
-from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
@@ -221,15 +220,23 @@ def collect_email(request):
                 [user_email.email],  # Remplacez ceci par le champ email de votre modèle
                 fail_silently=False,
             )
-
-            return JsonResponse({'success': 'Merci pour votre abonnement! Vous êtes maintenant abonné à notre newsletter.'})
-
+            messages.success(request, 'Merci pour votre abonnement! Vous êtes maintenant abonné à notre newsletter.')
+            return render(request, 'ouvrages/index.html')
         else:
-            return JsonResponse({'error': 'Une erreur est survenue. Veuillez réessayer.'}, status=400)
-
+            messages.error(request, 'Une erreur est survenue. Veuillez réessayer.')
     else:
         form = UserEmailForm()
         return render(request, 'ouvrages/index.html', {'form': form})
+    
+    #    if user is not None:
+    #         auth_login(request, user)  # Rename login function call to auth_login
+    #         return redirect(request.GET.get('next', 'edit-profile'))
+    #     else:
+    #         messages.error(request, 'Username OR password is incorrect')
+    # return render(request, 'adherants/login_register.html', {'page' : page})
+
+def password_reset(request):
+    return render(request, 'adherants/password_reset.html')
 
 def send_confirmation_email(email, name):
     subject = 'Confirmation de réception de votre réclamation'

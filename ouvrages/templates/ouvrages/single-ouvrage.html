@@ -45,9 +45,9 @@
                 {% else %}
                 <div class="d-flex align-items-center mt-4">
                     <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-2">Details</a>
-                    <a href="{% url 'ouvrages:make-reservation' ouvrage.id%}" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver</a>
+                    <a href="{% url 'ouvrages:make-reservation' ouvrage.id%}" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver <span href="#" class="bi-bookmark smoothscroll"></span></a>
                 </div>
-                <a href="#reservation" class="btn mybtn mt-3 mt-lg-4">Bookmark <span href="#" class="bi-bookmark smoothscroll"></span></a>
+                {% comment %} <a href="#reservation" class="btn mybtn mt-3 mt-lg-4">Bookmark <span href="#" class="bi-bookmark smoothscroll"></span></a> {% endcomment %}
                 {%endif%}
             </div>
 

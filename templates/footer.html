@@ -1,51 +1,6 @@
 {%load static%}
 <footer class="site-footer section-padding">
-    <!-- footer.html -->
-<style>
-        #message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 20px; /* Taille de la police */
-            width: 80%; /* Largeur de l'élément */
-            max-width: 400px; /* Largeur maximale de l'élément */
-            
-          
-            text-align: center; /* Centrage du texte */
-        }
-</style>
-<script>
-    $(document).ready(function() {
-        $('#ft').on('submit', function(event) {  // Utilisez l'ID de votre formulaire HTML ici
-            event.preventDefault();
-            $.ajax({
-                url: '/collect_email/',  // Utilisez l'URL de votre vue Django ici
-                type: 'POST',
-                data: $(this).serialize(),
-                dataType: 'json',
-                success: function(data) {
-                    if (data.error) {
-                        // Affichez le message d'erreur sur la page
-                        $('#message').text(data.error);
-                        $('#message').css('color', 'red');
-                    } else {
-                        // Affichez le message de succès sur la page
-                        $('#message').text(data.success);
-                        $('#message').css('color', 'green');
-                    }
-                    setTimeout(function() {
-                    $('#message').text('');
-                    }, 7000);
-                }
-            });
-        });
-    });
-    </script>
-    
-    <div id="message"></div>  <!-- Ajoutez cette ligne pour afficher les messages -->
    
-
     <div class="container">
         <div class="row">
             <!-- Company Information -->
