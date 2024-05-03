@@ -33,7 +33,7 @@ def browse(request):
         Q(titre__icontains=keyword) |
         Q(description__icontains=keyword) |
         Q(auteurs__nomComplet__icontains=keyword)
-    )
+    ).distinct()
     #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
     #ouvrages = Ouvrage.objects.all()
     #exemplaires = ouvrage.exemplaire_set.all()
@@ -78,7 +78,7 @@ def home(request):
  
 ## CRUD FOR OUVRAGES   
 def ouvrages(request):
-    ouvrages = Ouvrage.objects.all()
+    ouvrages = Ouvrage.objects.all().distinct()
     context = {'ouvrages': ouvrages}
     return render(request, 'ouvrages/ouvrages.html', context)
 
