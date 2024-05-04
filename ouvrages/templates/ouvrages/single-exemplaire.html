@@ -1,20 +1,46 @@
 {% extends "main.html" %}
-{% block content%}
+{% block content %}
 {% load static %}
-<img style="max-width: 500px" src="{{ exemplaire.ouvrage.featured_image.url }}">
-
-<h1>{{exemplaire.ouvrage.titre}}</h1>
-<hr>
-{%for categorie in exemplaire.ouvrage.categories.all%}
-    <span style="border:1px solid gray">{{categorie}}</span>
-{%endfor%}
-<hr>
-<h2>Description : </h2> 
-<p>{{exemplaire.ouvrage.description}}</p>
-<h2>Etat : </h2> 
-<p>{{exemplaire.etat}}</p>
-<h2>Reservé ?</h2> 
-<p>{{exemplaire.reserve}}</p>
-<h2>Emprunté ?</h2> 
-<p>{{exemplaire.emprunte}}</p>
-{% endblock content%}
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px; padding-bottom: 140px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="col-12 text-center">
+                    <h3 class="text-white text-center">{{ exemplaire.ouvrage.titre }}</h3>
+                </div>
+                <div class="col-md-8">
+                    <div class="custom-block bg-white shadow-lg p-15" style="width:55rem">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="img-thumbnail mb-lg-6">
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="mb-0" style="color: #7bbfcc;">Description :</h4>
+                                <p>{{ exemplaire.ouvrage.description }}</p>
+                                <h4 class="mb-0" style="color: #7bbfcc;">État :</h4>
+                                <p>{{ exemplaire.get_etat_display }}</p>
+                                <h4 class="mb-0" style="color: #7bbfcc;">Réserve :</h4>
+                                <p>{{ exemplaire.reserve }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-3 col-12 ms-auto">
+                        <form method="post" action="{% url 'ouvrages:update-exemplaire' exemplaire.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg">Modifier</button>
+                        </form>
+                    </div>
+                    <div class="col-lg-3 col-12">
+                        <form method="post" action="{% url 'ouvrages:delete-exemplaire' exemplaire.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-lg">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -23,7 +23,11 @@ urlpatterns = [
     path('create-exemplaire/', views.createExemplaire, name="create-exemplaire"),
     path('update-exemplaire/<str:pk>', views.updateExemplaire, name="update-exemplaire"),
     path('delete-exemplaire/<str:pk>', views.deleteExemplaire, name="delete-exemplaire"),
+    path('search-exemplaires/', views.search_exemplaires, name='search_exemplaires'),
+    path('modifier_exemplaire/<str:pk>/', views.modifier_exemplaire, name='modifier_exemplaire'),
+    path('emprunt/', views.liste_emprunts, name="emprunt"),
     #reservations
+    path('list_reservations/', views.list_reservations, name='list_reservations'),
     path('myreservations/', views.user_reservations, name="user-reservations"),
     path('make-reservation/<str:pk>', views.makeReservation, name="make-reservation"),
     path('edit-reservation/<str:pk>', views.editReservation, name="edit-reservation"),

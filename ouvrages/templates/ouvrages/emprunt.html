@@ -1,0 +1,45 @@
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px;padding-bottom: 140px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-12">
+                <div class="col-12 text-center">
+                    <h3 class="text-white text-center">Liste des Emprunts</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nom de l'Étudiant</th>
+                                <th>Exemplaire Emprunté</th>
+                                <th>Date d'Emprunt</th>
+                                <th>Date de Retour</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emprunt in emprunts %}
+                                <tr>
+                                    <td>{{ emprunt.emprunteur.nom }}</td>
+                                    <td>{{ emprunt.exemplaire.ouvrage.titre }}</td>
+                                    <td>{{ emprunt.date_emprunt }}</td>
+                                    <td>{{ emprunt.date_retour }}</td>
+                                    <td>
+                                        <a href="{% url 'ouvrages:modifier_emprunt' emprunt.id %}" class="btn btn-primary">Modifier</a>
+                                        <!-- Ajoutez ici le lien pour supprimer l'emprunt -->
+                                  </td>
+                               </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}

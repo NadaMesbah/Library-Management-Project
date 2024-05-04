@@ -200,12 +200,6 @@ def editProfile(request):
     context = {'form': form}
     return render(request, 'adherants/profile_form.html', context)
 
-# @csrf_protect
-# def list_reservations(request):
-#     # Récupérer toutes les réservations depuis la base de données
-#     reservations = Reservation.objects.all()
-#     # Passer les réservations au template
-#     return render(request, 'ouvrages/list_reservations.html', {'reservations': reservations})
 
 # #li shuia logic
 # def collect_email(request):

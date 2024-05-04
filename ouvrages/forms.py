@@ -18,6 +18,7 @@ class OuvrageForm(ModelForm):
         self.fields['titre'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter un titre'})
         self.fields['description'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter une description'})
         self.fields['exemplaires_total'].widget.attrs.update({'class': 'form-control'})
+        self.fields['featured_image'].widget.attrs.update({'class': 'form-control'})
         
 
 # class ExemplaireForm(ModelForm):
@@ -39,11 +40,12 @@ class ExemplaireForm(forms.ModelForm):
         fields = ['exemplaire', 'ouvrage', 'etat', 'reserve']
 
     def __init__(self, *args, **kwargs):
-        super(ExemplaireForm, self)._init_(*args, **kwargs)
+        super(ExemplaireForm, self).__init__(*args, **kwargs)
         self.fields['Exemplaire'] = forms.ModelChoiceField(queryset=Exemplaire.objects.filter(reserve=False, etat='DISPONIBLE'), label='Exemplaire')
         self.fields['Exemplaire'].widget.attrs.update({'class': 'form-control'})
         self.fields['ouvrage'].widget.attrs.update({'class': 'form-control'})
-        self.fields['etat'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['etat'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['reserve'].widget.attrs.update({'class': 'form-control'})  
         
             
 class ReservationForm(forms.ModelForm):

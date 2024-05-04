@@ -1,0 +1,51 @@
+
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px;padding-bottom: 140px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <form method="GET" action="{% url 'ouvrages:search_exemplaires' %}" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2" role="search">
+                    <div class="container">
+                        <div class="row">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bi-search" id="basic-addon1"></span>
+                                <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Search exemplaires by Title" aria-label="Search">
+                                <button type="submit" class="form-control">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                {% if exemplaires %}
+                <div class="row">
+                    {% for exemplaire in exemplaires %}
+                    <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
+                        <div class="custom-block bg-white shadow-lg">
+                            <a href="{% url 'ouvrages:exemplaire' exemplaire.id %}">
+                                <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="topics-detail-block-image img-thumbnail w-100 mb-lg-4" style="height: 22rem;">
+                                <div class="d-flex">
+                                    <div>
+                                        <h4 class="mb-2 text-black">{{ exemplaire.ouvrage.titre }}</h4>
+                                        <h5 class="text-black-50">État: {{ exemplaire.get_etat_display }}</h5>
+                                        <!-- Afficher d'autres détails de l'exemplaire si nécessaire -->
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="d-flex flex-column justify-content-center align-items-center pt-5 mb-0 mb-lg-0">
+                    <h4 class="text-white text-center">No Results Found : </h4>
+                    <img src="{% static 'images/sad.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem;">
+                    <h5 class="text-white text-center mt-3"><strong>Don't be sad! We can find it!</strong></h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

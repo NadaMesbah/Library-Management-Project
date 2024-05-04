@@ -1,9 +1,27 @@
 {% extends "main.html" %}
 {% block content %}
 {% load static %}
-<section class="section-padding col-12 col-lg-8 justify-content-center align-items-center">
-    <div style="width: 95%; max-width: 85rem; margin: 0 auto;">
-        <form action="" method="POST" enctype="multipart/form-data">
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page">Create Exemplaire</li>
+                    </ol>
+                </nav>
+
+                <h2 class="text-white">Create Exemplaire</h2>
+            </div>
+
+        </div>
+    </div>
+</header>
+<section class="section-padding section-bg col-12 col-lg-12 justify-content-start align-items-center">
+   <div class="container col-6">
+        <form action="" method="POST" enctype="multipart/form-data" role="form" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2">
             {% csrf_token %}
             {% for field in form%}
             <!-- Input:Text -->
@@ -14,8 +32,9 @@
                     placeholder="Enter text" /> {% endcomment %}
             </div>
             {% endfor %}
-            <button class="btn btn-primary" type="submit">Create</button>
+            <button class="btn custom-btn custom-border-btn smoothscroll me-2" type="submit">Create</button>
         </form>
     </div>  
 </section>
+
 {% endblock content %}

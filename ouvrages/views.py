@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Ouvrage, Categorie, Exemplaire, Reservation
+from .models import Ouvrage, Categorie, Exemplaire, Reservation, Emprunt
 from adherants.models import Profile
 from django.contrib import messages
 from .forms import OuvrageForm, ExemplaireForm, ReservationForm
@@ -244,3 +244,50 @@ def user_reservations(request):
 #         return redirect('panel')
 #     else:
 #         return render(request, 'panel.html')
+
+def list_reservations(request):
+    # Récupérer toutes les réservations depuis la base de données
+    reservations = Reservation.objects.all()
+    # Passer les réservations au template
+    return render(request, 'ouvrages/list_reservations.html', {'reservations': reservations})
+
+def search_exemplaires(request):
+    if request.method == 'GET':
+        keyword = request.GET.get('keyword')
+        if keyword:
+            exemplaires = Exemplaire.objects.filter(ouvrage__titre__icontains=keyword)
+            return render(request, 'ouvrages/details_exemplaires.html', {'exemplaires': exemplaires, 'keyword': keyword})
+        else:
+            return render(request, 'ouvrages/details_exemplaires.html', {'exemplaires': None, 'keyword': None})
+    else:
+        return render(request, 'ouvrages/details_exemplaires.html', {'exemplaires': None, 'keyword': None})
+    
+def modifier_exemplaire(request, pk):
+    exemplaire = get_object_or_404(Exemplaire, id=pk)
+    if request.method == 'POST':
+        form = ExemplaireForm(request.POST, instance=exemplaire)
+        if form.is_valid():
+            form.save()
+            return redirect('ouvrages:exemplaire', pk=pk)
+    else:
+        form = ExemplaireForm(instance=exemplaire)
+    return render(request, 'ouvrages:modifier_exemplaire.html', {'form': form})
+
+# def updateExemplaire(request, pk):
+#     exemplaire = get_object_or_404(Exemplaire, id=pk)
+#     form = ExemplaireForm(instance=exemplaire)
+#     if request.method == 'POST':
+#         form = ExemplaireForm(request.POST ,instance=exemplaire)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('ouvrages:exemplaires')
+#     context = {'form': form}
+#     return render(request, 'ouvrages/exemplaire_form.html', context)
+
+# def liste_etudiants(request):
+#     etudiants = Profile.objects.filter(user__is_staff=False)
+#     return render(request, 'liste_etudiants.html', {'etudiants': etudiants})
+
+def liste_emprunts(request):
+    emprunts = Emprunt.objects.all()
+    return render(request, 'ouvrages/emprunt.html', {'emprunts': emprunts})

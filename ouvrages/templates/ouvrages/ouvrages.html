@@ -1,33 +1,83 @@
 {% extends "main.html" %}
-{% block content%}
+{% block content %}
 {% load static %}
-<h1>Ouvrages</h1>
-<br>
-<a href="{% url 'ouvrages:create-ouvrage'%}">Add Ouvrage</a>
-<br>
-<table>
-    <tr>
-        <th>Ouvrage</th>
-        <th>Auteurs</th>
-        <th>Votes Positive</th>
-        <th>Votes</th>
-        <th>Date d'ajout</th>
-        <th>Options</th>
-    </tr>
-    {% for ouvrage in ouvrages%}
-        <tr>
-            <td>{{ouvrage.titre}}</td>
-            <td>{%for auteur in ouvrage.auteurs.all%}
-                    {{auteur}}
-                {%endfor%}
-            </td>
-            <td>{{ouvrage.vote_ratio}}%</td>
-            <td>{{ouvrage.vote_total}}</td>
-            <td>{{ouvrage.date_achat}}</td>
-            <td><a href="{% url 'ouvrages:update-ouvrage' ouvrage.id%}">Edit</a>
-            <a href="{% url 'ouvrages:delete-ouvrage' ouvrage.id%}">Delete</a>
-            <a href="{% url 'ouvrages:ouvrage' ouvrage.id%}">View</a></td>
-        </tr>
-    {% endfor %}
-</table>
-{% endblock content%}
+
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px;padding-bottom: 140px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="col-12 text-center">
+                    <h3 class="text-white text-center">Ouvrages disponibles <span class="badge bg-design rounded-pill ms-auto">{{ ouvrage_count }}</span></h3>
+                    <a href="{% url 'ouvrages:create-ouvrage' %}" class="btn custom-btn custom-border-btn smoothscroll me-2">Add Ouvrage</a>
+                </div><br>
+                <div class="container">
+                    <div class="row">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+
+                        </ul>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="featured-section" id="main">
+    <div class="container">
+        <div class="row justify-content-center">
+            {% for ouvrage in ouvrages %}
+            <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
+                <div class="custom-block bg-white shadow-lg">
+                    <a href="{% url 'ouvrages:ouvrage' ouvrage.id %}">
+                        <img src="{{ ouvrage.featured_image.url }}" class="topics-detail-block-image img-thumbnail w-100 mb-lg-4" style="height: 22rem;">
+                        <div class="d-flex">
+                            <div>
+                                {% for categorie in ouvrage.categories.all %}
+
+                                <span class="tag bg-design me-1 mb-lg-3">{{ categorie }}</span>
+                                {% endfor %}
+                                <h4 class="mb-2 text-black">{{ ouvrage.titre }}</h4>
+                                <h5 class="text-black-50">Auteur{{ ouvrage.auteurs.all.count|pluralize:"s" }}:</h5>
+
+                                <p class="mb-0 fst-italic mb-2">
+                                    {% if ouvrage.auteurs.all.count == 1 %}
+                                    {% for auteur in ouvrage.auteurs.all %}
+                                    {{ auteur }}
+                                    {% endfor %}
+
+                                    {% else %}
+                                    {% for auteur in ouvrage.auteurs.all %}
+                                    {{ auteur }}
+                                    {% if not forloop.last %}
+                                    &amp; <!-- Separator -->
+                                    {% endif %}
+                                    {% endfor %}
+
+                                    {% endif %}<br>
+                                     <td>{{ ouvrage.vote_ratio }}%</td><br>
+                                     <td>{{ ouvrage.vote_total }} votes</td><br>
+                                     <td>{{ ouvrage.date_achat }}</td><br>
+
+                                    <td>
+                                        <div>
+                                            <a href="{% url 'ouvrages:update-ouvrage' ouvrage.id %}" class="btn custom-btn custom-border-btn smoothscroll me-2">Edit</a>
+
+                                            <a href="{% url 'ouvrages:delete-ouvrage' ouvrage.id %}" class="btn custom-btn custom-border-btn smoothscroll me-2">Delete</a>
+
+                                            <a href="{% url 'ouvrages:ouvrage' ouvrage.id %}" class="btn custom-btn custom-border-btn smoothscroll me-2">View</a>
+                                        </div>
+                                    </td>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

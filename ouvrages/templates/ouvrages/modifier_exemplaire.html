@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px; padding-bottom: 140px;">
+    <div class="container">
+        <h2 class="mb-4" style="color: #fff;">Modifier l'exemplaire</h2>
+        <form method="post" role="form" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="description" class="form-label">Description :</label>
+                <textarea class="form-control" id="description" name="description" rows="4">{{ exemplaire.ouvrage.description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="etat" class="form-label">État :</label>
+                <select class="form-select" id="etat" name="etat">
+                    <option value="HORS_PRET" {% if exemplaire.etat == "HORS_PRET" %}selected{% endif %}>Hors Prêt</option>
+                    <option value="DISPONIBLE" {% if exemplaire.etat == "DISPONIBLE" %}selected{% endif %}>Disponible</option>
+                    <option value="PERDU" {% if exemplaire.etat == "PERDU" %}selected{% endif %}>Perdu</option>
+                    <option value="RETIRE" {% if exemplaire.etat == "RETIRE" %}selected{% endif %}>Retiré</option>
+                </select>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="reserve" name="reserve" {% if exemplaire.reserve %}checked{% endif %}>
+                <label class="form-check-label" for="reserve">Réservé</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer </button>
+        </form>
+    </div>
+</section>
+{% endblock %}
