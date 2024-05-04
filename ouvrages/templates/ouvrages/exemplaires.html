@@ -1,29 +1,52 @@
 {% extends "main.html" %}
-{% block content %}
+{% block content%}
 {% load static %}
+
 <section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px;padding-bottom: 140px;">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-12 mx-auto">
                 <div class="col-12 text-center">
-                    <h3 class="text-white text-center ">Exemplaires <span class="badge bg-design rounded-pill ms-auto">{{exemplaire_count}}</span></h3>
+                    <h3 class="text-white text-center ">Exemplaires disponibles <span class="badge bg-design rounded-pill ms-auto">{{exemplaires_count}}</span></h3> 
                 </div>
-                <form method="GET" action="{% url 'ouvrages:search_exemplaires' %}" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2" role="search">
+                <form method="GET"  action="{% url 'ouvrages:exemplaires' %}" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2" role="search">
                     <div class="container">
-                        <div class="row">
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text bi-search" id="basic-addon1"></span>
-                                <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Search exemplaires by Title, Author..." aria-label="Search">
-                                <button type="submit" class="form-control">Search</button>
-                            </div>
+                        {% comment %} <div class="row">
+                            <ul class="nav nav-tabs mb-lg-4" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link nav-ist" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:exemplaires' %}#main">All<span>({{categories.count}})</span></a>
+                                </li>
+                                {% for categorie in categories %}
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link nav-ist" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:exemplaires' %}?keyword={{categorie.name}}">{{ categorie.name }}<span>({{categorie.ouvrage_set.all.count}})</span></a>
+                                </li>
+                                {% endfor %}
+                                <li class="nav-item d-flex w-auto h-auto" role="presentation">
+                                    <a  class="nav-link nav-ist d-flex flex-row" style="color: #005792;" aria-selected="false" href="{% url 'ouvrages:categories' %}" >More</a>
+                                </li>
+                            </ul>
+                        </div> {% endcomment %}
+                        {% if user.is_staff%}
+                        <div class="col d-flex justify-content-center align-items-center mt-lg-0 mb-lg-4">
+                            <a href="{% url 'ouvrages:create-exemplaire' %}" class="btn mybtn smoothscroll me-2">Add Exemplaire</a>
                         </div>
+                   
+                    {%endif%}
+                    </div>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bi-search" id="basic-addon1">
+                            
+                        </span>
+
+                        <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Search Exemplaire by Title, Category, Author..." aria-label="Search">
+
+                        <button type="submit" class="form-control">Search</button>
                     </div>
                 </form>
-                {% if exemplaire_count == 0 %}
-                <div class="d-flex flex-column justify-content-center align-items-center pt-5 mb-0 mb-lg-0">
-                    <h4 class="text-white text-center">No Results Found : </h4>
-                    <img src="{% static 'images/pic.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem" >
-                    <h5 class="text-white text-center mt-3" ><strong>Don't be sad! We can find it!</strong></h5>
+                {% if exemplaires_count == 0 %}
+                <div class="d-flex flex-column justify-content-center align-items-center pt-5 mb-0 mb-lg-0">  
+                    <h4 class="text-white text-center">No Results Found :/  </h4>
+                    <img src="{% static 'images/sad.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem" >
                 </div>
                 {% endif %}
             </div>
@@ -31,35 +54,116 @@
         </div>
     </div>
 </section>
-
 <section class="featured-section" id="main">
     <div class="container">
         <div class="row justify-content-center">
-            {% for exemplaire in exemplaires %}
-    <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
-        <div class="custom-block bg-white shadow-lg">
-            <a href="{% url 'ouvrages:exemplaire' exemplaire.id %}">
-                <!-- Remplacer "{{ ouvrage.featured_image.url }}" par "{{ exemplaire.ouvrage.featured_image.url }}" -->
-                <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="topics-detail-block-image img-thumbnail w-100 mb-lg-4" style="height: 22rem;">
-                <div class="d-flex">
-                    <div>
-                        <!-- Modifier l'affichage des catégories et autres détails de l'exemplaire -->
-                        <h4 class="mb-2 text-black">{{ exemplaire.ouvrage.titre }}</h4>
-                        <h5 class="text-black-50">État: {{ exemplaire.get_etat_display }}</h5>
-                        <p class="mb-0 fst-italic mb-2">Réserve: {{ exemplaire.reserve }}</p>
+            {%for exemplaire in exemplaires%}
+                <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
+                    <div class="custom-block bg-white shadow-lg">
+                        <a href="{% url 'ouvrages:exemplaire' exemplaire.id %}">
+                        <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="topics-detail-block-image img-thumbnail w-100 mb-lg-4" style="height: 22rem;" >
+                            <div class="d-flex">
+                                <div>
+                                    {%for categorie in exemplaire.ouvrage.categories.all%}
+                                    {% comment %} <span class="badge bg-design me-1">{{categorie}}</span> {% endcomment %}
+                                    <span class="tag bg-design me-1 mb-lg-3">{{categorie}}</span>
+                                    {%endfor%}
+                                    <h4 class="mb-2 text-black">{{exemplaire.ouvrage.titre}}</h4>
+                                    <h5 class="text-black-50">Auteur{{ exemplaire.ouvrage.auteurs.all.count|pluralize:"s" }}:</h5>
+                                    <p class="mb-0 fst-italic mb-2">
+                                        {% if exemplaire.ouvrage.auteurs.all.count == 1 %}
+                                            {% for auteur in exemplaire.ouvrage.auteurs.all %}
+                                                {{ auteur }}
+                                            {% endfor %}
+                                        {% else %}
+                                        {% for auteur in exemplaire.ouvrage.auteurs.all %}
+                                            {{ auteur }}
+                                            {% if not forloop.last %}
+                                                &amp; <!-- Separator -->
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% endif %}
+                                    </p>
+                                    {% comment %} {% if ouvrage.vote_total != 0 %} {% endcomment %}
+                                    <div class="d-flex flex-column">    
+                                        <!-- Modifier l'affichage des catégories et autres détails de l'exemplaire -->
+                                        <div class=""><h5 class="text-black">État:</h5> <p>{{ exemplaire.get_etat_display }}<p></div>
+                                        <div class=""><h5 class="text-black">Réservé:</h5> <p>{{ exemplaire.reserve }}<p></div>                       
+                                    </div>
+                                    {% comment %} {%endif%} {% endcomment %}
+                                </div>
+                            </div>
+                            {% comment %} <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt=""> {% endcomment %}
+                            {% comment %} <div class="d-flex flex-row justify-content-start align-items-end mt-4"> {% endcomment %} 
+                            {% comment %} </div> {% endcomment %}
+                        </a>
                     </div>
                 </div>
-            </a>
-        </div>
-    </div>
-{% endfor %}
+            {%endfor%}       
         </div>
     </div>
 </section>
 
+{% comment %} <section class="explore-section section-padding mt-0" id="section_2">
+    <div class="container">
+            <div class="col-12 text-center">
+                <h4>ouvrages disponibles <span class="badge bg-design rounded-pill ms-auto">{{ouvrage_count}}</span></h4> 
+            </div>
+        </div>
+    </div>
 
+    <div class="container-fluid">
+        <div class="row">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" aria-selected="true" href="{% url 'ouvrages:browse' %}">All<span>({{categories.count}})</span></a>
+                </li>
+                {% for categorie in categories %}
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" aria-selected="false" href="{% url 'ouvrages:browse' %}?keyword={{categorie.name}}">{{ categorie.name }}<span>({{categorie.ouvrage_set.all.count}})</span></a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="tab-content" id="myTabContent"> 
+                    <div class="tab-pane fade show active" role="tabpanel" tabindex="0">
+                        <div class="row">
+                            {%for ouvrage in ouvrages%}
+                            <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
+                                <div class="custom-block bg-white shadow-lg">
+                                    <a href="{% url 'ouvrages:topics-detail'%}">
+                                        <div class="d-flex">
+                                            <div>
+                                                <h5 class="mb-2">{{ouvrage.titre}}</h5>
+                                                <p class="mb-0">{{ouvrage.date_achat}}</p>
+                                            </div>
+                                        </div>
+                                        <img src="{{ ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
+                                        <div class="d-flex flex-row justify-content-start align-items-end mt-4">
+                                            {%for categorie in ouvrage.categories.all%}
+                                            <span class="badge bg-design me-1">{{categorie}}</span>
+                                            {%endfor%} 
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            {%endfor%}                    
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <p>{{ message }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> {% endcomment %}
+{% endblock content%}
 {% comment %}<!--<h1>Exemplaires</h1>
 <br>
 <a href="{% url 'ouvrages:create-exemplaire'%}">Add Exemplaire(s)</a>
@@ -85,4 +189,3 @@
     {% endfor %}
 </table>-->
 {% endcomment %}
-{% endblock content%}

@@ -10,14 +10,14 @@
                     <h3 class="text-white text-center">Ouvrages disponibles <span class="badge bg-design rounded-pill ms-auto">{{ ouvrage_count }}</span></h3>
                     <a href="{% url 'ouvrages:create-ouvrage' %}" class="btn custom-btn custom-border-btn smoothscroll me-2">Add Ouvrage</a>
                 </div><br>
-                <div class="container">
+                {% comment %} <div class="container">
                     <div class="row">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
 
 
                         </ul>
                     </div>
-                </div>
+                </div> {% endcomment %}
                 </div>
             </div>
         </div>

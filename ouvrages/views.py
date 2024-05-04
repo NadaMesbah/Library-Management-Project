@@ -90,24 +90,26 @@ def ouvrage(request, pk):
     return render(request, 'ouvrages/single-ouvrage.html', context)
 
 def createOuvrage(request):
+    page = 'add'
     form = OuvrageForm()
     if request.method == 'POST':
         form = OuvrageForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('ouvrages:ouvrages')
-    context = {'form': form}
+            return redirect('ouvrages:browse')
+    context = {'form': form, 'page': page}
     return render(request, 'ouvrages/ouvrage_form.html', context)
 
 def updateOuvrage(request, pk):
+    page = 'edit'
     ouvrage = get_object_or_404(Ouvrage, id=pk)
     form = OuvrageForm(instance=ouvrage)
     if request.method == 'POST':
         form = OuvrageForm(request.POST, request.FILES ,instance=ouvrage)
         if form.is_valid():
             form.save()
-            return redirect('ouvrages:ouvrages')
-    context = {'form': form}
+            return redirect('ouvrages:browse')
+    context = {'form': form, 'page': page}
     return render(request, 'ouvrages/ouvrage_form.html', context)
 
 def deleteOuvrage(request, pk):
@@ -115,15 +117,26 @@ def deleteOuvrage(request, pk):
     if request.method == 'POST':
         # If the request is POST, delete the ouvrage
         ouvrage.delete()
-        return redirect('ouvrages')
+        return redirect('ouvrages:browse')
     # If the request is not POST, render the confirmation page
     context = {'ouvrage': ouvrage}
     return render(request, 'ouvrages/delete_ouvrage.html', context)
 
 ## CRUD FOR EXEMPLAIRES
+# def exemplaires(request):
+#     exemplaires = Exemplaire.objects.all()
+#     context = {'exemplaires': exemplaires}
+#     return render(request, 'ouvrages/exemplaires.html', context)
+
 def exemplaires(request):
-    exemplaires = Exemplaire.objects.all()
-    context = {'exemplaires': exemplaires}
+    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
+    exemplaires = Exemplaire.objects.filter(
+        Q(ouvrage__titre__icontains=keyword) |
+        Q(ouvrage__description__icontains=keyword) |
+        Q(ouvrage__auteurs__nomComplet__icontains=keyword)
+    ).distinct()
+    exemplaires_count = exemplaires.count()
+    context = {'exemplaires_count': exemplaires_count, 'exemplaires': exemplaires}
     return render(request, 'ouvrages/exemplaires.html', context)
 
 def exemplaire(request, pk):
@@ -142,7 +155,6 @@ def createExemplaire(request):
             exemplaires_data = [
                 {'ouvrage': ouvrage_instance,
                  'etat': form.cleaned_data['etat'],
-                 'emprunte': form.cleaned_data['emprunte'],
                  'reserve': form.cleaned_data['reserve']}
                 for _ in range(quantite)
             ]

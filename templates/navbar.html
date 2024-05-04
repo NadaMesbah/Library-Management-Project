@@ -14,12 +14,32 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
+       
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-lg-5">
                 {% comment %} <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_1">Home</a>
                 </li> {% endcomment %}
+                {% if user.is_staff %}
 
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:browse'%}">Ouvrages</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:exemplaires' %}">Exemplaires</a>
+                </li> 
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:emprunt' %}">Emprunts</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:list_reservations' %}">Reservations</a>
+                </li>
+
+                {% else %}
+               
                 <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Trending Books</a>
                 </li>
@@ -45,7 +65,7 @@
                         <li><a class="dropdown-item active" href="{% url 'contact'%}">Reclamation</a></li>
                     </ul>
                 </li>
-                
+                {%endif%}
             </ul>
             {% comment %} <div class="nav-item dropdown">
 
@@ -90,7 +110,7 @@
                     {% endif %}
 
                    
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and not user.is_staff %}
                         <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                             <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'ouvrages:user-reservations' %}">Reservations</a></li>
@@ -103,13 +123,10 @@
                             <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
                         </ul>
                     {% endif %}
+
                     {% if user.is_staff %}
                     <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                         <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-                        <li><a class="dropdown-item" href="{% url 'ouvrages:ouvrages' %}">Ouvrages</a></li>
-                        <li><a class="dropdown-item" href="{% url 'ouvrages:exemplaires' %}">Exemplaires</a></li>
-                        <li><a class="dropdown-item" href="{% url 'ouvrages:emprunt'%}">Emprunts</a></li>
-                        <li><a class="dropdown-item" href="{% url 'ouvrages:list_reservations'%}">Reservations</a></li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                     {% endif %}

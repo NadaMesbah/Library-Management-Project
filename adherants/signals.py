@@ -2,8 +2,11 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import *
 from ouvrages.models import *
+
+from django.template.loader import render_to_string
+
 
 from django.core.mail import send_mail
 from django.conf import settings
@@ -55,14 +58,13 @@ def deleteUser(sender, instance, **kwargs):
 
 def envoyer_email_nouvel_ouvrage(pk):
     instance = Ouvrage.objects.get(id=pk)
-    sujet = f'Nouvel ouvrage ajouté : {instance.titre}'
+    sujet = f'Nouvel ouvrage ajouté à la bibliothèque: {instance.titre}'
     emails = UserEmail.objects.values_list('email', flat=True)
+
     contexte = {
         'titre': instance.titre,
-        'auteurs': instance.auteurs,
-        'categories': instance.categories,
         'description': instance.description,
-        'lien_details': f"http://localhost:8000/ouvrages/ouvrage/{instance.id}"  # Lien vers la page de détails de l'ouvrage
+        'lien_details': f"http://localhost:8000/ouvrage/{instance.id}"  # Link to the ouvrage details page
     }
     message = render_to_string('adherants/nouvel_ouvrage_email.html', contexte)
     send_mail(sujet, message, 'nada.mesbah@usmba.ac.ma', emails)

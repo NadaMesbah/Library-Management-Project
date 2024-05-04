@@ -6,12 +6,12 @@
     <div class="container">
         <div class="row align-items-center">
 
-            <div class="col-lg-5 col-12">
+            <div class="col-lg-12 col-12">
                 <h2 class="text-white">Détail de la réservation</h2>
             </div>
 
         </div>
-        <div class="col-lg-5 col-12">
+        <div class="col-lg-5 col-12 mt-lg-3">
             {% if reservation.statut == 'en_attente' %}
                 <span class="badge bg-warning rounded-pill ms-auto mt-0 mb-3 etat-reservation">En attente</span>
             {% elif reservation.statut == 'acceptee' %}
@@ -70,7 +70,7 @@
                                 <label for="floatingInput">Date de réservation</label>
                             </div>
                             <div class="form-floating">
-                                <input type="text" class="form-control" placeholder="Date de réservation" value="{{ reservation.date_retour_prevue|date:'Y-m-d' }}" readonly>
+                                <input type="text" class="form-control" placeholder="Date de retour" value="{{ reservation.date_retour_prevue|date:'Y-m-d' }}" readonly>
                                 <label for="floatingInput">Date de retour</label>
                             </div>
                             

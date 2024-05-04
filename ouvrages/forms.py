@@ -34,18 +34,16 @@ class OuvrageForm(ModelForm):
       
 class ExemplaireForm(forms.ModelForm):
     quantite = forms.IntegerField(label='Quantité')
-    exemplaire = forms.ModelChoiceField(queryset=Exemplaire.objects.filter(reserve=False, etat='DISPONIBLE'), label='Exemplaire')
     class Meta:
         model = Exemplaire
-        fields = ['exemplaire', 'ouvrage', 'etat', 'reserve']
+        fields = ['ouvrage', 'etat', 'reserve']
 
     def __init__(self, *args, **kwargs):
         super(ExemplaireForm, self).__init__(*args, **kwargs)
-        self.fields['Exemplaire'] = forms.ModelChoiceField(queryset=Exemplaire.objects.filter(reserve=False, etat='DISPONIBLE'), label='Exemplaire')
-        self.fields['Exemplaire'].widget.attrs.update({'class': 'form-control'})
         self.fields['ouvrage'].widget.attrs.update({'class': 'form-control'})
+        self.fields['quantite'].widget.attrs.update({'class': 'form-control'})
         self.fields['etat'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['reserve'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['reserve'].widget = forms.CheckboxInput()
         
             
 class ReservationForm(forms.ModelForm):

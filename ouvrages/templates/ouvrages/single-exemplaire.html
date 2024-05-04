@@ -4,11 +4,11 @@
 <section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px; padding-bottom: 140px;">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-12 mx-auto">
-                <div class="col-12 text-center">
-                    <h3 class="text-white text-center">{{ exemplaire.ouvrage.titre }}</h3>
+            <div class="col-lg-10 col-12 mx-auto">
+                <div class="col-11 text-center mb-lg-3">
+                    <h2 class="text-white text-center mb-lg-3">{{ exemplaire.ouvrage.titre }}</h2>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="custom-block bg-white shadow-lg p-15" style="width:55rem">
                         <div class="row">
                             <div class="col-md-6">
@@ -19,25 +19,15 @@
                                 <p>{{ exemplaire.ouvrage.description }}</p>
                                 <h4 class="mb-0" style="color: #7bbfcc;">État :</h4>
                                 <p>{{ exemplaire.get_etat_display }}</p>
-                                <h4 class="mb-0" style="color: #7bbfcc;">Réserve :</h4>
+                                <h4 class="mb-0" style="color: #7bbfcc;">Réservé :</h4>
                                 <p>{{ exemplaire.reserve }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row mt-4">
-                    <div class="col-lg-3 col-12 ms-auto">
-                        <form method="post" action="{% url 'ouvrages:update-exemplaire' exemplaire.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary btn-lg">Modifier</button>
-                        </form>
-                    </div>
-                    <div class="col-lg-3 col-12">
-                        <form method="post" action="{% url 'ouvrages:delete-exemplaire' exemplaire.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-lg">Supprimer</button>
-                        </form>
-                    </div>
+                <div class="d-flex flex-row justify-content-center align-items-center mt-4">
+                    <a href="{% url 'ouvrages:update-exemplaire' exemplaire.id%}" class="btn custom-btn mt-3 mt-lg-4 mx-4" style="width: 10rem; font-size: 2rem;">Edit</a>
+                    <a href="{% url 'ouvrages:delete-exemplaire' exemplaire.id%}" class="btn mybtn mt-3 mt-lg-4 mx-4" style="width: 10rem; font-size: 2rem;" >Delete</a>
                 </div>
             </div>
         </div>

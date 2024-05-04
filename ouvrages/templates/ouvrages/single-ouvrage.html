@@ -36,13 +36,19 @@
                     <span class="badge bg-music me-1">{{categorie}}</span>
                     {%endfor%} 
                 </div>
+                {% if user.is_staff %}
+                <div class="d-flex align-items-center mt-4">
+                    <a href="{% url 'ouvrages:update-ouvrage' ouvrage.id%}" class="btn custom-btn custom-border-btn smoothscroll me-2">Edit</a>
+                    <a href="{% url 'ouvrages:delete-ouvrage' ouvrage.id%}" class="btn mybtn custom-border-btn smoothscroll me-2">Delete</a>
+                </div>
+                {%endif%}
                 {% if not user.is_authenticated %}
                 <div class="d-flex align-items-center mt-4">
                     <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-2">Details</a>
                     <a href="#reservation" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver</a>
                 </div>
-                <a href="#reservation" class="btn mybtn mt-3 mt-lg-4">Bookmark <span href="#" class="bi-bookmark smoothscroll"></span></a>
-                {% else %}
+                {%endif%}
+                {% if user.is_authenticated and not user.is_staff %}
                 <div class="d-flex align-items-center mt-4">
                     <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-2">Details</a>
                     <a href="{% url 'ouvrages:make-reservation' ouvrage.id%}" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver <span href="#" class="bi-bookmark smoothscroll"></span></a>
@@ -74,40 +80,51 @@
     </div>
 </section>
 
-{% comment %} <section class="">
+{% if user.is_staff %} 
+<section class="">
     <div class="container">
         <div class="row">
 
-            <div class="col-lg-8 col-12 m-auto">
+            <div class="col-lg-12 col-12 m-auto">
                 <h3 class="mb-4">Exemplaires de cet ouvrage</h3>
             </div>
             <div class="col-lg-8 col-12 mt-3 mx-auto">
             {% for exemplaire in ouvrage.exemplaire_set.all %}
                 <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
                     <div class="d-flex">
+                        
                         <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
 
                         <div class="custom-block-topics-listing-info d-flex">
                             <div>
-                                <h5 class="mb-2">Exemplaire de : {{exemplaire.ouvrage.titre}}</h5>
-
-                                <p class="mb-0">Topic Listing includes home, listing, detail and contact pages. Feel free to modify this template for your custom websites.</p>
-                                 rediriger vers la page de reservation 
-                                <a href="{% url 'ouvrages:ouvrage' exemplaire.ouvrage.id%}" class="btn custom-btn mt-3 mt-lg-4">Reserver</a>
+                                <div class="d-flex flex-row justify-content-lg-between">
+                                    <h5 class="mb-2 p-2">Exemplaire de : {{exemplaire.ouvrage.titre}}</h5>
+                                    {% if exemplaire.etat == 'DISPONIBLE'%}
+                                    <span class="badge bg-education" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{exemplaire.get_etat_display}}</p></span>
+                                    {% elif exemplaire.etat == 'HORS_PRET' %}
+                                    <span class="badge bg-advertising" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{exemplaire.get_etat_display}}</p></span>
+                                    {% else %}
+                                    <span class="badge bg-music" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{exemplaire.get_etat_display}}</p></span>
+                                    {% endif %}
+                                    
+                                </div>
+                                <p class="mb-0 p-2">Reservé: {{ exemplaire.reserve }}</p>
+                                <a href="{% url 'ouvrages:update-exemplaire' exemplaire.id%}" class="btn custom-btn mt-3 mt-lg-4">Edit</a>
+                                <a href="{% url 'ouvrages:delete-exemplaire' exemplaire.id%}" class="btn mybtn mt-3 mt-lg-4" >Delete</a>
                             </div>
-                            {% if exemplaire.etat == 'DI'%}
-                                <span class="tag bg-education ms-auto">{{exemplaire.etat}}</span>
-                            {% elif exemplaire.etat == 'HP' %}
-                                <span class="tag bg-finance ms-auto">{{exemplaire.etat}}</span>
-                            {% else %}
-                                <span class="tag bg-music ms-auto">{{exemplaire.etat}}</span>
-                            {% endif %}
+                           
                         </div>
                     </div>
                 </div>
-            {%endfor%}
+                {% empty %}
+                    <div class="d-flex flex-column justify-content-center align-items-center mb-0 mb-lg-0">  
+                        <h4 class="text-black-50">No Exemplaires yet :/ </h4>
+                        <img src="{% static 'images/sad.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem" >
+                        <a href="{% url 'ouvrages:create-exemplaire'%}" class="btn custom-btn mt-3 mt-lg-4">Ajouter des exemplaires</a>
+                    </div>
+                {% endfor %}
             </div>
-            <div class="col-lg-12 col-12">
+            {% comment %} <div class="col-lg-12 col-12">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center mb-0">
                         <li class="page-item">
@@ -143,16 +160,12 @@
                         </li>
                     </ul>
                 </nav>
-            </div>
-            <div class="col-lg-10 col-12 m-auto mt-lg-5" id="reservation">
-                <blockquote>
-                    Pour reserver vous devez vous connecter... <a href="#" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a> 
-                </blockquote>
-            </div>        
+            </div>         {% endcomment %}
         </div>
     </div>
 </section> 
-{% endcomment %}
+{% endif %}
+{% if not user.is_staff %}
 <section>
     <div class="pt-lg-5 pb-lg-5 section-bg">
         <div class="container">
@@ -275,6 +288,8 @@
         </div>
     </div>
 </section> 
+{% endif %}
+
 {% if not user.is_authenticated %}
 <section class="section-padding">
     <div class="container">

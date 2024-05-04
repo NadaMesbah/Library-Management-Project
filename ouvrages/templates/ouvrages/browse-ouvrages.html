@@ -12,7 +12,7 @@
                 <form method="GET"  action="{% url 'ouvrages:browse' %}" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2" role="search">
                     <div class="container">
                         <div class="row">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <ul class="nav nav-tabs mb-lg-4" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link nav-ist" style="color: #dee2e6" aria-selected="false" href="{% url 'ouvrages:browse' %}#main">All<span>({{categories.count}})</span></a>
                                 </li>
@@ -26,6 +26,12 @@
                                 </li>
                             </ul>
                         </div>
+                        {% if user.is_staff%}
+                        <div class="col d-flex justify-content-center align-items-center mt-lg-0 mb-lg-4">
+                            <a href="{% url 'ouvrages:create-ouvrage' %}" class="btn mybtn smoothscroll me-2">Add Ouvrage</a>
+                        </div>
+                   
+                    {%endif%}
                     </div>
                     <div class="input-group input-group-lg">
                         <span class="input-group-text bi-search" id="basic-addon1">

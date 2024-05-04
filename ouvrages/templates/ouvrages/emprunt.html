@@ -1,45 +1,79 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
+
 {% block content %}
 {% load static %}
 
-<section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="padding-top: 120px;padding-bottom: 140px;">
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index' %}">Homepage</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Emprunts</li>
+                    </ol>
+                </nav>
+                <h2 class="text-white">Emprunts Details</h2>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="section-bg section-padding">
+    <style>
+        /* Styles spécifiques pour les éléments th */
+        .th {
+            background-color: #fafafa !important; /* Couleur d'arrière-plan */
+            color: #83b4bb; /* Couleur du texte */
+            border-radius: 5px !important; /* Bordures arrondies */
+            padding: 10px; /* Espacement interne */
+            }
+            table {
+            border-collapse: separate;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Ajouter une ombre */
+            }
+    </style>
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-12">
-                <div class="col-12 text-center">
-                    <h3 class="text-white text-center">Liste des Emprunts</h3>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nom de l'Étudiant</th>
-                                <th>Exemplaire Emprunté</th>
-                                <th>Date d'Emprunt</th>
-                                <th>Date de Retour</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for emprunt in emprunts %}
+                <div class="custom-block bg-white shadow-lg">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="section-title">Liste des Emprunts</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table ">
+                            <thead >
+                                <tr class="th">
+                                    <th class="th">Nom de l'Étudiant</th>
+                                    <th class="th">Exemplaire Emprunté</th>
+                                    <th class="th">Date d'Emprunt</th>
+                                    <th class="th">Date de Retour</th>
+                                    <th class="th">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for emprunt in emprunts %}
                                 <tr>
                                     <td>{{ emprunt.emprunteur.nom }}</td>
                                     <td>{{ emprunt.exemplaire.ouvrage.titre }}</td>
                                     <td>{{ emprunt.date_emprunt }}</td>
                                     <td>{{ emprunt.date_retour }}</td>
                                     <td>
-                                        <a href="{% url 'ouvrages:modifier_emprunt' emprunt.id %}" class="btn btn-primary">Modifier</a>
+                                        <a href="{% url 'ouvrages:modifier_emprunt' emprunt.id %}" style="color: #137C8B;" class="btn mybtn">Modifier</a>
                                         <!-- Ajoutez ici le lien pour supprimer l'emprunt -->
                                   </td>
                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                               {% empty %}
+                                <tr>
+                                    <td colspan="5" class="fw-semibold text-center text-info">Aucun emprunt disponible</td>
+                                </tr>
+                                {% endfor %}
+                           
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-
-{% endblock content %}
+{% endblock content%}
