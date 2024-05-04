@@ -28,6 +28,7 @@ urlpatterns = [
     path('emprunt/', views.liste_emprunts, name="emprunt"),
     #reservations
     path('list_reservations/', views.list_reservations, name='list_reservations'),
+    path('reservation_detail/<str:pk>', views.reservation_detail, name="reservation_detail"),
     path('myreservations/', views.user_reservations, name="user-reservations"),
     path('make-reservation/<str:pk>', views.makeReservation, name="make-reservation"),
     path('edit-reservation/<str:pk>', views.editReservation, name="edit-reservation"),

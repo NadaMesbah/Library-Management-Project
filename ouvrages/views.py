@@ -251,6 +251,29 @@ def list_reservations(request):
     # Passer les réservations au template
     return render(request, 'ouvrages/list_reservations.html', {'reservations': reservations})
 
+def reservation_detail(request, pk):
+    reservation = get_object_or_404(Reservation, id=pk)
+    
+    if request.method == 'POST':
+        # Annuler la réservation
+        if 'cancel_reservation' in request.POST:
+            reservation.delete()
+            return redirect('ouvrages:list_reservations') 
+        # Accepter un exemplaire
+        elif 'accept_copy' in request.POST:
+            selected_copy_id = request.POST.get('selected_copy')
+            selected_copy = Exemplaire.objects.get(id=selected_copy_id)
+            selected_copy.reserve = True
+            selected_copy.save()
+            reservation.ouvrage = selected_copy.ouvrage  # Utilisez l'ouvrage lié à l'exemplaire
+            reservation.statut = 'acceptee'  # Mettre à jour le statut de la réservation
+            reservation.save()
+            return redirect('ouvrages:list_reservations') 
+
+    book_exemplaires = Exemplaire.objects.filter(ouvrage=reservation.ouvrage, reserve=False)
+    return render(request, 'ouvrages/reservation_detail.html', {'reservation': reservation, 'book_exemplaires': book_exemplaires})
+
+
 def search_exemplaires(request):
     if request.method == 'GET':
         keyword = request.GET.get('keyword')

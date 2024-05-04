@@ -27,12 +27,11 @@
             {% for field in form%}
 
             <!-- Input:Text -->
-
-            <div style=" margin-top: 2rem;margin-bottom: 2rem;">
-                <label class="form-floating">{{field.label}}:</label>
+            <div class="form-floating">
+                <label class="form-control">{{field.label}}:</label>
                 {{field}}
-
             </div>
+
             {% endfor %}
 
             <button class="btn custom-btn custom-border-btn smoothscroll me-2" type="submit">Create</button>

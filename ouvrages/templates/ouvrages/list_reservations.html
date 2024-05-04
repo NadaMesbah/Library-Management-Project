@@ -6,7 +6,7 @@
 <header class="site-header d-flex flex-column justify-content-center align-items-center">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-5 col-12">
+            <div class="col-lg-12 col-12">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'ouvrages:index' %}">Homepage</a></li>
@@ -46,6 +46,7 @@
                                     <th class="th">Date de réservation</th>
                                     <th class="th">Nom de l'adherant</th>
                                     <th class="th" >Titre de l'ouvrage</th>
+                                    <th class="th" >Status de la réservation</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,7 +55,8 @@
                                     <td>{{ reservation.date_reservation }}</td>
                                     <td>{{ reservation.owner.username }}</td>
                                     <td>{{ reservation.ouvrage }}</td>
-                                    <td ><a href="" style="color: #137C8B;">Voir réservation</a></td>
+                                    <td>{{ reservation.get_statut_display }}</td>
+                                    <td ><a href="{% url 'ouvrages:reservation_detail' reservation.id%}" style="color: #137C8B;">Voir réservation</a></td>
 
                                 </tr>
                                 {% empty %}

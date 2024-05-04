@@ -113,7 +113,7 @@ def login(request):
         #     return redirect(request.GET['next'] if 'next' in request.GET else 'profile')
         if user is not None:
             auth_login(request, user)  # Rename login function call to auth_login
-            return redirect(request.GET.get('next', 'edit-profile'))
+            return redirect(request.GET.get('next', 'profile'))
         else:
             messages.error(request, 'Username OR password is incorrect')
     return render(request, 'adherants/login_register.html', {'page' : page})
