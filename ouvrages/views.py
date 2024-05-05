@@ -276,6 +276,7 @@ def reservation_detail(request, pk):
             selected_copy_id = request.POST.get('selected_copy')
             selected_copy = Exemplaire.objects.get(id=selected_copy_id)
             selected_copy.reserve = True
+            selected_copy.etat = 'HORS_PRET'
             selected_copy.save()
             reservation.ouvrage = selected_copy.ouvrage  # Utilisez l'ouvrage lié à l'exemplaire
             reservation.statut = 'acceptee'  # Mettre à jour le statut de la réservation
