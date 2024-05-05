@@ -1,9 +1,14 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg">
     <div class="container">
+
         <a class="navbar-brand" href="{% url 'ouvrages:index'%}#section_1">
-            <i class="bi-back"></i>
-            <span>Bibliotheque</span>
+            {% comment %} <i class="bi-back"></i> {% endcomment %}
+            <div class="d-flex justify-content-around align-content-center">
+                <img src="{% static 'images/logoo.png'%}" style="height: 60px;width: auto; margin-top:auto; margin-right: 0.5rem;"/>
+                <h6 style="margin-top:0.3rem; font-size: 2.5rem; font-weight: 800;">Library</h6>
+            </div>
+
         </a>
 
         <div class="d-lg-none ms-auto me-4">
@@ -101,11 +106,11 @@
 
 
                     {% if user.is_authenticated %}
-                        <a href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a href="#" class="ms-lg-4" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ user.profile.profile_image.url }}" class="avatar avatar-sm nav-link navbar-icon bi-person smoothscroll">
                         </a>
                     {% else %}
-                        <a class="nav-link navbar-icon bi-person smoothscroll" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link navbar-icon bi-person smoothscroll ms-lg-4" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         </a>
                     {% endif %}
 
