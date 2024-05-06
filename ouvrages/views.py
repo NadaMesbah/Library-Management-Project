@@ -145,6 +145,7 @@ def exemplaire(request, pk):
     return render(request, 'ouvrages/single-exemplaire.html', context)
 
 def createExemplaire(request):
+    page = 'add'
     form = ExemplaireForm()
     if request.method == 'POST':
         form = ExemplaireForm(request.POST)
@@ -161,10 +162,11 @@ def createExemplaire(request):
             
             Exemplaire.objects.bulk_create([Exemplaire(**data) for data in exemplaires_data])
             return redirect('ouvrages:exemplaires')
-    context = {'form': form}
+    context = {'form': form, 'page': page}
     return render(request, 'ouvrages/exemplaire_form.html', context)
 
 def updateExemplaire(request, pk):
+    page = 'edit'
     exemplaire = get_object_or_404(Exemplaire, id=pk)
     form = ExemplaireForm(instance=exemplaire)
     if request.method == 'POST':
@@ -172,7 +174,7 @@ def updateExemplaire(request, pk):
         if form.is_valid():
             form.save()
             return redirect('ouvrages:exemplaires')
-    context = {'form': form}
+    context = {'form': form, 'page' : page}
     return render(request, 'ouvrages/exemplaire_form.html', context)
 
 def deleteExemplaire(request, pk):
@@ -225,6 +227,11 @@ def cancelReservation(request, pk):
     reservation = get_object_or_404(Reservation, id=pk)
     if request.method == 'POST':
         # If the request is POST, delete the ouvrage
+        if reservation.statut == 'acceptee':
+            exemplaire = reservation.selected_copy
+            exemplaire.etat = 'DISPONIBLE'
+            exemplaire.reserve = False
+            exemplaire.save()
         reservation.delete()
         return redirect('ouvrages:user-reservations')
     # If the request is not POST, render the confirmation page
@@ -269,6 +276,11 @@ def reservation_detail(request, pk):
     if request.method == 'POST':
         # Annuler la réservation
         if 'cancel_reservation' in request.POST:
+            selected_copy_id = request.POST.get('selected_copy')
+            exemplaire = Exemplaire.objects.get(id=selected_copy_id)
+            exemplaire.etat = 'DISPONIBLE'
+            exemplaire.reserve = False
+            exemplaire.save()  # Save the exemplaire after updating its attributes
             reservation.delete()
             return redirect('ouvrages:list_reservations') 
         # Accepter un exemplaire
@@ -279,6 +291,7 @@ def reservation_detail(request, pk):
             selected_copy.etat = 'HORS_PRET'
             selected_copy.save()
             reservation.ouvrage = selected_copy.ouvrage  # Utilisez l'ouvrage lié à l'exemplaire
+            reservation.selected_copy = selected_copy 
             reservation.statut = 'acceptee'  # Mettre à jour le statut de la réservation
             reservation.save()
             return redirect('ouvrages:list_reservations') 

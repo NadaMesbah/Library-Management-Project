@@ -87,12 +87,14 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <button type="submit" name="accept_copy" class="btn btn-success">Accepter</button>
-                                <button type="submit" name="cancel_reservation" class="btn btn-danger">Refuser</button>
+                                {% if reservation.statut == 'en_attente' %}
+                                <button type="submit" name="accept_copy" class="btn custom-btn custom-border-btn smoothscroll me-2">Accepter</button>
+                                {% endif %}
+                                <button type="submit" name="cancel_reservation" class="btn mybtn custom-border-btn smoothscroll me-2">Annuler</button>
                             </form>
                             
                             {% if not book_exemplaires %}
-                                <p>Aucun exemplaire disponible pour ce livre.</p>
+                                <p class="text-danger mt-lg-4">Aucun exemplaire disponible pour ce livre.</p>
                             {% endif %}
                         </div>
                         

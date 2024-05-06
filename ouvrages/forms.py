@@ -33,17 +33,36 @@ class OuvrageForm(ModelForm):
 #         self.fields['etat'].widget.attrs.update({'class': 'form-control'}) 
       
 class ExemplaireForm(forms.ModelForm):
-    quantite = forms.IntegerField(label='Quantité')
+    quantite = forms.IntegerField(label='Quantité', required=False) 
     class Meta:
         model = Exemplaire
         fields = ['ouvrage', 'etat', 'reserve']
 
+
     def __init__(self, *args, **kwargs):
         super(ExemplaireForm, self).__init__(*args, **kwargs)
         self.fields['ouvrage'].widget.attrs.update({'class': 'form-control'})
-        self.fields['quantite'].widget.attrs.update({'class': 'form-control'})
         self.fields['etat'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['reserve'].widget = forms.CheckboxInput()
+        self.fields['quantite'].widget.attrs.update({'class': 'form-control'})
+            
+            
+# class ExemplaireForm(forms.ModelForm):
+#     quantite = forms.IntegerField(label='Quantité', required=False)  # Make it not required
+    
+#     class Meta:
+#         model = Exemplaire
+#         fields = ['ouvrage', 'etat', 'reserve']  # Exclude 'quantite' from fields
+    
+#     def __init__(self, *args, **kwargs):
+#         super(ExemplaireForm, self).__init__(*args, **kwargs)
+#         self.fields['ouvrage'].widget.attrs.update({'class': 'form-control'})
+#         self.fields['etat'].widget.attrs.update({'class': 'form-control'}) 
+#         self.fields['reserve'].widget = forms.CheckboxInput()
+        
+#         # Hide 'quantite' field in update case
+#         if self.instance.pk:
+#             self.fields['quantite'].widget = forms.HiddenInput()
         
             
 class ReservationForm(forms.ModelForm):

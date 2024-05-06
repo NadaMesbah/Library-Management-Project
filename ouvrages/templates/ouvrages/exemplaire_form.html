@@ -9,30 +9,44 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
 
-                        <li class="breadcrumb-item active" aria-current="page">Create Exemplaire</li>
+                        {% if page == 'edit' %}
+                        <li class="breadcrumb-item active" aria-current="page">Edit Exemplaire</li>
+                        {% endif %}
+                        {% if page == 'add' %}
+                        <li class="breadcrumb-item active" aria-current="page">Add Exemplaire</li>
+                        {% endif %}
                     </ol>
                 </nav>
-
-                <h2 class="text-white">Create Exemplaire</h2>
+                {% if page == 'add' %}
+                <h2 class="text-white">Enter Exemplaire Details</h2>
+                {% endif %}
+                {% if page == 'edit' %}
+                <h2 class="text-white">Exemplaire Details</h2>
+                {% endif %}
             </div>
 
         </div>
     </div>
 </header>
-<section class="section-padding section-bg col-12 col-lg-12 justify-content-start align-items-center">
+<section class="pt-lg-4 pb-lg-4 section-bg col-12 col-lg-12 justify-content-start align-items-center">
    <div class="container col-6">
         <form action="" method="POST" enctype="multipart/form-data" role="form" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2">
             {% csrf_token %}
             {% for field in form%}
             <!-- Input:Text -->
-            <div style=" margin-top: 1.5rem;margin-bottom: 1.5rem;">
-                <label class="fw-bold fs-4">{{field.label}}:</label>
+            <div class="">
+                <label class="fw-bold fs-4 mb-lg-3">{{field.label}}:</label>
                 {{field}}
                 {% comment %} <input class="input input--text" id="formInput#text" type="text" name="text"
                     placeholder="Enter text" /> {% endcomment %}
             </div>
             {% endfor %}
+            {% if page == 'add' %}
             <button class="btn custom-btn custom-border-btn smoothscroll me-2" type="submit">Create</button>
+            {% endif %}
+            {% if page == 'edit' %}
+            <button class="btn custom-btn custom-border-btn smoothscroll me-2" type="submit">Edit</button>
+            {% endif %}
         </form>
     </div>  
 </section>

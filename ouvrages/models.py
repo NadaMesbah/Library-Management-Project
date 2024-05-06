@@ -85,6 +85,12 @@ class Exemplaire(models.Model):
     def __str__(self):
         return f"Exemplaire de l'ouvrage {self.ouvrage.titre}"
     
+@receiver(post_save, sender=Ouvrage)
+def create_exemplaire_on_ouvrage_create(sender, instance, created, **kwargs):
+    if created:
+        # Create a new Exemplaire instance associated with the newly created Ouvrage
+        Exemplaire.objects.create(ouvrage=instance)
+    
 @receiver(post_save, sender=Exemplaire)
 def update_ouvrage_on_exemplaire_save(sender, instance, created, **kwargs):
     if created:
@@ -129,6 +135,7 @@ class Reservation(models.Model):
     date_reservation = models.DateTimeField()
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     ouvrage = models.ForeignKey('Ouvrage', on_delete=models.CASCADE, null=True)  # Lier à Ouvrage
+    selected_copy = models.ForeignKey('Exemplaire', on_delete=models.CASCADE, null=True, blank=True)
     
     STATUT_CHOICES = (
         ('en_attente', 'En attente'),
