@@ -4,6 +4,49 @@ from django.contrib.auth.models import User
 from .models import Profile, Message, UserEmail
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.exceptions import ValidationError
+
+def academic_email_validator(value):
+    """
+    Validator to ensure the email address belongs to an academic domain.
+    """
+    allowed_domains = ['edu.umi.ac.ma', 'umi.ac.ma']
+    domain = value.split('@')[-1]
+    if domain not in allowed_domains:
+        raise ValidationError('Only academic email addresses are allowed.')
+
+class RegisterForm(forms.ModelForm):
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+    
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'form-control'})
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password1'] != cd['password2']:
+            raise forms.ValidationError('Passwords don\'t match')
+        return cd['password2']
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        academic_email_validator(email)  # Applying the custom validator
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
+
 
 # class CustomUserCreationForm(UserCreationForm):
 #     class Meta:
@@ -36,31 +79,31 @@ from django.core.mail import send_mail
 
 
 # Code for register form
-class RegisterForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email')
+# class RegisterForm(forms.ModelForm):
+#     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+#     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+#     class Meta:
+#         model = User
+#         fields = ('username', 'first_name', 'last_name', 'email')
     
-    def __init__(self, *args, **kwargs):
-        super(RegisterForm, self).__init__(*args, **kwargs)
+#     def __init__(self, *args, **kwargs):
+#         super(RegisterForm, self).__init__(*args, **kwargs)
 
-        for name, field in self.fields.items():
-            field.widget.attrs.update({'class': 'form-control'})
+#         for name, field in self.fields.items():
+#             field.widget.attrs.update({'class': 'form-control'})
 
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd['password1'] != cd['password2']:
-            raise forms.ValidationError('Passwords don\'t match')
-        return cd['password2']
+#     def clean_password2(self):
+#         cd = self.cleaned_data
+#         if cd['password1'] != cd['password2']:
+#             raise forms.ValidationError('Passwords don\'t match')
+#         return cd['password2']
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        if commit:
-            user.save()
-        return user
+#     def save(self, commit=True):
+#         user = super().save(commit=False)
+#         user.set_password(self.cleaned_data["password1"])
+#         if commit:
+#             user.save()
+#         return user
 
 # Code for login form
 class LoginForm(forms.Form):  # Use forms.Form since this is not a model form
