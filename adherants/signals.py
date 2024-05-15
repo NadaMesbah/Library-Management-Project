@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
 
+
 # @receiver(post_save, sender=Profile)
 
 
@@ -68,11 +69,37 @@ def envoyer_email_nouvel_ouvrage(pk):
     }
     message = render_to_string('adherants/nouvel_ouvrage_email.html', contexte)
     send_mail(sujet, message, 'nada.mesbah@usmba.ac.ma', emails)
+    
 
 @receiver(post_save, sender=Ouvrage)
 def post_save_ouvrage(sender, instance, created, **kwargs):
     if created:
         envoyer_email_nouvel_ouvrage(instance.id)
+        
+        
+# @receiver(post_save, sender=Reservation)
+def send_reservation_confirmation_email(pk):
+    instance = Reservation.objects.get(id=pk)
+    exemplaire = instance.selected_copy
+    sujet = f'Votre Réservation est acceptée, votre exemplaire est celui-ci : Exemplaire Barcode - {exemplaire.id}'
+    # emails = UserEmail.objects.values_list('email', flat=True)  
+    owner_email = instance.owner.email 
+        
+    contexte = {
+    'titre': exemplaire.ouvrage.titre,
+    'code': exemplaire.id
+    }
+       
+    message = render_to_string('adherants/reservation_confirmation_email.html', contexte)
+    # send_mail(sujet, message, 'nada.mesbah@usmba.ac.ma', emails)
+    send_mail(sujet, message, 'nada.mesbah@usmba.ac.ma', [owner_email])
+    # send_mail(subject, message, settings.EMAIL_HOST_USER, [instance.user.email], fail_silently=False)
+
+@receiver(post_save, sender=Reservation)
+def post_save_reservation(sender, instance, created, **kwargs):
+    if instance.statut == 'acceptee':
+        send_reservation_confirmation_email(instance.id)
+        
         
 post_save.connect(createProfile, sender=User)
 post_save.connect(updateUser, sender=Profile)

@@ -83,7 +83,7 @@
                     
                                     <select name="selected_copy" id="selected_copy" class="form-control">
                                         {% for exemplaire in book_exemplaires %}
-                                            <option value="{{ exemplaire.id }}">{{ exemplaire.ouvrage.titre }} - État: {{ exemplaire.get_etat_display }}</option>
+                                            <option value="{{ exemplaire.id }}">État: {{ exemplaire.get_etat_display }}, Barcode: {{ exemplaire.id }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
