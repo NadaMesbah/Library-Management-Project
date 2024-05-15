@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 
 from django.contrib.auth.models import User
@@ -81,15 +81,23 @@ def post_save_ouvrage(sender, instance, created, **kwargs):
 def send_reservation_confirmation_email(pk):
     instance = Reservation.objects.get(id=pk)
     exemplaire = instance.selected_copy
-    sujet = f'Votre Réservation est acceptée, votre exemplaire est celui-ci : Exemplaire Barcode - {exemplaire.id}'
+    sujet = f'Votre Réservation est acceptée, votre exemplaire est celui-ci : Code - {exemplaire.id}'
     # emails = UserEmail.objects.values_list('email', flat=True)  
     owner_email = instance.owner.email 
-        
+    return_date = instance.date_retour_prevue
+    date_reservation = instance.date_reservation
+    
+    # Calculate the deadline for returning the item (48 hours after return date)
+    deadline = return_date + timedelta(days=2)
+
     contexte = {
-    'titre': exemplaire.ouvrage.titre,
-    'code': exemplaire.id
+        'titre': exemplaire.ouvrage.titre,
+        'code': exemplaire.id,
+        'date_reservation': date_reservation.strftime("%d-%m-%Y"),
+        'return_date': return_date.strftime("%d-%m-%Y"),
+        'deadline': deadline.strftime("%d-%m-%Y"),
     }
-       
+
     message = render_to_string('adherants/reservation_confirmation_email.html', contexte)
     # send_mail(sujet, message, 'nada.mesbah@usmba.ac.ma', emails)
     send_mail(sujet, message, 'nada.mesbah@usmba.ac.ma', [owner_email])
@@ -100,6 +108,24 @@ def post_save_reservation(sender, instance, created, **kwargs):
     if instance.statut == 'acceptee':
         send_reservation_confirmation_email(instance.id)
         
+def send_cancellation_notification(pk):
+    instance = Reservation.objects.get(id=pk)
+    exemplaire = instance.selected_copy
+    sujet = f'Annulation de votre réservation : Code - {exemplaire.id}'
+    owner_email = instance.owner.email 
+    
+    contexte = {
+        'titre': exemplaire.ouvrage.titre,
+        'code': exemplaire.id,
+    }
+    
+    message = render_to_string('adherants/reservation_cancellation_email.html', contexte)
+    send_mail(sujet, message, 'nada.mesbah@usmba.ac.ma', [owner_email])
+    
+@receiver(pre_delete, sender=Reservation)
+def pre_delete_reservation(sender, instance, **kwargs):
+    send_cancellation_notification(instance.id)
+
         
 post_save.connect(createProfile, sender=User)
 post_save.connect(updateUser, sender=Profile)

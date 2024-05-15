@@ -3,9 +3,17 @@ Bonjour,
 
 Votre réservation a été acceptée !
 
-L'ouvrage : {{ titre }}
-Code de l'exemplaire réservé : {{ code }}
+L'ouvrage choisi : {{ titre }}
+Code de l'exemplaire réservé : {{code}}
+
+La date de réservation choisie : {{date_reservation}} et la date de retour prévue est : {{return_date}},
+
+IMPORTANT!!
+
+Vous devez vous présentez chez nous pour faire l'emprunt pendant les 48h depuis la date de réservation choisie 
+c-à-d au plus tard le : {{deadline}}, 
+Sinon votre réservation sera annulée.
 
 Cordialement,
-Votre équipe de bibliothèque
+Votre équipe de bibliothèque.
 {% endautoescape %}
