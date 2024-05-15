@@ -4,6 +4,7 @@ from adherants.models import Profile
 from django.contrib import messages
 from .forms import OuvrageForm, ExemplaireForm, ReservationForm
 from django.db.models import Q
+from django.utils.crypto import get_random_string
 # Business Logic
 
 def index(request):
@@ -133,7 +134,8 @@ def exemplaires(request):
     exemplaires = Exemplaire.objects.filter(
         Q(ouvrage__titre__icontains=keyword) |
         Q(ouvrage__description__icontains=keyword) |
-        Q(ouvrage__auteurs__nomComplet__icontains=keyword)
+        Q(ouvrage__auteurs__nomComplet__icontains=keyword) |
+        Q(id__icontains=keyword) 
     ).distinct()
     exemplaires_count = exemplaires.count()
     context = {'exemplaires_count': exemplaires_count, 'exemplaires': exemplaires}
@@ -156,7 +158,8 @@ def createExemplaire(request):
             exemplaires_data = [
                 {'ouvrage': ouvrage_instance,
                  'etat': form.cleaned_data['etat'],
-                 'reserve': form.cleaned_data['reserve']}
+                 'reserve': form.cleaned_data['reserve'],
+                 'id': generate_unique_id()}
                 for _ in range(quantite)
             ]
             
@@ -164,6 +167,14 @@ def createExemplaire(request):
             return redirect('ouvrages:exemplaires')
     context = {'form': form, 'page': page}
     return render(request, 'ouvrages/exemplaire_form.html', context)
+
+
+def generate_unique_id():
+    # Generate a unique id
+    while True:
+        potential_id = f"FSM{get_random_string(length=4)}"
+        if not Exemplaire.objects.filter(id=potential_id).exists():
+            return potential_id
 
 def updateExemplaire(request, pk):
     page = 'edit'

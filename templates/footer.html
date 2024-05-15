@@ -5,13 +5,17 @@
         <div class="row">
             <!-- Company Information -->
             <div class="col-lg-3 col-12 mb-4 pb-2">
-                <h6 class="site-footer-title mb-3">Company</h6>
+                {% comment %} <h6 class="site-footer-title mb-3">Company</h6>
                 <a class="navbar-brand mb-2" href="{% url 'ouvrages:index'%}">
                     <i class="bi-back"></i>
                     <span>Bibliotheque</span>
-                </a>
+                </a> {% endcomment %}
+                <div class="d-flex align-content-center">
+                    <img src="{% static 'images/logoo.png'%}" style="height: 60px;width: auto; margin-top:auto;"/>
+                    <h6 style="margin-top:0.3rem; font-size: 2.5rem; font-weight: 800;">Library</h6>
+                </div>
             </div>
-
+           
             <!-- Resources -->
             <div class="col-lg-3 col-md-4 col-6">
                 <h6 class="site-footer-title mb-3">Resources</h6>

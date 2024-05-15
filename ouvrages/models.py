@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.db import models
 import uuid
 from datetime import datetime, timedelta
+from django.utils import timezone
 from django.db.models.deletion import CASCADE
 from adherants.models import Profile
 
@@ -76,38 +77,41 @@ class Exemplaire(models.Model):
         ('DISPONIBLE', 'Disponible'),
         ('PERDU', 'Perdu'),
         ('RETIRE', 'Retiré'),
+        ('A_ENLEVER', 'À enlever'),
     ]
-    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+    id = models.CharField(max_length=8, primary_key=True, unique=True, editable=False)
     ouvrage = models.ForeignKey('Ouvrage', on_delete=models.CASCADE)
     etat = models.CharField(max_length=20, choices=ETAT_CHOICES, default='DISPONIBLE')
     reserve = models.BooleanField(default=False, blank=True)
+    
+    def save(self, *args, **kwargs):
+        # If id is not set, it will be handled in the view
+        super().save(*args, **kwargs)
 
+    
     def __str__(self):
-        return f"Exemplaire de l'ouvrage {self.ouvrage.titre}"
+        return f"Exemplaire {self.id} de l'ouvrage {self.ouvrage.titre}"
     
-@receiver(post_save, sender=Ouvrage)
-def create_exemplaire_on_ouvrage_create(sender, instance, created, **kwargs):
-    if created:
-        # Create a new Exemplaire instance associated with the newly created Ouvrage
-        Exemplaire.objects.create(ouvrage=instance)
-    
-@receiver(post_save, sender=Exemplaire)
-def update_ouvrage_on_exemplaire_save(sender, instance, created, **kwargs):
-    if created:
-        instance.ouvrage.exemplaires_total += 1
-        instance.ouvrage.save()
 
-@receiver(post_delete, sender=Exemplaire)
-def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
-    instance.ouvrage.exemplaires_total -= 1
-    instance.ouvrage.save()
+    
+# @receiver(post_save, sender=Exemplaire)
+# def update_ouvrage_on_exemplaire_save(sender, instance, created, **kwargs):
+#     if created:
+#         instance.ouvrage.exemplaires_total += 1
+#         instance.ouvrage.save()
+
+# @receiver(post_delete, sender=Exemplaire)
+# def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
+#     instance.ouvrage.exemplaires_total -= 1
+#     instance.ouvrage.save()
+
     
 class Emprunt(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     emprunteur = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE)
     date_emprunt = models.DateTimeField(auto_now_add=True)
-    date_retour = models.DateTimeField()
+    date_retour = models.DateTimeField(null=True, blank=True)
     rendu = models.BooleanField(default=False, blank=True)
 
     @property
@@ -123,6 +127,61 @@ class Emprunt(models.Model):
                 self.exemplaire.ouvrage.save()
 
         super().save(*args, **kwargs)
+        
+# @receiver(post_save, sender=Emprunt)
+# def update_exemplaire_on_emprunt_save(sender, instance, created, **kwargs):
+#     if created:
+#         instance.exemplaire.ouvrage.exemplaires_total -= 1
+#         instance.exemplaire.ouvrage.save()
+
+# @receiver(post_delete, sender=Emprunt)
+# def update_exemplaire_on_emprunt_delete(sender, instance, **kwargs):
+#     instance.exemplaire.ouvrage.exemplaires_total += 1
+#     instance.exemplaire.ouvrage.save()
+
+# class Emprunt(models.Model):
+#     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+#     emprunteur = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+#     exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE)
+#     date_emprunt = models.DateTimeField(auto_now_add=True)
+#     date_retour = models.DateTimeField(null=True, blank=True)
+#     rendu = models.BooleanField(default=False)
+#     destroyed = models.BooleanField(default=False)
+
+#     @property
+#     def calculer_date_retour(self):
+#         return self.date_emprunt + timedelta(days=15)
+
+#     def save(self, *args, **kwargs):
+#         if self.rendu:
+#             self.exemplaire.etat = 'DISPONIBLE'
+#             self.exemplaire.ouvrage.exemplaires_total += 1
+#             self.exemplaire.ouvrage.save()
+#         elif self.destroyed:
+#             self.exemplaire.etat = 'A_ENLEVER'
+#         super().save(*args, **kwargs)
+
+# @receiver(post_save, sender=Emprunt)
+# def update_exemplaire_on_emprunt_save(sender, instance, created, **kwargs):
+#     if not created:
+#         previous_instance = Emprunt.objects.get(pk=instance.pk)
+#         if instance.rendu and not previous_instance.rendu:
+#             instance.exemplaire.etat = 'DISPONIBLE'
+#             instance.exemplaire.ouvrage.exemplaires_total += 1
+#             instance.exemplaire.ouvrage.save()
+#         elif instance.destroyed and not previous_instance.destroyed:
+#             instance.exemplaire.etat = 'A_ENLEVER'
+#         instance.exemplaire.save()
+
+# @receiver(post_delete, sender=Emprunt)
+# def update_exemplaire_on_emprunt_delete(sender, instance, **kwargs):
+#     if not instance.rendu and not instance.destroyed:
+#         instance.exemplaire.etat = 'PERDU'
+#         # Check if the Emprunt is older than one year
+#         if instance.date_emprunt < timezone.now() - timedelta(days=365):
+#             instance.exemplaire.delete()
+#         else:
+#             instance.exemplaire.save()
 
 #exemple de creation d'un emprunt
 # emprunt = Emprunt.objects.create(

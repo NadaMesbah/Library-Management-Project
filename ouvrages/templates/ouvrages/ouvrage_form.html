@@ -43,8 +43,13 @@
                     placeholder="Enter text" /> {% endcomment %}
             </div>
             {% endfor %}
-
-            <button class="btn custom-btn custom-border-btn smoothscroll me-2" type="submit">Create</button>
+            {% if page == 'add' %}
+            <input type="submit" value="Create" class="btn custom-btn smoothscroll me-2"/>
+            {% endif %}
+            {% if page == 'edit' %}
+            <input type="submit" value="Edit" class="btn custom-btn smoothscroll me-2"/>
+            {% endif %}
+            {% comment %} <button  type="submit">Create</button> {% endcomment %}
             <a href="{% url 'ouvrages:browse' %}" class="btn mybtn custom-border-btn  smoothscroll me-2">Go Back</a>
         </form>
     </div>  
