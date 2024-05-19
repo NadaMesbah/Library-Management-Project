@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Ouvrage, Categorie, Exemplaire, Reservation, Emprunt
 from adherants.models import Profile
+from datetime import datetime, timedelta
 from django.contrib import messages
-from .forms import OuvrageForm, ExemplaireForm, ReservationForm
+from django.utils import timezone
+from datetime import timedelta
+from .forms import OuvrageForm, ExemplaireForm, ReservationForm,EmpruntForm
 from django.db.models import Q
 from django.utils.crypto import get_random_string
+from django.http import JsonResponse
 # Business Logic
 
 def index(request):
@@ -276,6 +280,8 @@ def user_reservations(request):
 #         return render(request, 'panel.html')
 
 def list_reservations(request):
+    # Supprimer les réservations expirées
+    supprimer_reservations_expirees()
     # Récupérer toutes les réservations depuis la base de données
     reservations = Reservation.objects.all()
     # Passer les réservations au template
@@ -284,6 +290,9 @@ def list_reservations(request):
 def reservation_detail(request, pk):
     reservation = get_object_or_404(Reservation, id=pk)
     
+    # Vérifier si l'utilisateur a un emprunt non rendu
+    has_unreturned_loan = Emprunt.objects.filter(emprunteur=reservation.owner, rendu=False).exists()
+
     if request.method == 'POST':
         # Annuler la réservation
         if 'cancel_reservation' in request.POST:
@@ -291,25 +300,55 @@ def reservation_detail(request, pk):
             exemplaire = Exemplaire.objects.get(id=selected_copy_id)
             exemplaire.etat = 'DISPONIBLE'
             exemplaire.reserve = False
-            exemplaire.save()  # Save the exemplaire after updating its attributes
+            exemplaire.save()  # Sauvegarder l'exemplaire après avoir mis à jour ses attributs
             reservation.delete()
-            return redirect('ouvrages:list_reservations') 
+            return redirect('ouvrages:list_reservations')
+        
         # Accepter un exemplaire
-        elif 'accept_copy' in request.POST:
+        elif 'accept_copy' in request.POST and not has_unreturned_loan:
             selected_copy_id = request.POST.get('selected_copy')
             selected_copy = Exemplaire.objects.get(id=selected_copy_id)
             selected_copy.reserve = True
             selected_copy.etat = 'HORS_PRET'
             selected_copy.save()
-            reservation.ouvrage = selected_copy.ouvrage  # Utilisez l'ouvrage lié à l'exemplaire
-            reservation.selected_copy = selected_copy 
+            reservation.ouvrage = selected_copy.ouvrage  # Utiliser l'ouvrage lié à l'exemplaire
+            reservation.selected_copy = selected_copy
             reservation.statut = 'acceptee'  # Mettre à jour le statut de la réservation
             reservation.save()
-            return redirect('ouvrages:list_reservations') 
+
+            # Créer un nouvel emprunt
+            Emprunt.objects.create(
+                emprunteur=reservation.owner,
+                exemplaire=selected_copy,
+                date_emprunt=reservation.date_reservation,
+                date_retour=reservation.date_retour_prevue
+            )
+            return redirect('ouvrages:list_reservations')
 
     book_exemplaires = Exemplaire.objects.filter(ouvrage=reservation.ouvrage, reserve=False)
-    return render(request, 'ouvrages/reservation_detail.html', {'reservation': reservation, 'book_exemplaires': book_exemplaires})
+    return render(request, 'ouvrages/reservation_detail.html', {
+        'reservation': reservation,
+        'book_exemplaires': book_exemplaires,
+        'has_unreturned_loan': has_unreturned_loan
+    })
 
+
+def supprimer_reservations_expirees():
+    # Récupérer les réservations expirées (plus de 24 heures)
+    reservations_expirees = Reservation.objects.filter(date_retour_prevue__lte=timezone.now())
+
+    # Parcourir les réservations expirées
+    for reservation in reservations_expirees:
+        # Vérifier si la réservation a un exemplaire associé
+        exemplaire = reservation.selected_copy
+        if exemplaire:
+            # Marquer l'exemplaire comme disponible
+            exemplaire.etat = 'DISPONIBLE'
+            exemplaire.reserve = False
+            exemplaire.save()
+
+            # Supprimer la réservation expirée
+            reservation.delete()
 
 def search_exemplaires(request):
     if request.method == 'GET':
@@ -349,5 +388,93 @@ def modifier_exemplaire(request, pk):
 #     return render(request, 'liste_etudiants.html', {'etudiants': etudiants})
 
 def liste_emprunts(request):
+    # Supprimer les emprunts automatiques non confirmés
+    supprimer_emprunts_non_confirmes()
+
+     # Supprimer les emprunts rendus
+    emprunts_rendus = Emprunt.objects.filter(rendu=True)
+    for emprunt_rendu in emprunts_rendus:
+        # Marquer l'exemplaire comme disponible
+        exemplaire = emprunt_rendu.exemplaire
+        exemplaire.etat = 'DISPONIBLE'
+        exemplaire.reserve = False
+        exemplaire.save()
+
+    # Supprimer les emprunts rendus
+    emprunts_rendus.delete()
+
+    # Récupérer tous les emprunts
     emprunts = Emprunt.objects.all()
+
+    # Afficher la liste des emprunts dans un template
     return render(request, 'ouvrages/emprunt.html', {'emprunts': emprunts})
+
+
+def nouvel_emprunt(request):
+    if request.method == 'POST':
+        form = EmpruntForm(request.POST)
+        if form.is_valid():
+            emprunt = form.save(commit=False)
+            emprunteur = form.cleaned_data['emprunteur']
+            emprunt.emprunteur = emprunteur
+            emprunt.automatique = False
+            emprunt.save()
+
+            # Marquer l'exemplaire comme emprunté
+            exemplaire = emprunt.exemplaire
+            exemplaire.etat = 'HORS_PRET'
+            exemplaire.save()
+
+            # Vérifier s'il existe une réservation acceptée pour cet exemplaire
+            reservation = Reservation.objects.filter(ouvrage=exemplaire.ouvrage, statut='acceptee').first()
+            if reservation:
+                # Vérifier s'il n'existe pas déjà un emprunt automatique pour cet exemplaire
+                existing_automatique = Emprunt.objects.filter(exemplaire=exemplaire, automatique=True).exists()
+                if not existing_automatique:
+                    # Créer un nouvel emprunt avec les détails de la réservation
+                    Emprunt.objects.create(
+                        emprunteur=reservation.owner,
+                        exemplaire=exemplaire,
+                        date_emprunt=reservation.date_reservation,
+                        date_retour=reservation.date_retour_prevue,
+                        automatique=True,  # Marquer comme un emprunt automatique
+                        confirmer=False,   # L'emprunt n'est pas encore confirmé
+                    )
+
+            # Rediriger vers la liste des emprunts
+            return redirect('ouvrages:emprunt')
+    else:
+        form = EmpruntForm()
+    return render(request, 'ouvrages/nouvel_emprunt.html', {'form': form})
+
+def supprimer_emprunts_non_confirmes():
+    # Récupérer tous les emprunts automatiques non confirmés
+    emprunts_non_confirmes = Emprunt.objects.filter(
+        automatique=True,
+        confirmer=False,
+        date_emprunt__lte=timezone.now() - timedelta(hours=24)
+    )
+
+   # Supprimer les emprunts non confirmés et mettre à jour l'état des exemplaires
+    for emprunt in emprunts_non_confirmes:
+        # Supprimer l'emprunt et vérifier s'il est supprimé avec succès
+        if emprunt.delete()[0] == 1:
+            # Mettre à jour l'état de l'exemplaire associé uniquement si l'emprunt est supprimé
+            exemplaire = emprunt.exemplaire
+            exemplaire.etat = 'DISPONIBLE'
+            exemplaire.reserve = False  
+            exemplaire.save()
+
+def supprimer_emprunt(request, emprunt_id):
+    emprunt = get_object_or_404(Emprunt, id=emprunt_id)
+    exemplaire = emprunt.exemplaire
+
+    # Supprimer l'emprunt
+    emprunt.delete()
+
+    # Marquer l'exemplaire comme disponible
+    exemplaire.etat = 'DISPONIBLE'
+    exemplaire.reserve = False
+    exemplaire.save()
+
+    return JsonResponse({'message': "L'emprunt a été supprimé avec succès."})

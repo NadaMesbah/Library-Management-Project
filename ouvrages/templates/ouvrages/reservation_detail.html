@@ -5,11 +5,9 @@
 <header class="site-header d-flex flex-column justify-content-center align-items-center">
     <div class="container">
         <div class="row align-items-center">
-
             <div class="col-lg-12 col-12">
                 <h2 class="text-white">Détail de la réservation</h2>
             </div>
-
         </div>
         <div class="col-lg-5 col-12 mt-lg-3">
             {% if reservation.statut == 'en_attente' %}
@@ -18,7 +16,6 @@
                 <span class="badge bg-success rounded-pill ms-auto mt-0 mb-3 etat-reservation">Acceptée</span>
             {% endif %}
         </div>
-        
         <style>
             .etat-reservation {
                 font-size: 1.2em; 
@@ -30,9 +27,10 @@
 <section class="pt-5 pb-5 section-bg">
     <div class="container">
         <div class="row">
-
             <div class="col-lg-6 col-12">
+                <!-- Formulaire avec jeton CSRF inclus -->
                 <form action="#" method="post" class="custom-form contact-form" role="form">
+                    {% csrf_token %}
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-floating">
@@ -40,31 +38,25 @@
                                 <label for="floatingInput">Nom</label>
                             </div>
                         </div>
-
                         <div class="col-lg-6 col-md-6 col-12"> 
                             <div class="form-floating">
                                 <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Adresse e-mail" value="{{ reservation.owner.email }}" required="">
                                 <label for="floatingInput">Adresse e-mail</label>
                             </div>
                         </div>
-
                         <div class="col-lg-12 col-12">
                             <div class="form-floating">
                                 <input type="text" name="subject" id="subject" class="form-control" placeholder="Sujet" value="{{ reservation.id }}" required="">
                                 <label for="floatingInput">ID de réservation</label>
                             </div>
-
-                        
                             <div class="form-floating">
                                 <input type="text" name="book_name" id="book_name" class="form-control" placeholder="Nom de l'ouvrage" value="{{ reservation.ouvrage.titre }}" required="">
                                 <label for="floatingInput">Nom de l'ouvrage</label>
                             </div>
-
                             <div class="form-floating">
                                 <input type="text" class="form-control" placeholder="Date de demande" value="{{ reservation.date_demande|date:'Y-m-d' }}" readonly>
                                 <label for="floatingInput">Date de demande</label>
                             </div>
-                            
                             <div class="form-floating">
                                 <input type="text" class="form-control" placeholder="Date de réservation" value="{{ reservation.date_reservation|date:'Y-m-d' }}" readonly>
                                 <label for="floatingInput">Date de réservation</label>
@@ -73,38 +65,31 @@
                                 <input type="text" class="form-control" placeholder="Date de retour" value="{{ reservation.date_retour_prevue|date:'Y-m-d' }}" readonly>
                                 <label for="floatingInput">Date de retour</label>
                             </div>
-                            
                         </div>
                         <div class="form-group">
                             <h6>Sélectionnez un exemplaire :</h6>
-                            <form method="post">
-                                {% csrf_token %}
-                                <div class="form-group">
-                    
-                                    <select name="selected_copy" id="selected_copy" class="form-control">
-                                        {% for exemplaire in book_exemplaires %}
-                                            <option value="{{ exemplaire.id }}">État: {{ exemplaire.get_etat_display }}, Barcode: {{ exemplaire.id }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                {% if reservation.statut == 'en_attente' %}
-                                <button type="submit" name="accept_copy" class="btn custom-btn custom-border-btn smoothscroll me-2">Accepter</button>
-                                {% endif %}
-                                <button type="submit" name="cancel_reservation" class="btn mybtn custom-border-btn smoothscroll me-2">Annuler</button>
-                            </form>
-                            
+                            <select name="selected_copy" id="selected_copy" class="form-control">
+                                {% for exemplaire in book_exemplaires %}
+                                    <option value="{{ exemplaire.id }}">État: {{ exemplaire.get_etat_display }}, Barcode: {{ exemplaire.id }}</option>
+                                {% endfor %}
+                            </select>
                             {% if not book_exemplaires %}
                                 <p class="text-danger mt-lg-4">Aucun exemplaire disponible pour ce livre.</p>
                             {% endif %}
                         </div>
-                        
-                        
-                        
+                        <!-- Afficher un message d'erreur si l'utilisateur a un emprunt non rendu -->
+                        {% if has_unreturned_loan %}
+                            <p class="text-danger mt-lg-4">Cet utilisateur a déjà un emprunt non rendu.</p>
+                        {% endif %}
+                        </div>
+                        <!-- Bouton "Accepter" désactivé si l'utilisateur a un emprunt non rendu -->
+                        {% if reservation.statut == 'en_attente' %}
+                            <button type="submit" name="accept_copy" class="btn custom-btn custom-border-btn smoothscroll me-2" {% if has_unreturned_loan %}disabled{% endif %}>Accepter</button>
+                        {% endif %}
+                        <button type="submit" name="cancel_reservation" class="btn mybtn custom-border-btn smoothscroll me-2">Annuler</button>
                     </div>
                 </form>
             </div>
-            
-
             <div class="col-lg-5 col-12 mx-auto mt-5 mt-lg-0">
                 {% if reservation.ouvrage.featured_image %}
                     <img src="{{ reservation.ouvrage.featured_image.url }}" alt="Image de l'ouvrage associé à la réservation" class="img-fluid">
@@ -112,7 +97,6 @@
                     <p>Pas d'image disponible pour cet ouvrage.</p>
                 {% endif %}
             </div>
-
         </div>
     </div>
 </section>

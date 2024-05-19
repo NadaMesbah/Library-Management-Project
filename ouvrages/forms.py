@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Ouvrage, Exemplaire, Reservation
+from .models import Ouvrage, Exemplaire, Reservation,Profile,Emprunt
 from django import forms
 from django.forms.widgets import DateInput
 from datetime import datetime, timedelta
@@ -80,3 +80,59 @@ class ReservationForm(forms.ModelForm):
         #     self.fields['ouvrage'].initial = ouvrage_instance.titre
         #     self.fields['ouvrage'].widget = forms.TextInput(attrs={'disabled': True, 'class': 'form-control'})
 
+
+class EmpruntForm(forms.ModelForm):
+    CNE = forms.CharField(max_length=20, required=False, label='CNE', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'CNE'}))
+    nom = forms.CharField(max_length=100, required=False, label='Nom', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}))
+    prenom = forms.CharField(max_length=100, required=False, label='Prénom', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}))
+
+    class Meta:
+        model = Emprunt
+        fields = ['CNE', 'nom', 'prenom', 'exemplaire', 'date_retour']
+        widgets = {
+            'exemplaire': forms.Select(attrs={'class': 'form-control'}),
+            'date_retour': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filtrer pour ne montrer que les exemplaires disponibles
+        self.fields['exemplaire'].queryset = Exemplaire.objects.filter(etat='DISPONIBLE')
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        CNE = cleaned_data.get('CNE')
+        nom = cleaned_data.get('nom')
+        prenom = cleaned_data.get('prenom')
+        exemplaire = cleaned_data.get('exemplaire')
+
+        # Rechercher l'utilisateur correspondant
+        if CNE:
+            try:
+                emprunteur = Profile.objects.get(CNE=CNE)
+            except Profile.DoesNotExist:
+                raise forms.ValidationError("Aucun utilisateur trouvé avec ce CNE.")
+        elif nom and prenom:
+            try:
+                emprunteur = Profile.objects.get(nom=nom, prenom=prenom)
+            except Profile.DoesNotExist:
+                raise forms.ValidationError("Aucun utilisateur trouvé avec ce nom et prénom.")
+        else:
+            raise forms.ValidationError("Veuillez fournir le CNE ou le nom et prénom.")
+        # Ajouter la vérification ici
+        if Emprunt.objects.filter(emprunteur=emprunteur, rendu=False).exists():
+            raise forms.ValidationError("Cet utilisateur a déjà un emprunt non rendu.")
+        cleaned_data['emprunteur'] = emprunteur
+
+        # Vérifiez si l'exemplaire est disponible
+        if exemplaire is not None:
+            if exemplaire.etat != 'DISPONIBLE':
+                raise forms.ValidationError("Cet exemplaire n'est pas disponible")
+            
+        # Vérifiez si la date de retour est définie
+        date_retour = cleaned_data.get('date_retour')
+        if not date_retour:
+            cleaned_data['date_retour'] = datetime.now().date() + timedelta(days=15)
+
+        return cleaned_data

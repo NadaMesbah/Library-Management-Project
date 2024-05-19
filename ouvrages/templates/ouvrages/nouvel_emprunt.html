@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Homepage</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Make Emprunt</li>
+                    </ol>
+                </nav>
+                <h2 class="text-white">Enter Emprunt Details</h2>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="section-padding section-bg col-12 col-lg-12 d-flex justify-content-center align-items-center">
+        <div class="container col-6">
+            <h2>Nouvel Emprunt</h2>
+            <form method="post" enctype="multipart/form-data" class="custom-form contact-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn mybtn mt-3 mt-lg-4">Emprunter</button>
+            </form>
+
+            <!-- JavaScript to auto-fill the date_retour field -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script>
+                function updateReturnDate() {
+                    var reservationDate = new Date();
+                    reservationDate.setDate(reservationDate.getDate() + 15);
+                    var returnDate = reservationDate.toISOString().slice(0, 10);
+                    $('#id_date_retour').val(returnDate);
+                }
+
+                $(document).ready(function() {
+                    updateReturnDate();
+                });
+
+                $('#id_date_retour').change(function() {
+                    var returnDate = $('#id_date_retour').val();
+                    if (!returnDate) {
+                        updateReturnDate();
+                    }
+                });
+            </script>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

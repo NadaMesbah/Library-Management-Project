@@ -26,6 +26,8 @@ urlpatterns = [
     path('search-exemplaires/', views.search_exemplaires, name='search_exemplaires'),
     path('modifier_exemplaire/<str:pk>/', views.modifier_exemplaire, name='modifier_exemplaire'),
     path('emprunt/', views.liste_emprunts, name="emprunt"),
+    path('nouvel-emprunt/',views.nouvel_emprunt, name='nouvel_emprunt'),
+     path('supprimer_emprunt/<uuid:emprunt_id>/', views.supprimer_emprunt, name='supprimer_emprunt'),
     #reservations
     path('list_reservations/', views.list_reservations, name='list_reservations'),
     path('reservation_detail/<str:pk>', views.reservation_detail, name="reservation_detail"),
