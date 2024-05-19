@@ -1,20 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Ouvrage, Categorie, Exemplaire, Reservation, Emprunt
 from adherants.models import Profile
+from django.core.paginator import Paginator
 from django.contrib import messages
 from .forms import OuvrageForm, ExemplaireForm, ReservationForm
 from django.db.models import Q
 from django.utils.crypto import get_random_string
+from .utils import searchOuvrages, searchExemplaires, paginateOuvrages
 # Business Logic
 
 def index(request):
-    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
-    ouvrages = Ouvrage.objects.filter(
-        Q(categories__name__icontains=keyword) |
-        Q(titre__icontains=keyword) |
-        Q(description__icontains=keyword) |
-        Q(auteurs__nomComplet__icontains=keyword)
-    )
+    ouvrages, search_query = searchOuvrages(request)
     #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
     #ouvrages = Ouvrage.objects.all()
     categories = Categorie.objects.all()
@@ -24,24 +20,23 @@ def index(request):
     recommended_ouvrages = Ouvrage.objects.filter(recommended=True)
     context = {'ouvrages': ouvrages, 'categories': categories,
                'ouvrage_count': ouvrage_count, 'best_ouvrage' : best_ouvrage, 
-               'newest_ouvrage': newest_ouvrage , 'recommanded_ouvrages' : recommended_ouvrages}
+               'newest_ouvrage': newest_ouvrage , 'recommanded_ouvrages' : recommended_ouvrages, 'search_query': search_query}
     return render(request, 'ouvrages/index.html', context)
 
 def browse(request):
-    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
-    ouvrages = Ouvrage.objects.filter(
-        Q(categories__name__icontains=keyword) |
-        Q(titre__icontains=keyword) |
-        Q(description__icontains=keyword) |
-        Q(auteurs__nomComplet__icontains=keyword)
-    ).distinct()
-    #categories = ouvrage.categories.all() ==> ouvrage is an instance of Ouvrage
-    #ouvrages = Ouvrage.objects.all()
-    #exemplaires = ouvrage.exemplaire_set.all()
+    ouvrages, search_query = searchOuvrages(request)
+    ouvrage_count = ouvrages.count()  # Count before pagination
+    custom_range, paginated_ouvrages = paginateOuvrages(request, ouvrages, 3)
     categories = Categorie.objects.all()
-    ouvrage_count = ouvrages.count()
-    context = {'ouvrages': ouvrages, 'categories': categories,
-               'ouvrage_count': ouvrage_count, 'exemplaires': exemplaires}
+
+    context = {
+        'ouvrages': paginated_ouvrages,
+        'categories': categories,
+        'ouvrage_count': ouvrage_count,
+        'search_query': search_query,
+        'custom_range': custom_range,
+        # 'exemplaires': exemplaires  # Comment this out or define exemplaires if needed
+    }
     return render(request, 'ouvrages/browse-ouvrages.html', context)
 
 def categories(request):
@@ -130,15 +125,9 @@ def deleteOuvrage(request, pk):
 #     return render(request, 'ouvrages/exemplaires.html', context)
 
 def exemplaires(request):
-    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
-    exemplaires = Exemplaire.objects.filter(
-        Q(ouvrage__titre__icontains=keyword) |
-        Q(ouvrage__description__icontains=keyword) |
-        Q(ouvrage__auteurs__nomComplet__icontains=keyword) |
-        Q(id__icontains=keyword) 
-    ).distinct()
+    exemplaires, search_query = searchExemplaires(request)
     exemplaires_count = exemplaires.count()
-    context = {'exemplaires_count': exemplaires_count, 'exemplaires': exemplaires}
+    context = {'exemplaires_count': exemplaires_count, 'exemplaires': exemplaires, 'search_query' :search_query}
     return render(request, 'ouvrages/exemplaires.html', context)
 
 def exemplaire(request, pk):

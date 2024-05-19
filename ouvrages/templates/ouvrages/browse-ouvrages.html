@@ -38,7 +38,7 @@
                             
                         </span>
 
-                        <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Search Ouvrages by Title, Category, Author..." aria-label="Search">
+                        <input name="search_query" value="{{search_query}}" type="search" class="form-control" id="search_query" placeholder="Search Ouvrages by Title, Category, Author..." aria-label="Search">
 
                         <button type="submit" class="form-control">Search</button>
                     </div>
@@ -100,9 +100,48 @@
                 </div>
             {%endfor%}       
         </div>
+        <div class="col-lg-12 col-12">
+            {% if ouvrages.has_other_pages %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center mb-0">
+                    {% if ouvrages.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ouvrages.previous_page_number}}" aria-label="Previous">
+                            <span aria-hidden="true">Prev</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for page in custom_range %}
+
+                    {% if page == ouvrages.number%}
+
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                    </li>
+                    
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                    </li>
+
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if ouvrages.has_next %}
+
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ouvrages.next_page_number}}" aria-label="Next">
+                            <span aria-hidden="true">Next</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
     </div>
 </section>
-
 {% comment %} <section class="explore-section section-padding mt-0" id="section_2">
     <div class="container">
             <div class="col-12 text-center">

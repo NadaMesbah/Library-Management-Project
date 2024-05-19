@@ -118,6 +118,38 @@
                 color: white;
             }
 
+            .page-link {
+                border: 0;
+                border-radius: 10px;
+                color: #717275;
+                font-family: 'Montserrat', sans-serif;
+                margin: 0 5px;
+                padding: 10px 20px;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+            .page-link:hover,
+            .page-item:first-child .page-link:hover,
+            .page-item:last-child .page-link:hover {
+              background-color: #80d0c7;
+              color:  #ffffff;
+            }
+            
+            .page-item:first-child .page-link {
+              margin-right: 5px;
+            }
+            
+            .page-item:first-child .page-link,
+            .page-item:last-child .page-link {
+              background-color: #f0f8ff;
+              border-radius: 10px;
+            }
+
+            .page-item.active .page-link, /* Specificity for active state */
+            .page-link.active {
+            background-color:#0056b3;
+            border-color: #0056b3;
+            color: #ffffff !important; /* Ensure text color is white */
+            }
         </style>
     {% include 'navbar.html' %}
 
