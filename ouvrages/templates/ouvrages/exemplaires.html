@@ -69,7 +69,7 @@
                                     <span class="tag bg-design me-1 mb-lg-3">{{categorie}}</span>
                                     {%endfor%}
                                     <h4 class="mb-2 text-black">{{exemplaire.ouvrage.titre}}</h4>
-                                    <h5 class="text-black-50">Auteur{{ exemplaire.ouvrage.auteurs.all.count|pluralize:"s" }}:</h5>
+                                    {% comment %} <h5 class="text-black-50">Auteur{{ exemplaire.ouvrage.auteurs.all.count|pluralize:"s" }}:</h5>
                                     <p class="mb-0 fst-italic mb-2">
                                         {% if exemplaire.ouvrage.auteurs.all.count == 1 %}
                                             {% for auteur in exemplaire.ouvrage.auteurs.all %}
@@ -83,13 +83,13 @@
                                             {% endif %}
                                         {% endfor %}
                                         {% endif %}
-                                    </p>
+                                    </p> {% endcomment %}
                                     {% comment %} {% if ouvrage.vote_total != 0 %} {% endcomment %}
-                                    <div class="d-flex flex-column">    
+                                    {% comment %} <div class="d-flex flex-column">    
                                         <!-- Modifier l'affichage des catégories et autres détails de l'exemplaire -->
                                         <div class=""><h5 class="text-black">État:</h5> <p>{{ exemplaire.get_etat_display }}<p></div>
                                         <div class=""><h5 class="text-black">Réservé:</h5> <p>{{ exemplaire.reserve }}<p></div>                       
-                                    </div>
+                                    </div> {% endcomment %}
                                     {% comment %} {%endif%} {% endcomment %}
                                 </div>
                             </div>

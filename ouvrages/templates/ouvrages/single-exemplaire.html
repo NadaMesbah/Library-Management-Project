@@ -14,9 +14,7 @@
                             <div class="col-md-6">
                                 <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="img-thumbnail mb-lg-6">
                             </div>
-                            <div class="col-md-6">
-                                <h4 class="mb-0" style="color: #7bbfcc;">Description :</h4>
-                                <p>{{ exemplaire.ouvrage.description }}</p>
+                            <div class="col-md-6 d-grid bi-grip-vertical align-content-lg-center">
                                 <h4 class="mb-0" style="color: #7bbfcc;">État :</h4>
                                 <p>{{ exemplaire.get_etat_display }}</p>
                                 <h4 class="mb-0" style="color: #7bbfcc;">Réservé :</h4>
