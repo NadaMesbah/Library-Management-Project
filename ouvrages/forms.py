@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from .models import Ouvrage, Exemplaire, Reservation
+from django.db import transaction
 from django import forms
 from django.forms.widgets import DateInput
 from datetime import datetime, timedelta
@@ -45,7 +46,33 @@ class ExemplaireForm(forms.ModelForm):
         self.fields['etat'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['reserve'].widget = forms.CheckboxInput()
         self.fields['quantite'].widget.attrs.update({'class': 'form-control'})
-            
+       
+    def generate_unique_id(self):
+        potential_id = f"FSM{get_random_string(length=4)}"
+        while Exemplaire.objects.filter(id=potential_id).exists():
+            logger.info(f"Potential ID {potential_id} already exists. Generating a new one.")
+            potential_id = f"FSM{get_random_string(length=4)}"
+        logger.info(f"Generated unique ID: {potential_id}")
+        return potential_id
+
+    @transaction.atomic
+    def save(self, commit=True):
+        quantite = self.cleaned_data.pop('quantite', 1)
+        ouvrage = self.cleaned_data.get('ouvrage')
+        exemplaires = []
+
+        for _ in range(quantite):
+            exemplaire = Exemplaire(**self.cleaned_data)
+            exemplaire.id = self.generate_unique_id()
+            exemplaires.append(exemplaire)
+
+        Exemplaire.objects.bulk_create(exemplaires)
+
+        # Update the exemplaires_total field
+        ouvrage.exemplaires_total = Exemplaire.objects.filter(ouvrage=ouvrage).count()
+        ouvrage.save()
+
+        return exemplaires     
             
 # class ExemplaireForm(forms.ModelForm):
 #     quantite = forms.IntegerField(label='Quantité', required=False)  # Make it not required

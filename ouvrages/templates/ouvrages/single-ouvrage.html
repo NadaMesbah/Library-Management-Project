@@ -37,12 +37,12 @@
                     {%endfor%} 
                 </div>
 
-                {% if user.is_authenticated and not user.is_staff %}
+                {% if user.is_authenticated %}
                 <div class="d-flex flex-row align-items-center mt-lg-3">
-                    <h5 class="text-black-50">Exemplaires disponibles:  <span class="badge bg-design rounded-pill ms-auto">{{ouvrage.exemplaires_total}}</span></h5>
+                    <h5 class="text-black-50">Exemplaires disponibles:  <span class="badge bg-design rounded-pill ms-auto">{{ouvrage.count_available_exemplaires}}</span></h5>
                 </div>
 
-                {% if ouvrage.exemplaires_total == 1 %}
+                {% if ouvrage.exemplaires_total == 1 or ouvrage.count_available_exemplaires == 0%}
                 <p class="mb-0 text-warning fst-italic">Cet ouvrage est pour consultation sur place seulement.</p>
                 {% endif %}
 
@@ -64,7 +64,7 @@
                 {% if user.is_authenticated and not user.is_staff %}
                 <div class="d-flex align-items-center mt-4">
                     <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-2">Details</a>
-                    {% if ouvrage.exemplaires_total == 1 %}
+                    {% if ouvrage.exemplaires_total == 1 or ouvrage.count_available_exemplaires == 0 %}
                     <a href="#reservation" class="btn custom-btn smoothscroll me-2" style="color: darkgray; pointer-events: none; cursor: not-allowed; background-color: lightgray;" onclick="return false;">Reserver  <span href="#" class="bi-bookmark smoothscroll"></span></a>
                     {% else %}
                     <a href="{% url 'ouvrages:make-reservation' ouvrage.id%}" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver <span href="#" class="bi-bookmark smoothscroll"></span></a>

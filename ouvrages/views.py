@@ -146,35 +146,46 @@ def exemplaire(request, pk):
     context = {'exemplaire': exemplaireObj}
     return render(request, 'ouvrages/single-exemplaire.html', context)
 
+# def createExemplaire(request):
+#     page = 'add'
+#     form = ExemplaireForm()
+#     if request.method == 'POST':
+#         form = ExemplaireForm(request.POST)
+#         if form.is_valid():
+#             quantite = form.cleaned_data['quantite']
+#             ouvrage_instance = form.cleaned_data['ouvrage']
+
+#             exemplaires_data = [
+#                 {'ouvrage': ouvrage_instance,
+#                  'etat': form.cleaned_data['etat'],
+#                  'reserve': form.cleaned_data['reserve'],
+#                  'id': generate_unique_id()}
+#                 for _ in range(quantite)
+#             ]
+            
+#             Exemplaire.objects.bulk_create([Exemplaire(**data) for data in exemplaires_data])
+#             return redirect('ouvrages:exemplaires')
+#     context = {'form': form, 'page': page}
+#     return render(request, 'ouvrages/exemplaire_form.html', context)
+
 def createExemplaire(request):
     page = 'add'
     form = ExemplaireForm()
     if request.method == 'POST':
         form = ExemplaireForm(request.POST)
         if form.is_valid():
-            quantite = form.cleaned_data['quantite']
-            ouvrage_instance = form.cleaned_data['ouvrage']
-
-            exemplaires_data = [
-                {'ouvrage': ouvrage_instance,
-                 'etat': form.cleaned_data['etat'],
-                 'reserve': form.cleaned_data['reserve'],
-                 'id': generate_unique_id()}
-                for _ in range(quantite)
-            ]
-            
-            Exemplaire.objects.bulk_create([Exemplaire(**data) for data in exemplaires_data])
-            return redirect('ouvrages:exemplaires')
+            form.save()
+            return redirect('ouvrages:exemplaires')  # Adjust this redirect to match your actual URL name
     context = {'form': form, 'page': page}
     return render(request, 'ouvrages/exemplaire_form.html', context)
 
 
-def generate_unique_id():
-    # Generate a unique id
-    while True:
-        potential_id = f"FSM{get_random_string(length=4)}"
-        if not Exemplaire.objects.filter(id=potential_id).exists():
-            return potential_id
+# def generate_unique_id():
+#     # Generate a unique id
+#     while True:
+#         potential_id = f"FSM{get_random_string(length=4)}"
+#         if not Exemplaire.objects.filter(id=potential_id).exists():
+#             return potential_id
 
 def updateExemplaire(request, pk):
     page = 'edit'

@@ -46,6 +46,21 @@ class Ouvrage(models.Model):
     def __str__(self):
         return self.titre
     
+    def save(self, *args, **kwargs):
+        # Automatically set recommended to True if vote_ratio is above 80%
+        if self.vote_ratio > 80:
+            self.recommended = True
+        else:
+            self.recommended = False
+        super(Ouvrage, self).save(*args, **kwargs)
+    
+    def update_exemplaires_total(self):
+        self.exemplaires_total = self.exemplaire_set.count()
+        self.save()
+        
+    def count_available_exemplaires(self):
+        return self.exemplaire_set.filter(etat='DISPONIBLE').count()
+        
 class Review(models.Model):
     owner = models.ForeignKey(
         Profile, on_delete=models.CASCADE, null=True, blank=True)

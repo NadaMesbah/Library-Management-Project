@@ -36,15 +36,24 @@ def create_exemplaire_on_ouvrage_create(sender, instance, created, **kwargs):
         logger.info(f"Exemplaire created with ID {barcode}")
         
 @receiver(post_save, sender=Exemplaire)
-def update_ouvrage_on_exemplaire_save(sender, instance, created, **kwargs):
+def update_exemplaires_total_on_save(sender, instance, created, **kwargs):
     if created:
-        instance.ouvrage.exemplaires_total += 1
-        instance.ouvrage.save()
+        instance.ouvrage.update_exemplaires_total()
 
 @receiver(post_delete, sender=Exemplaire)
-def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
-    instance.ouvrage.exemplaires_total -= 1
-    instance.ouvrage.save()
+def update_exemplaires_total_on_delete(sender, instance, **kwargs):
+    instance.ouvrage.update_exemplaires_total()
+        
+# @receiver(post_save, sender=Exemplaire)
+# def update_ouvrage_on_exemplaire_save(sender, instance, created, **kwargs):
+#     if created:
+#         instance.ouvrage.exemplaires_total += 1
+#         instance.ouvrage.save()
+
+# @receiver(post_delete, sender=Exemplaire)
+# def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
+#     instance.ouvrage.exemplaires_total -= 1
+#     instance.ouvrage.save()
 
 
 # @receiver(post_save, sender=Ouvrage)
