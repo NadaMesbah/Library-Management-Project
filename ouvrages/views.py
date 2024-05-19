@@ -6,7 +6,7 @@ from django.contrib import messages
 from .forms import OuvrageForm, ExemplaireForm, ReservationForm
 from django.db.models import Q
 from django.utils.crypto import get_random_string
-from .utils import searchOuvrages, searchExemplaires, paginateOuvrages
+from .utils import searchOuvrages, searchExemplaires, paginateOuvrages, paginateExemplaires
 # Business Logic
 
 def index(request):
@@ -126,8 +126,15 @@ def deleteOuvrage(request, pk):
 
 def exemplaires(request):
     exemplaires, search_query = searchExemplaires(request)
-    exemplaires_count = exemplaires.count()
-    context = {'exemplaires_count': exemplaires_count, 'exemplaires': exemplaires, 'search_query' :search_query}
+    exemplaires_count = exemplaires.count() # Count before pagination
+    custom_range, paginated_exemplaires = paginateExemplaires(request, exemplaires, 3)
+    context = {
+        'exemplaires': paginated_exemplaires,
+        'exemplaires_count': exemplaires_count,
+        'search_query': search_query,
+        'custom_range': custom_range,
+        # 'exemplaires': exemplaires  # Comment this out or define exemplaires if needed
+    }
     return render(request, 'ouvrages/exemplaires.html', context)
 
 def exemplaire(request, pk):

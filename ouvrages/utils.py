@@ -31,6 +31,34 @@ def paginateOuvrages(request, ouvrages, results):
 
     return custom_range, ouvrages
 
+def paginateExemplaires(request, exemplaires, results):
+
+    page = request.GET.get('page')
+    paginator = Paginator(exemplaires, results)
+
+    try:
+        exemplaires = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        exemplaires = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        exemplaires = paginator.page(page)
+
+    leftIndex = (int(page) - 4)
+
+    if leftIndex < 1:
+        leftIndex = 1
+
+    rightIndex = (int(page) + 5)
+
+    if rightIndex > paginator.num_pages:
+        rightIndex = paginator.num_pages + 1
+
+    custom_range = range(leftIndex, rightIndex)
+
+    return custom_range, exemplaires
+
 
 def searchOuvrages(request):
     search_query = ''
