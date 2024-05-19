@@ -46,6 +46,9 @@ class Ouvrage(models.Model):
     def __str__(self):
         return self.titre
     
+    class Meta:
+        ordering = ['-vote_ratio', '-vote_total', 'titre']
+    
     def save(self, *args, **kwargs):
         # Automatically set recommended to True if vote_ratio is above 80%
         if self.vote_ratio > 80:
@@ -98,14 +101,17 @@ class Exemplaire(models.Model):
     ouvrage = models.ForeignKey('Ouvrage', on_delete=models.CASCADE)
     etat = models.CharField(max_length=20, choices=ETAT_CHOICES, default='DISPONIBLE')
     reserve = models.BooleanField(default=False, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
     
     def save(self, *args, **kwargs):
         # If id is not set, it will be handled in the view
         super().save(*args, **kwargs)
 
-    
     def __str__(self):
         return f"Exemplaire {self.id} de l'ouvrage {self.ouvrage.titre}"
+    
+    class Meta:
+        ordering = ['-created']
     
 
     
