@@ -184,11 +184,12 @@
 {% endif %}
 
 {% if not user.is_staff %}
-<section>
-    <div class="pt-lg-5 pb-lg-5 section-bg">
-        <div class="d-flex flex-row align-items-start">
-            <div class="container col-lg-7 col-12 ms-lg-5">
-                <div class="w-auto">
+<section class="section-bg py-lg-5 pb-lg-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row justify-content-lg-evenly align-items-start">
+
+            <div class="col-lg-7 col-12 mb-5">
+                <div class="">
                     <h3 class="mb-3 pb-2">Feedback</h3>
                     <p class="mb-lg-4">
                         <span style="font-weight: bold;">{{ ouvrage.vote_ratio }}%</span> Positive Feedback ({{ ouvrage.vote_total }} vote{{ ouvrage.vote_total|pluralize:"s" }})
@@ -233,8 +234,8 @@
                 {% endif %}
             </div>
 
-            <div class="container col-lg-4 col-12 ms-lg-3">
-                <div class="col-12">
+            <div class="col-lg-5 col-12 mb-5">
+                <div class="w-auto">
                     <h3 class="mb-5 pb-2">Reviews</h3>
                 </div>
                 <div class="commentList col-12 mt-lg-2">
@@ -254,9 +255,7 @@
                         {% endif %}
                     {% endfor %}
                 </div> 
-
-                <div class="col-lg-4 col-12 mt-lg-2 ms-lg-5">
-                    {% if reviews.has_other_pages %}
+                {% if reviews.has_other_pages %}
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-center mb-0">
                                 {% if reviews.has_previous %}
@@ -289,8 +288,8 @@
                             </ul>
                         </nav>
                     {% endif %}
-                </div>
             </div>
+
         </div>
     </div>
 </section>
