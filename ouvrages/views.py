@@ -3,10 +3,10 @@ from .models import Ouvrage, Categorie, Exemplaire, Reservation, Emprunt
 from adherants.models import Profile
 from django.core.paginator import Paginator
 from django.contrib import messages
-from .forms import OuvrageForm, ExemplaireForm, ReservationForm
+from .forms import OuvrageForm, ExemplaireForm, ReservationForm, ReviewForm
 from django.db.models import Q
 from django.utils.crypto import get_random_string
-from .utils import searchOuvrages, searchExemplaires, paginateOuvrages, paginateExemplaires
+from .utils import searchOuvrages, searchExemplaires, paginateOuvrages, paginateExemplaires, paginateReviews
 # Business Logic
 
 def index(request):
@@ -81,8 +81,30 @@ def ouvrages(request):
 #whatever we name the parameter here <str:pk> we should name it here :
 def ouvrage(request, pk):
     ouvrageObj = Ouvrage.objects.get(id=pk)
-    #categories = ouvrageObj.categories.all()
-    context = {'ouvrage': ouvrageObj}
+    form = ReviewForm()
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.ouvrage = ouvrageObj
+            review.owner = request.user.profile
+            review.save()
+
+            ouvrageObj.getVoteCount
+
+            messages.success(request, 'Your review was successfully submitted!')
+            return redirect('ouvrages:ouvrage', pk=ouvrageObj.id)
+
+    reviews = ouvrageObj.review_set.all()
+    custom_range, reviews = paginateReviews(request, reviews, 3)
+
+    context = {
+        'reviews': reviews,
+        'custom_range': custom_range,
+        'ouvrage': ouvrageObj,
+        'form': form
+    }
     return render(request, 'ouvrages/single-ouvrage.html', context)
 
 def createOuvrage(request):
@@ -141,6 +163,8 @@ def exemplaire(request, pk):
     exemplaireObj = Exemplaire.objects.get(id=pk)
     context = {'exemplaire': exemplaireObj}
     return render(request, 'ouvrages/single-exemplaire.html', context)
+
+
 
 # def createExemplaire(request):
 #     page = 'add'

@@ -182,129 +182,118 @@
     </div>
 </section> 
 {% endif %}
+
 {% if not user.is_staff %}
 <section>
     <div class="pt-lg-5 pb-lg-5 section-bg">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                <div class="w-100 col-12">
+        <div class="d-flex flex-row align-items-start">
+            <div class="container col-lg-7 col-12 ms-lg-5">
+                <div class="w-auto">
                     <h3 class="mb-3 pb-2">Feedback</h3>
                     <p class="mb-lg-4">
-                    <span style="font-weight: bold;">{{ouvrage.vote_ratio}}%</span> Postitive
-                    Feedback ({{ouvrage.vote_total}} vote{{ ouvrage.vote_total|pluralize:"s" }})
+                        <span style="font-weight: bold;">{{ ouvrage.vote_ratio }}%</span> Positive Feedback ({{ ouvrage.vote_total }} vote{{ ouvrage.vote_total|pluralize:"s" }})
                     </p>
                 </div>
+
+                {% if request.user.profile.id in ouvrage.reviewers %}
+                    <p class="text-danger col-12">You have already submitted your review for this ouvrage</p>
+                {% endif %}
+
                 {% if not user.is_authenticated %}
-                <div class="col-lg-10 col-12 m-auto" id="reservation">
-                    <blockquote>
-                    Connectez-vous pour laisser un Feedback... <a href="{% url 'login' %}" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a> 
-                    </blockquote>
-                </div>    
-                {% else %}   
-                <div class="w-100 col-12 mt-lg-2">
-                    <form action="#" method="post" class="custom-form contact-form" role="form">
-                        <div class="col">
-                        <div class="col-lg-12 col-12">
-                            <div>
-                                <ul id="reviews">
-                                    {% for review in ouvrage.reviews.all %}
-                                        <li>
-                                            <div class="stars">
-                                                {% for i in "12345" %}
-                                                    <span class="star {% if i <= review.rating %} checked {% endif %}" onclick="rateBook({{ review.id }}, {{ i }})">&#9733;</span>
-                                                {% endfor %}
-                                            </div>
-                                            <p>{{ review.body }}</p>
-                                        </li>
-                                    {% empty %}
-                                        <!-- No reviews yet -->
-                                    {% endfor %}
-                                </ul>
-                                <div class="stars">
-                                {% for i in "12345" %}
-                                    <span id="star" class="star" onclick="addReview({{ i }})">&#9733;</span>
-                                {% endfor %}
-                                </div>
-                            </div>
-                        
-                            <div class="form-floating">
-                                <textarea class="form-control" id="message" name="message"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-12 ms-0">
-                            <button type="submit" class="form-control">Submit</button>
-                        </div>
-                        </div>
-                    </form>
-                </div>
-                </div>
-
-                <div class="col">
-                <div class="commentList w-100 col-12 mt-lg-2 ms-lg-5">
-                    <div class="comment">
-                        <a href="#">
-                            <img class="avatar avatar--sm"
-                                src="{% static 'images/pfp.jpg'%}" alt="user" />
-                        </a>
-                        <div class="comment__details">
-                            <a href="#" class="comment__author">Sulamita Ivanov</a>
-                            <p class="comment__info">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit alias numquam perferendis
-                            mollitia minus minima exercitationem possimus ab deserunt qui, soluta iusto doloribus eveniet
-                            similique consequuntur ratione, dignissimos ut magni laborum quo.
-                            </p>
-                        </div>
+                    <div class="col-lg-10 col-12 m-auto" id="reservation">
+                        <blockquote>
+                            Connectez-vous pour laisser un Feedback... <a href="{% url 'login' %}" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a>
+                        </blockquote>
                     </div>
-
-                    <div class="comment">
-                        <a href="#">
-                        <img class="avatar avatar--sm" src="{% static 'images/pfp.jpg'%}" alt="user" />
-                        </a>
-                        <div class="comment__details">
-                            <a href="#" class="comment__author">Dennis Ivanov</a>
-                            <p class="comment__info">
-                                Consectetur adipisicing elit. Reprehenderit alias numquam perferendis mollitia minus minima
-                                exercitationem possimus ab deserunt qui, ratione, dignissimos ut magni laborum quo.
-                            </p>
-                        </div>
-                    </div> 
-                </div> 
-                <div class="w-100 col-12 mt-lg-2 ms-lg-5">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center mb-0">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">Prev</span>
-                                </a>
-                            </li>
-    
-                            <li class="page-item active" aria-current="page">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            
-                            <li class="page-item">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            
-                            <li class="page-item">
-                                <a class="page-link" href="#">3</a>
-                            </li>
-                            
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                {% else %}
+                    <div class="w-auto mt-lg-2">
+                        <form action="{% url 'ouvrages:ouvrage' ouvrage.id %}" method="post" class="custom-form contact-form" role="form">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="col-lg-10 col-12 mt-2">
+                                    <div class="form-floating">
+                                        {{ field }}
+                                        <label class="label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    </div>
+                                    {% if field.help_text %}
+                                        <div class="form-text">{{ field.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            {% if request.user.profile.id in ouvrage.reviewers %}
+                            <button type="submit" class="btn custom-btn mt-3" style="color: darkgray; pointer-events: none; cursor: not-allowed; background-color: lightgray;" onclick="return false;"style="color: darkgray; pointer-events: none; cursor: not-allowed; background-color: lightgray;" onclick="return false;">Envoyer</button>
+                            {%else%}
+                            <button type="submit" class="btn custom-btn mt-3">Envoyer</button>
+                            {%endif%}
+                        </form>
+                    </div>
                 {% endif %}
             </div>
-            </div> 
+
+            <div class="container col-lg-4 col-12 ms-lg-3">
+                <div class="col-12">
+                    <h3 class="mb-5 pb-2">Reviews</h3>
+                </div>
+                <div class="commentList col-12 mt-lg-2">
+                    {% for review in reviews %}
+                        {% if review.body %}
+                            <div class="comment">
+                                <a href="#">
+                                    <img class="avatar avatar--sm" src="{{review.owner.profile_image.url}}" alt="user" />
+                                </a>
+                                <div class="comment__details">
+                                    <a href="#" class="comment__author">{{review.owner.nom}} {{review.owner.prenom}}</a>
+                                    <p class="comment__info">
+                                        {{review.body|linebreaksbr}}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div> 
+
+                <div class="col-lg-4 col-12 mt-lg-2 ms-lg-5">
+                    {% if reviews.has_other_pages %}
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center mb-0">
+                                {% if reviews.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{reviews.previous_page_number}}" aria-label="Previous">
+                                            <span aria-hidden="true">Prev</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in custom_range %}
+                                    {% if page == reviews.number %}
+                                        <li class="page-item active" aria-current="page">
+                                            <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if reviews.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{reviews.next_page_number}}" aria-label="Next">
+                                            <span aria-hidden="true">Next</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
-</section> 
+</section>
 {% endif %}
 
 {% if not user.is_authenticated %}
@@ -346,37 +335,6 @@
         </div>
     </div>
 </section> {% endcomment %}
-<script>
-    function addReview(rating) {
-        // Set the selected rating in the review input box
-        const message = document.getElementById("message");
-        message.value = `Rating: ${rating}/5\n\n\n\n`;
-        // Update the UI with the submitted review
-        const stars = document.querySelectorAll(".star");
-        for (let i = 0; i < rating; i++) {
-            stars[i].classList.add("checked");
-        }
-    }
-    function submitReview() {
-        // Get the review text from the input box
-        const message = document.getElementById("message").value;
-        // Extract the rating from the review text
-        const ratingMatch = message.match(/Rating: (\d)\/5/);
-        let rating = 0;
-        if (ratingMatch) {
-            rating = parseInt(ratingMatch[1]);
-        }
-    }
-    function rateBook(reviewId, rating) {
-            
-        const stars = document.querySelectorAll(`[onclick="rateBook(${reviewId}, ${rating})"]`);
-        stars.forEach((star, index) => {
-            if (index < rating) {
-                star.classList.add('checked');
-            } else {
-                star.classList.remove('checked');
-            }
-        });
-    }
-</script>
+
+
 {% endblock content%}

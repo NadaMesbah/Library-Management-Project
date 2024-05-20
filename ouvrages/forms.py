@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Ouvrage, Exemplaire, Reservation
+from .models import Ouvrage, Exemplaire, Reservation, Review
 from django.db import transaction
 from django import forms
 from django.forms.widgets import DateInput
@@ -107,3 +107,18 @@ class ReservationForm(forms.ModelForm):
         #     self.fields['ouvrage'].initial = ouvrage_instance.titre
         #     self.fields['ouvrage'].widget = forms.TextInput(attrs={'disabled': True, 'class': 'form-control'})
 
+class ReviewForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['value', 'body']
+
+        labels = {
+            'value': 'Place your vote',
+            'body': 'Add a comment with your vote'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ReviewForm, self).__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'form-control'})

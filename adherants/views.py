@@ -11,6 +11,9 @@ from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
 from django.urls import conf
 from ouvrages.models import *
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from .models import Profile, Message, Reclamation,UserEmail
 from .forms import LoginForm, ProfileForm, UserForm, RegisterForm, UserEmailForm, ContactForm
@@ -199,7 +202,6 @@ def editProfile(request):
 
     context = {'form': form}
     return render(request, 'adherants/profile_form.html', context)
-
 
 # #li shuia logic
 # def collect_email(request):

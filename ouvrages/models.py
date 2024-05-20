@@ -63,6 +63,23 @@ class Ouvrage(models.Model):
         
     def count_available_exemplaires(self):
         return self.exemplaire_set.filter(etat='DISPONIBLE').count()
+    
+    @property
+    def reviewers(self):
+        queryset = self.review_set.all().values_list('owner__id', flat=True)
+        return queryset
+
+    @property
+    def getVoteCount(self):
+        reviews = self.review_set.all()
+        upVotes = reviews.filter(value='up').count()
+        totalVotes = reviews.count()
+
+        ratio = (upVotes / totalVotes) * 100
+        self.vote_total = totalVotes
+        self.vote_ratio = ratio
+
+        self.save()
         
 class Review(models.Model):
     owner = models.ForeignKey(
@@ -76,6 +93,7 @@ class Review(models.Model):
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
     #choices is gonna be a drop down list and the user can select from it
+    rating = models.PositiveIntegerField(default=0)  # Add this line
     created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
