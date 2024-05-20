@@ -143,15 +143,20 @@ class Exemplaire(models.Model):
 # def update_ouvrage_on_exemplaire_delete(sender, instance, **kwargs):
 #     instance.ouvrage.exemplaires_total -= 1
 #     instance.ouvrage.save()
+# models.py
 
-    
+# models.py
+
+
 class Emprunt(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
-    emprunteur = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
-    exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE)
-    date_emprunt = models.DateTimeField(auto_now_add=True)
+    emprunteur = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='emprunts', null=True, blank=True)
+    exemplaire = models.ForeignKey('Exemplaire', on_delete=models.CASCADE, related_name='emprunts')
+    date_emprunt = models.DateTimeField(default=timezone.now)
     date_retour = models.DateTimeField(null=True, blank=True)
     rendu = models.BooleanField(default=False, blank=True)
+    automatique = models.BooleanField(default=True)  # Champ pour identifier les emprunts automatiques
+    confirmer = models.BooleanField(default=False)  # Champ pour indiquer si l'emprunt a été confirmé par le bibliothécaire
 
     @property
     def calculer_date_retour(self):
@@ -159,14 +164,13 @@ class Emprunt(models.Model):
     
     def save(self, *args, **kwargs):
         if self.rendu:
-            # Check if the book is being returned
             if not self.pk or (self.pk and not Emprunt.objects.get(pk=self.pk).rendu):
-                # Update the exemplaires_total field of the related Ouvrage when the book is returned
                 self.exemplaire.ouvrage.exemplaires_total += 1
                 self.exemplaire.ouvrage.save()
 
         super().save(*args, **kwargs)
-        
+
+
 # @receiver(post_save, sender=Emprunt)
 # def update_exemplaire_on_emprunt_save(sender, instance, created, **kwargs):
 #     if created:
@@ -227,6 +231,7 @@ class Emprunt(models.Model):
 #     exemplaire=your_exemplaire_instance,
 #     date_retour=emprunt.calculate_return_date()  
 # )
+
 class Reservation(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     date_demande =  models.DateTimeField(auto_now_add=True)
@@ -243,6 +248,8 @@ class Reservation(models.Model):
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
     date_retour_prevue = models.DateField(null=True, blank=True)
     
-    def __str__(self):
-        return f"Réservation de l'ouvrage {self.ouvrage.titre} de la part de {self.owner.username}"
+    def can_be_converted_to_emprunt(self):
+        today = datetime.now().date()
+        return self.statut == 'acceptee' and self.date_reservation <= today
+
     

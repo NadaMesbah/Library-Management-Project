@@ -2,6 +2,36 @@
 
 {% block content %}
 {% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.supprimer-emprunt-btn').click(function(e) {
+            e.preventDefault(); // Empêche le comportement par défaut du bouton
+
+            // Récupérer l'ID de l'emprunt à supprimer
+            var empruntId = $(this).data('emprunt-id');
+
+            // Envoyer une requête AJAX pour supprimer l'emprunt
+            $.ajax({
+                url: '/supprimer_emprunt/' + empruntId + '/',
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    // Si la suppression réussit, masquer la ligne de l'emprunt
+                    $('#emprunt-' + empruntId).hide();
+                    alert("L'emprunt a été supprimé avec succès.");
+                },
+                error: function(xhr, errmsg, err) {
+                    // Gérer les erreurs en conséquence
+                    console.log(xhr.status + ": " + xhr.responseText);
+                    alert("Une erreur s'est produite lors de la suppression de l'emprunt.");
+                }
+            });
+        });
+    });
+</script>
 
 <header class="site-header d-flex flex-column justify-content-center align-items-center">
     <div class="container">
@@ -26,11 +56,11 @@
             color: #83b4bb; /* Couleur du texte */
             border-radius: 5px !important; /* Bordures arrondies */
             padding: 10px; /* Espacement interne */
-            }
-            table {
+        }
+        table {
             border-collapse: separate;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Ajouter une ombre */
-            }
+        }
     </style>
     <div class="container">
         <div class="row">
@@ -43,6 +73,7 @@
                         <table class="table ">
                             <thead >
                                 <tr class="th">
+                                    <th class="th">CNE</th>
                                     <th class="th">Nom de l'Étudiant</th>
                                     <th class="th">Exemplaire Emprunté</th>
                                     <th class="th">Date d'Emprunt</th>
@@ -53,21 +84,21 @@
                             <tbody>
                                 {% for emprunt in emprunts %}
                                 <tr>
+                                    <td>{{ emprunt.emprunteur.CNE }}</td>
                                     <td>{{ emprunt.emprunteur.nom }}</td>
                                     <td>{{ emprunt.exemplaire.ouvrage.titre }}</td>
                                     <td>{{ emprunt.date_emprunt }}</td>
                                     <td>{{ emprunt.date_retour }}</td>
                                     <td>
-                                        <a href="{% url 'ouvrages:modifier_emprunt' emprunt.id %}" style="color: #137C8B;" class="btn mybtn">Modifier</a>
-                                        <!-- Ajoutez ici le lien pour supprimer l'emprunt -->
-                                  </td>
-                               </tr>
-                               {% empty %}
+                                        <a href="#" class="btn mybtn" style="color: #137C8B;">Modifier</a>
+                                        <button class="btn btn-custom supprimer-emprunt-btn" data-emprunt-id="{{ emprunt.id }}">Supprimer</button>
+                                    </td>
+                                </tr>
+                                {% empty %}
                                 <tr>
-                                    <td colspan="5" class="fw-semibold text-center text-warning">Aucun emprunt disponible</td>
+                                    <td colspan="6" class="fw-semibold text-center text-warning">Aucun emprunt disponible</td>
                                 </tr>
                                 {% endfor %}
-                           
                             </tbody>
                         </table>
                     </div>
@@ -76,4 +107,4 @@
         </div>
     </div>
 </section>
-{% endblock content%}
+{% endblock content %}
