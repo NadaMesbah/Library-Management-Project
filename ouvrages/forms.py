@@ -2,13 +2,16 @@ from datetime import datetime, timedelta
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.utils import timezone
-from .forms import OuvrageForm, ExemplaireForm, ReservationForm, ReviewForm, EmpruntForm
 from django.db.models import Q
+from django.db import transaction
 from django.utils.crypto import get_random_string
+from django.forms import ModelForm
+from django import forms
+
+
 from django.http import JsonResponse
 from .utils import searchOuvrages, searchExemplaires, paginateOuvrages, paginateExemplaires, paginateReviews
-from django import forms
-from .models import Review, Emprunt, Exemplaire, Profile
+from .models import *
 
 class OuvrageForm(ModelForm):
     class Meta:
@@ -55,9 +58,9 @@ class ExemplaireForm(forms.ModelForm):
     def generate_unique_id(self):
         potential_id = f"FSM{get_random_string(length=4)}"
         while Exemplaire.objects.filter(id=potential_id).exists():
-            logger.info(f"Potential ID {potential_id} already exists. Generating a new one.")
+           
             potential_id = f"FSM{get_random_string(length=4)}"
-        logger.info(f"Generated unique ID: {potential_id}")
+       
         return potential_id
 
     @transaction.atomic
@@ -104,8 +107,8 @@ class ReservationForm(forms.ModelForm):
         
     def __init__(self, *args, ouvrage_instance=None, **kwargs):  
         super().__init__(*args, **kwargs)
-        self.fields['date_reservation'].widget = DateInput(attrs={'type': 'date', 'id': 'id_date_reservation','class': 'form-control'})
-        self.fields['date_retour_prevue'].widget = DateInput(attrs={'type': 'date', 'id': 'id_date_retour_prevue','class': 'form-control'})
+        self.fields['date_reservation'].widget = forms.DateInput(attrs={'type': 'date', 'id': 'id_date_reservation','class': 'form-control'})
+        self.fields['date_retour_prevue'].widget = forms.DateInput(attrs={'type': 'date', 'id': 'id_date_retour_prevue','class': 'form-control'})
         
         # if ouvrage_instance: 
         #     self.fields['ouvrage'].queryset = Ouvrage.objects.filter(pk=ouvrage_instance.pk)

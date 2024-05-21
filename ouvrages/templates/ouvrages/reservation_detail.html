@@ -26,7 +26,7 @@
 
 <section class="pt-5 pb-5 section-bg">
     <div class="container">
-        <div class="row">
+        <div class="row justify-content-lg-around">
             <div class="col-lg-6 col-12">
                 <!-- Formulaire avec jeton CSRF inclus -->
                 <form action="#" method="post" class="custom-form contact-form" role="form">
@@ -89,14 +89,22 @@
                         <button type="submit" name="cancel_reservation" class="btn mybtn custom-border-btn smoothscroll me-2">Annuler</button>
                     </div>
                 </form>
+                <div class="col-lg-5 col-12 p-lg-3">
+                    {% if reservation.ouvrage.featured_image %}
+                        <img src="{{ reservation.ouvrage.featured_image.url }}" alt="Image de l'ouvrage associé à la réservation" class="img-thumbnail">
+                    {% else %}
+                        <p>Pas d'image disponible pour cet ouvrage.</p>
+                    {% endif %}
+                </div>
             </div>
-            <div class="col-lg-5 col-12 mx-auto mt-5 mt-lg-0">
+            
+            {% comment %} <div class="col-lg-5 col-12 mx-auto mt-5 mt-lg-0">
                 {% if reservation.ouvrage.featured_image %}
                     <img src="{{ reservation.ouvrage.featured_image.url }}" alt="Image de l'ouvrage associé à la réservation" class="img-fluid">
                 {% else %}
                     <p>Pas d'image disponible pour cet ouvrage.</p>
                 {% endif %}
-            </div>
+            </div> {% endcomment %}
         </div>
     </div>
 </section>

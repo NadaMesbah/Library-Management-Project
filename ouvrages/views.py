@@ -1,8 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Ouvrage, Categorie, Exemplaire, Reservation, Emprunt
 from adherants.models import Profile
-from .models import Ouvrage, Exemplaire, Reservation, Review, Profile, Emprunt
+from datetime import datetime, timedelta
+from django.contrib import messages
+from django.utils import timezone
+from django.db.models import Q
+from .models import Ouvrage, Categorie, Exemplaire, Reservation, Review, Profile, Emprunt
 from django.db import transaction
+from .forms import OuvrageForm, ExemplaireForm, ReservationForm, ReviewForm, EmpruntForm
+from .utils import searchOuvrages, searchExemplaires, paginateOuvrages, paginateExemplaires, paginateReviews
+
 
 def index(request):
     ouvrages, search_query = searchOuvrages(request)
