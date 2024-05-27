@@ -49,7 +49,7 @@
                 {% else %}
                
                 <li class="nav-item">
-                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Trending Books</a>
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Recommended</a>
                 </li>
 
                 <li class="nav-item">
@@ -70,6 +70,7 @@
                     <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                         <li><a class="dropdown-item" href="{% url 'ouvrages:browse'%}">Browse Books</a></li>
                         {% comment %} <li><a class="dropdown-item" href="{% url 'ouvrages:topics-listing'%}">Exemplaires</a></li> {% endcomment %}
+                        <li><a class="dropdown-item" href="{% url 'ouvrages:user-reservations' %}">My reservations</a></li>
                         <li>
                             <a class="dropdown-item" href="{% url 'inbox' %}">Inbox</a>
                         </li>
@@ -125,7 +126,6 @@
                     {% if user.is_authenticated and not user.is_staff %}
                         <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                             <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'ouvrages:user-reservations' %}">Reservations</a></li>
                             <li>
                                 <a class="dropdown-item" href="{% url 'inbox' %}">Inbox</a>
                             </li>

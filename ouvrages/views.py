@@ -320,7 +320,7 @@ def user_reservations(request):
 @user_passes_test(est_administrateur)
 def list_reservations(request):
     # Supprimer les réservations expirées
-    supprimer_reservations_expirees()
+    supprimer_reservations_expirees(request)
     # Récupérer toutes les réservations depuis la base de données
     reservations = Reservation.objects.all()
     # Passer les réservations au template
@@ -374,7 +374,7 @@ def reservation_detail(request, pk):
 
 
 @user_passes_test(est_administrateur)
-def supprimer_reservations_expirees():
+def supprimer_reservations_expirees(request):
     # Récupérer les réservations expirées (plus de 24 heures)
     reservations_expirees = Reservation.objects.filter(date_retour_prevue__lte=timezone.now())
 
@@ -433,7 +433,7 @@ def modifier_exemplaire(request, pk):
 @user_passes_test(est_administrateur)
 def liste_emprunts(request):
     # Supprimer les emprunts automatiques non confirmés
-    supprimer_emprunts_non_confirmes()
+    supprimer_emprunts_non_confirmes(request)
 
      # Supprimer les emprunts rendus
     emprunts_rendus = Emprunt.objects.filter(rendu=True)
@@ -494,7 +494,7 @@ def nouvel_emprunt(request):
 
 
 @user_passes_test(est_administrateur)
-def supprimer_emprunts_non_confirmes():
+def supprimer_emprunts_non_confirmes(request):
     # Récupérer tous les emprunts automatiques non confirmés
     emprunts_non_confirmes = Emprunt.objects.filter(
         automatique=True,

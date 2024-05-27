@@ -22,9 +22,10 @@
 
 <section class="pt-5 pb-5 section-bg">
   <div class="container">
+    {% for message in messageRequests %}
       <div class="d-flex flex-column justify-content-center align-items-center">
-        {% for message in messageRequests %}
-          <div class="col-lg-6 custom-block custom-block-topics-listing bg-white shadow-lg">
+        
+          <div class="col-lg-6 custom-block custom-block-topics-listing bg-white shadow-lg mb-lg-4">
               
               <div class="row justify-content-lg-evenly align-items-start">
                 <div class="col-lg-3 col-12">
@@ -37,16 +38,18 @@
                       <a href="{% url 'message' message.id %}">
                       <h4 class="w-100">{{message.subject}}</h4>
                       <p class="w-100">{{message.created}}</p>
-                      <div class="text-black-50 fw-normal fs-4 w-100">{{message.body|linebreaksbr}}</div>
+                      {% comment %} <div class="text-black-50 fw-normal fs-4 w-100">{{message.body|linebreaksbr|slice:"10"}}</div> {% endcomment %}
                       </a>
                     </div>
                 </div>
              </div>
-             {% empty %}
-              <h4 class="text-info"><i class="bi-info-circle">No messages yet.</i></h4>
-              {% endfor %}
+             
           </div>
+          
       </div>
+      {% empty %}
+          <h4 class="text-info"><i class="bi-info-circle">No messages yet.</i></h4>
+      {% endfor %}
   </div>
 </section>
 
