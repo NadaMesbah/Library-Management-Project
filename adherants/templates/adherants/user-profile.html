@@ -18,7 +18,9 @@
 </header>
 <section class="section-bg py-lg-5 pb-lg-3 d-flex flex-column justify-content-center align-items-center">
     <div class="container">
+        {% if not profile.user.is_staff%}
         <div class="row justify-content-lg-between align-items-start px-lg-5 ms-lg-5">
+            
             <div class="col-lg-4 col-12 mb-5">
                 <div class="w-100 custom-block bg-white shadow-lg d-flex flex-column justify-content-center align-items-center">
                     <img src="{{ profile.imageURL }}" class="avatar avatar--lg" alt="profile picture">
@@ -31,6 +33,7 @@
             </div>
             <div class="col-lg-7 col-12 mb-5 ms-auto">
                 <div class="d-flex flex-column col-12 col-lg-10">
+                    
                     
                         <h4 class="mb-2 p-2">Informations de l'adhérant:</h4>
                         <p class="mb-0 p-2"><strong>Email:</strong> {{ profile.email }}</p>
@@ -89,9 +92,27 @@
                             {% endfor %}
                         </div>
                     </div>
+                   
+                </div>
+            </div>
+            
+        </div>
+        {% else %}
+        <div class="d-flex justify-content-lg-center align-items-start px-lg-5 ms-lg-5">
+            <div class="col-lg-6 col-12 mb-5">
+                <div class="w-100 custom-block bg-white shadow-lg d-flex flex-column justify-content-center align-items-center">
+                    <img src="{{ profile.imageURL }}" class="avatar avatar--lg" alt="profile picture">
+                    <h4 class="mb-0 p-2 mt-3 text-info"><strong>Bibliothécaire</strong></h4>
+                    <p class="mb-0 p-2 mt-3"><strong>Nom:</strong> {{ profile.nom }}</p>
+                    <p class="mb-0 p-2 mt-2"><strong>Prénom:</strong> {{ profile.prenom }}</p>
+                    <p class="mb-0 p-2 mt-2"><strong>Téléphone:</strong> {{ profile.phonenumber }}</p>
+                    {% if request.user.profile.id != profile.id %}
+                        <a href="{% url 'create-message' profile.id %}" class="btn mybtn my-lg-3 mt-3 w-75">Envoyer un message</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
+            {% endif %}
     </div>
 </section>
 {% endblock content %}
