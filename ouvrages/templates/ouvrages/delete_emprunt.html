@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-lg-5 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page">Delete Emprunt </li>
+                    </ol>
+                </nav>
+
+                <h2 class="text-white">Delete Emprunt Confirmation</h2>
+            </div>
+
+        </div>
+    </div>
+</header>
+<section class="pt-lg-3 pb-lg-5 section-bg col-12 col-lg-12 d-flex flex-column justify-content-start align-items-center">
+<form action="" method="post" role="form" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2">
+    {% csrf_token %}
+    <p>Are you sure you want to delete this emprunt <strong>"{{ emprunt }}"</strong>?</p>
+    <a href="{% url 'ouvrages:emprunt' %}" class="btn mybtn custom-border-btn smoothscroll me-2">Go Back</a>
+    <button class="btn custom-btn custom-border-btn smoothscroll me-2" type="submit" >Confirm Delete</button>
+</form>
+</section>
+{% endblock content %}

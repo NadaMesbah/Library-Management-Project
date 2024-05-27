@@ -455,7 +455,7 @@ def liste_emprunts(request):
 
 
 @user_passes_test(est_administrateur)
-def nouvel_emprunt(request):
+def nouvelEmprunt(request):
     if request.method == 'POST':
         form = EmpruntForm(request.POST)
         if form.is_valid():
@@ -492,6 +492,39 @@ def nouvel_emprunt(request):
         form = EmpruntForm()
     return render(request, 'ouvrages/nouvel_emprunt.html', {'form': form})
 
+@user_passes_test(est_administrateur)
+def modifier_emprunt(request, emprunt_id):
+    emprunt = get_object_or_404(Emprunt, id=emprunt_id)
+
+    if request.method == 'POST':
+        form = EmpruntForm(request.POST, instance=emprunt)
+        if form.is_valid():
+            if form.cleaned_data.get('rendu'):
+                emprunt.exemplaire.etat = 'DISPONIBLE'
+                emprunt.exemplaire.reserve = False
+                emprunt.exemplaire.save()
+                emprunt.delete()
+                messages.success(request, "L'emprunt a été marqué comme rendu et supprimé avec succès.")
+                return redirect('ouvrages:emprunt')
+            else:
+                form.save()
+                messages.success(request, "L'emprunt a été modifié avec succès.")
+                return redirect('ouvrages:emprunt')
+    else:
+        form = EmpruntForm(instance=emprunt)
+
+    return render(request, 'ouvrages/modifier_emprunt.html', {'form': form})
+
+@user_passes_test(est_administrateur)
+def deleteEmprunt(request, pk):
+    emprunt = get_object_or_404(Emprunt, id=pk)
+    if request.method == 'POST':
+        # If the request is POST, delete the ouvrage
+        emprunt.delete()
+        return redirect('ouvrages:emprunt')
+    # If the request is not POST, render the confirmation page
+    context = {'emprunt': emprunt}
+    return render(request, 'ouvrages/delete_emprunt.html', context)
 
 @user_passes_test(est_administrateur)
 def supprimer_emprunts_non_confirmes(request):

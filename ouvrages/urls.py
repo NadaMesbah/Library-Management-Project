@@ -27,8 +27,10 @@ urlpatterns = [
     path('search-exemplaires/', views.search_exemplaires, name='search_exemplaires'),
     path('modifier_exemplaire/<str:pk>/', views.modifier_exemplaire, name='modifier_exemplaire'),
     path('emprunt/', views.liste_emprunts, name="emprunt"),
-    path('nouvel-emprunt/',views.nouvel_emprunt, name='nouvel_emprunt'),
-     path('supprimer_emprunt/<uuid:emprunt_id>/', views.supprimer_emprunt, name='supprimer_emprunt'),
+    path('nouvel_emprunt/', views.nouvelEmprunt, name='nouvel_emprunt'),
+    path('modifier_emprunt/<uuid:emprunt_id>/', views.modifier_emprunt, name='modifier_emprunt'),
+    path('supprimer_emprunt/<uuid:emprunt_id>/', views.supprimer_emprunt, name='supprimer_emprunt'),
+    path('delete_emprunt/<str:pk>', views.deleteEmprunt, name='delete_emprunt'),
     #reservations
     path('list_reservations/', views.list_reservations, name='list_reservations'),
     path('reservation_detail/<str:pk>', login_required(views.reservation_detail), name="reservation_detail"),

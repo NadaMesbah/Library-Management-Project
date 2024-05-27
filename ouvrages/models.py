@@ -169,6 +169,9 @@ class Emprunt(models.Model):
                 self.exemplaire.ouvrage.save()
 
         super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return f"Emprunt de l'exemplaire {self.exemplaire.id} de la part de {self.emprunteur.username}"
 
 
 # @receiver(post_save, sender=Emprunt)

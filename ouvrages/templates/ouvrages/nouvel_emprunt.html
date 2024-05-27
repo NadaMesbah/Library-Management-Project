@@ -25,6 +25,13 @@
             <form method="post" enctype="multipart/form-data" class="custom-form contact-form">
                 {% csrf_token %}
                 {{ form.as_p }}
+                {% for field in form %}
+                    {% if field.errors %}
+                    {% for error in field.errors %}
+                        <p class="text-danger mt-lg-4">{{ error }}</p>
+                    {% endfor %}
+                    {% endif %}
+                {% endfor %}
                 <button type="submit" class="btn mybtn mt-3 mt-lg-4">Emprunter</button>
             </form>
 
