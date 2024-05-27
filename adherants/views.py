@@ -254,7 +254,7 @@ def userProfile(request, pk):
 
 
 def collect_email(request):
-    keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
+    keyword = request.GET.get('keyword') if request.GET.get('keyword') else ''
     ouvrages = Ouvrage.objects.filter(
         Q(categories__name__icontains=keyword) |
         Q(titre__icontains=keyword) |
@@ -272,7 +272,11 @@ def collect_email(request):
                'ouvrage_count': ouvrage_count, 'best_ouvrage' : best_ouvrage, 
                'newest_ouvrage': newest_ouvrage , 'recommanded_ouvrages' : recommended_ouvrages}
     if request.method == 'POST':
+        email = request.POST.get('email')
         form = UserEmailForm(request.POST)
+        if UserEmail.objects.filter(email=email).exists():
+            messages.info(request, 'Vous êtes déjà abonné à notre newsletter.')
+            return render(request, 'ouvrages/index.html', context)
         if form.is_valid():
             user_email = form.save()
 
