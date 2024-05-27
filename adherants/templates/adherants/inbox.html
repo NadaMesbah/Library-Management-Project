@@ -20,7 +20,37 @@
   </div>
 </header>
 
-<section class="pt-5 pb-5 section-bg inbox">
+<section class="pt-5 pb-5 section-bg">
+  <div class="container">
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        {% for message in messageRequests %}
+          <div class="col-lg-6 custom-block custom-block-topics-listing bg-white shadow-lg">
+              
+              <div class="row justify-content-lg-evenly align-items-start">
+                <div class="col-lg-3 col-12">
+                    <div class="w-100 d-flex flex-column justify-content-center align-items-center">
+                        <img src="{{ message.sender.imageURL }}" class="avatar avatar--md" alt="profile picture">
+                    </div>
+                </div>
+                <div class="col-lg-7 col-12">
+                    <div class="d-flex flex-column col-12 col-lg-12">
+                      <a href="{% url 'message' message.id %}">
+                      <h4 class="w-100">{{message.subject}}</h4>
+                      <p class="w-100">{{message.created}}</p>
+                      <div class="text-black-50 fw-normal fs-4 w-100">{{message.body|linebreaksbr}}</div>
+                      </a>
+                    </div>
+                </div>
+             </div>
+             {% empty %}
+              <h4 class="text-info"><i class="bi-info-circle">No messages yet.</i></h4>
+              {% endfor %}
+          </div>
+      </div>
+  </div>
+</section>
+
+{% comment %} <section class="pt-5 pb-5 section-bg inbox">
   <div class="content-box">
       <div class="d-flex flex-column justify-content-center align-items-center">
           <div class="col-lg-8 d-flex flex-column justify-content-center align-items-center custom-block custom-block-topics-listing bg-white shadow-lg">
@@ -44,6 +74,6 @@
             </ul>
       </div>
   </div>
-</section>
+</section> {% endcomment %}
 
 {% endblock content %}
