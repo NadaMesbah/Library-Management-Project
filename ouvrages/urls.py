@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.decorators import login_required
 
 app_name = 'ouvrages'
 
@@ -30,9 +31,9 @@ urlpatterns = [
      path('supprimer_emprunt/<uuid:emprunt_id>/', views.supprimer_emprunt, name='supprimer_emprunt'),
     #reservations
     path('list_reservations/', views.list_reservations, name='list_reservations'),
-    path('reservation_detail/<str:pk>', views.reservation_detail, name="reservation_detail"),
-    path('myreservations/', views.user_reservations, name="user-reservations"),
-    path('make-reservation/<str:pk>', views.makeReservation, name="make-reservation"),
-    path('edit-reservation/<str:pk>', views.editReservation, name="edit-reservation"),
-    path('cancel-reservation/<str:pk>', views.cancelReservation, name="cancel-reservation"),
+    path('reservation_detail/<str:pk>', login_required(views.reservation_detail), name="reservation_detail"),
+    path('myreservations/',login_required( views.user_reservations), name="user-reservations"),
+    path('make-reservation/<str:pk>', login_required(views.makeReservation), name="make-reservation"),
+    path('edit-reservation/<str:pk>', login_required(views.editReservation), name="edit-reservation"),
+    path('cancel-reservation/<str:pk>',login_required( views.cancelReservation), name="cancel-reservation"),
 ]

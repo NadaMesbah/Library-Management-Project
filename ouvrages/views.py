@@ -9,6 +9,8 @@ from django.db import transaction
 from .forms import OuvrageForm, ExemplaireForm, ReservationForm, ReviewForm, EmpruntForm
 from .utils import searchOuvrages, searchExemplaires, paginateOuvrages, paginateExemplaires, paginateReviews
 
+from django.contrib.auth.decorators import user_passes_test
+
 
 def index(request):
     ouvrages, search_query = searchOuvrages(request)
@@ -72,7 +74,10 @@ def home(request):
     context = {'ouvrages': ouvrages, 'categories': categories,
                'ouvrage_count': ouvrage_count}
     return render(request, 'ouvrages/home.html', context)
- 
+
+def est_administrateur(user):
+    return user.is_authenticated and user.is_staff
+
 ## CRUD FOR OUVRAGES   
 def ouvrages(request):
     ouvrages = Ouvrage.objects.all().distinct()
@@ -108,6 +113,7 @@ def ouvrage(request, pk):
     }
     return render(request, 'ouvrages/single-ouvrage.html', context)
 
+@user_passes_test(est_administrateur)
 def createOuvrage(request):
     page = 'add'
     form = OuvrageForm()
@@ -131,6 +137,7 @@ def updateOuvrage(request, pk):
     context = {'form': form, 'page': page}
     return render(request, 'ouvrages/ouvrage_form.html', context)
 
+@user_passes_test(est_administrateur)
 def deleteOuvrage(request, pk):
     ouvrage = get_object_or_404(Ouvrage, id=pk)
     if request.method == 'POST':
@@ -189,6 +196,7 @@ def exemplaire(request, pk):
 #     context = {'form': form, 'page': page}
 #     return render(request, 'ouvrages/exemplaire_form.html', context)
 
+@user_passes_test(est_administrateur)
 def createExemplaire(request):
     page = 'add'
     form = ExemplaireForm()
@@ -208,6 +216,7 @@ def createExemplaire(request):
 #         if not Exemplaire.objects.filter(id=potential_id).exists():
 #             return potential_id
 
+@user_passes_test(est_administrateur)
 def updateExemplaire(request, pk):
     page = 'edit'
     exemplaire = get_object_or_404(Exemplaire, id=pk)
@@ -220,6 +229,7 @@ def updateExemplaire(request, pk):
     context = {'form': form, 'page' : page}
     return render(request, 'ouvrages/exemplaire_form.html', context)
 
+@user_passes_test(est_administrateur)
 def deleteExemplaire(request, pk):
     exemplaire = get_object_or_404(Exemplaire, id=pk)
     if request.method == 'POST':
@@ -307,6 +317,7 @@ def user_reservations(request):
 #     else:
 #         return render(request, 'panel.html')
 
+@user_passes_test(est_administrateur)
 def list_reservations(request):
     # Supprimer les réservations expirées
     supprimer_reservations_expirees()
@@ -315,6 +326,7 @@ def list_reservations(request):
     # Passer les réservations au template
     return render(request, 'ouvrages/list_reservations.html', {'reservations': reservations})
 
+@user_passes_test(est_administrateur)
 def reservation_detail(request, pk):
     reservation = get_object_or_404(Reservation, id=pk)
     
@@ -361,6 +373,7 @@ def reservation_detail(request, pk):
     })
 
 
+@user_passes_test(est_administrateur)
 def supprimer_reservations_expirees():
     # Récupérer les réservations expirées (plus de 24 heures)
     reservations_expirees = Reservation.objects.filter(date_retour_prevue__lte=timezone.now())
@@ -378,6 +391,7 @@ def supprimer_reservations_expirees():
             # Supprimer la réservation expirée
             reservation.delete()
 
+@user_passes_test(est_administrateur)
 def search_exemplaires(request):
     if request.method == 'GET':
         keyword = request.GET.get('keyword')
@@ -388,7 +402,8 @@ def search_exemplaires(request):
             return render(request, 'ouvrages/details_exemplaires.html', {'exemplaires': None, 'keyword': None})
     else:
         return render(request, 'ouvrages/details_exemplaires.html', {'exemplaires': None, 'keyword': None})
-    
+
+@user_passes_test(est_administrateur)  
 def modifier_exemplaire(request, pk):
     exemplaire = get_object_or_404(Exemplaire, id=pk)
     if request.method == 'POST':
@@ -415,6 +430,7 @@ def modifier_exemplaire(request, pk):
 #     etudiants = Profile.objects.filter(user__is_staff=False)
 #     return render(request, 'liste_etudiants.html', {'etudiants': etudiants})
 
+@user_passes_test(est_administrateur)
 def liste_emprunts(request):
     # Supprimer les emprunts automatiques non confirmés
     supprimer_emprunts_non_confirmes()
@@ -438,6 +454,7 @@ def liste_emprunts(request):
     return render(request, 'ouvrages/emprunt.html', {'emprunts': emprunts})
 
 
+@user_passes_test(est_administrateur)
 def nouvel_emprunt(request):
     if request.method == 'POST':
         form = EmpruntForm(request.POST)
@@ -475,6 +492,8 @@ def nouvel_emprunt(request):
         form = EmpruntForm()
     return render(request, 'ouvrages/nouvel_emprunt.html', {'form': form})
 
+
+@user_passes_test(est_administrateur)
 def supprimer_emprunts_non_confirmes():
     # Récupérer tous les emprunts automatiques non confirmés
     emprunts_non_confirmes = Emprunt.objects.filter(
@@ -493,6 +512,7 @@ def supprimer_emprunts_non_confirmes():
             exemplaire.reserve = False  
             exemplaire.save()
 
+@user_passes_test(est_administrateur)
 def supprimer_emprunt(request, emprunt_id):
     emprunt = get_object_or_404(Emprunt, id=emprunt_id)
     exemplaire = emprunt.exemplaire
