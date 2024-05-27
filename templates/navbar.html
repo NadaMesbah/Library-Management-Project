@@ -26,6 +26,9 @@
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_1">Home</a>
                 </li> {% endcomment %}
                 {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'profiles'%}">Adhérants</a>
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:browse'%}">Ouvrages</a>
@@ -52,7 +55,7 @@
                 <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_3">How it works</a>
                 </li>
-
+                
                 <li class="nav-item">
                     <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_4">FAQs</a>
                 </li>
@@ -67,7 +70,11 @@
                     <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                         <li><a class="dropdown-item" href="{% url 'ouvrages:browse'%}">Browse Books</a></li>
                         {% comment %} <li><a class="dropdown-item" href="{% url 'ouvrages:topics-listing'%}">Exemplaires</a></li> {% endcomment %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'inbox' %}">Inbox</a>
+                        </li>
                         <li><a class="dropdown-item active" href="{% url 'contact'%}">Reclamation</a></li>
+
                     </ul>
                 </li>
                 {%endif%}
@@ -119,6 +126,9 @@
                         <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                             <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'ouvrages:user-reservations' %}">Reservations</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'inbox' %}">Inbox</a>
+                            </li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
                     {% else %}
@@ -132,6 +142,9 @@
                     {% if user.is_staff %}
                     <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                         <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'inbox' %}">Inbox</a>
+                        </li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                     {% endif %}

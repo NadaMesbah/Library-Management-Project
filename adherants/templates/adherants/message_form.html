@@ -1,0 +1,75 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-lg-5 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page">Message Form</li>
+                    </ol>
+                </nav>
+
+                <h2 class="text-white">Write your message</h2>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<section class="pt-5 pb-5 section-bg">
+    <div class="container">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <div class="col-lg-8 d-flex flex-column justify-content-center align-items-center custom-block custom-block-topics-listing bg-white shadow-lg">
+                <div class="align-self-lg-start">
+                    <a class="mybtn my-3" style="width:4rem;" href="{% url 'user-profile' recipient.id  %}"><i class="bi-arrow-left"></i></a>
+                </div>
+                <form action="" method="post" class="custom-form contact-form" role="form">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        {% if request.user.is_authenticated == False %}
+                        <div class="w-100">
+                            <div class="form-floating">                                
+                                <label for="name">{{form.name.label}}</label>
+                                {{form.name}}
+                            </div>
+                        </div>
+
+                        <div class="w-100">
+                            <div class="form-floating">                                
+                                <label for="name">{{form.name.email}}</label>
+                                {{form.email}}
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                        <div class="w-100"> 
+                            <div class="form-floating">                                
+                                <label for="email">{{form.subject.label}}</label>
+                                {{form.subject}}
+                            </div>
+                        </div>
+
+                        <div class="w-100"> 
+                            <div class="form-floating">                                
+                                <label for="email">{{form.body.label}}</label>
+                                {{form.body}}
+                            </div>
+                        </div>
+        
+                        <div class="col-lg-6 col-12">
+                            <button type="submit" class="form-control">Envoyer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

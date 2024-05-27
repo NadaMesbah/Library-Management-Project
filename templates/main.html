@@ -153,6 +153,72 @@
             border-color: #006a71;
             color: #ffffff !important; /* Ensure text color is white */
             }
+            .content-box {
+                width: 95%;
+                max-width: 85rem;
+                margin: 0 auto;
+              }
+            .inbox {
+                height: 90vh;
+              }
+              
+              .inbox__title,
+              .inbox__title span {
+                font-size: 2.4rem;
+                font-weight: 700;
+                color: #2d2d39;
+                text-transform: uppercase;
+                text-align: left;
+                margin-bottom: 3rem;
+              }
+              
+              .inbox__title span {
+                color: #717275;
+              }
+              
+              .messages {
+                list-style: none;
+                background: white;
+                padding: 0.5rem 3rem;
+                border: 2px solid section-bg;
+                border-radius: 0.7rem;
+              }
+              
+              .message {
+                padding: 2.5rem 0;
+              }
+              
+              .message > a span {
+                font-size: 1.45rem;
+                font-weight: 500;
+              }
+              
+              .message.message--unread a span {
+                font-weight: 700;
+                color: #2d2d39;
+              }
+              
+              .message:not(:last-child) {
+                border-bottom: 2px solid cyan;
+              }
+              
+              .message > a {
+                display: flex;
+                gap: 1rem;
+              }
+              
+              .message__author,
+              .message__date {
+                flex-basis: 25%;
+              }
+              
+              .message__subject {
+                flex-basis: 50%;
+              }
+              
+              .message__date {
+                text-align: right;
+              }
         </style>
     {% include 'navbar.html' %}
 

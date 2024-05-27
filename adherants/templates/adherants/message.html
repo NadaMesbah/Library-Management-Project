@@ -1,0 +1,59 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+  <div class="container">
+      <div class="row align-items-center">
+
+          <div class="col-lg-5 col-12">
+              <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+
+                      <li class="breadcrumb-item active" aria-current="page">Message</li>
+                  </ol>
+              </nav>
+          </div>
+
+      </div>
+  </div>
+</header>
+<section class="pt-5 pb-5 section-bg">
+  <div class="container">
+      <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="col-lg-8 d-flex flex-column justify-content-center align-items-center custom-block custom-block-topics-listing bg-white shadow-lg">
+              <div class="align-self-lg-start">
+                  <a class="mybtn my-3" style="width:4rem;"href="{% url 'inbox' %}"><i class="bi-arrow-left"></i></a>
+              </div>
+
+              <div class="row justify-content-lg-between align-items-start">
+                <div class="col-lg-3 col-12 mb-5">
+                    <div class="w-100 d-flex flex-column justify-content-center align-items-center">
+                         {% if message.sender %}
+                          <img src="{{ message.sender.imageURL }}" class="avatar avatar--md" alt="profile picture">
+                        
+                          <a class="fs-3 fw-semibold text-info" href="{% url 'user-profile' message.sender.id  %}">{{message.name}}</a>
+                        {% else %}
+                          <p>{{message.name}}</p>
+                        {% endif %}
+                       
+                        {% if request.user.profile.id != message.recipient.id %}
+                            <a href="{% url 'create-message' message.recipient.id %}" class="btn mybtn my-lg-3 mt-3">Repondre</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-8 col-12 mb-5 ms-auto">
+                    <div class="d-flex flex-column col-12 col-lg-12">
+                      <h4 class="w-100">Subject : {{message.subject}}</h4>
+                      <p class="w-100"><strong>Date d'envoi:</strong> {{message.created}}</p>
+                      <div class="text-black-50 fw-normal fs-4 w-100">{{message.body|linebreaksbr}}</div>
+                    </div>
+                </div>
+             </div>
+          </div>
+      </div>
+  </div>
+</section>
+{% endblock content %}

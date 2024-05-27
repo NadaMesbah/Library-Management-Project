@@ -6,17 +6,19 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
+from .utils import searchProfiles, paginateProfiles
 from django.urls import conf
 from ouvrages.models import *
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
-from .models import Profile, Message, Reclamation,UserEmail
-from .forms import LoginForm, ProfileForm, UserForm, RegisterForm, UserEmailForm, ContactForm
+from .models import Profile, Message, Reclamation, UserEmail
+from .forms import LoginForm, ProfileForm, UserForm, RegisterForm, UserEmailForm, ContactForm, MessageForm
 
 def homepage(request):
     return render(request, './templates/main.html', {'section': 'homepage'})
@@ -229,6 +231,28 @@ def editProfile(request):
 #         form = UserEmailForm()
 #         return render(request, 'ouvrages/index.html', {'form': form})
 
+def profiles(request):  
+    profiles, search_query = searchProfiles(request)
+    
+    profiles = profiles.filter(
+        user__is_staff=False
+    )
+    custom_range, profiles = paginateProfiles(request, profiles, 1)
+    context = {'profiles': profiles, 'search_query': search_query,
+               'custom_range': custom_range}
+    return render(request, 'adherants/profiles.html', context)
+
+def userProfile(request, pk):
+    profile = get_object_or_404(Profile, id=pk)
+    reservations = Reservation.objects.filter(owner=profile)
+
+    context = {
+        'profile': profile,
+        'reservations': reservations
+    }
+    return render(request, 'adherants/user-profile.html', context)
+
+
 def collect_email(request):
     keyword = request.GET.get('keyword') if request.GET.get('keyword') != None else ''
     ouvrages = Ouvrage.objects.filter(
@@ -355,4 +379,50 @@ def contact(request):
 
 def contact_succes(request):
     return render(request, 'adherants/contact_success.html')
+
+
+def inbox(request):
+    profile = request.user.profile
+    messageRequests = profile.messages.all()
+    unreadCount = messageRequests.filter(is_read=False).count()
+    context = {'messageRequests': messageRequests, 'unreadCount': unreadCount}
+    return render(request, 'adherants/inbox.html', context)
+
+
+def viewMessage(request, pk):
+    profile = request.user.profile
+    message = profile.messages.get(id=pk)
+    if message.is_read == False:
+        message.is_read = True
+        message.save()
+    context = {'message': message}
+    return render(request, 'adherants/message.html', context)
+
+
+def createMessage(request, pk):
+    recipient = Profile.objects.get(id=pk)
+    form = MessageForm()
+
+    try:
+        sender = request.user.profile
+    except:
+        sender = None
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+
+            if sender:
+                message.name = sender.username
+                message.email = sender.email
+            message.save()
+
+            messages.success(request, 'Your message was successfully sent!')
+            return redirect('user-profile', pk=recipient.id)
+
+    context = {'recipient': recipient, 'form': form}
+    return render(request, 'adherants/message_form.html', context)
 

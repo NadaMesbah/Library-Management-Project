@@ -24,6 +24,13 @@ urlpatterns = [
     
     path('contact_succes/', views.contact_succes, name='contact_succes'),
     path('collect_email/', views.collect_email, name='collect_email'),
+    
+    path('user-profile/<str:pk>/', views.userProfile, name="user-profile"),
+    path('profiles/', views.profiles, name='profiles'),
+    
+    path('inbox/', views.inbox, name="inbox"),
+    path('message/<str:pk>/', views.viewMessage, name="message"),
+    path('create-message/<str:pk>/', views.createMessage, name="create-message"),
 
 ]
 

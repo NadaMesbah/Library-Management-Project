@@ -1,0 +1,49 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<!-- Main Section -->
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+  <div class="container">
+      <div class="row align-items-center">
+
+          <div class="col-lg-5 col-12">
+              <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+
+                      <li class="breadcrumb-item active" aria-current="page">Inbox</li>
+                  </ol>
+              </nav>
+          </div>
+          <h3 class="text-white">New Messages (<span>{{unreadCount}}</span>)</h3>
+      </div>
+  </div>
+</header>
+
+<section class="pt-5 pb-5 section-bg inbox">
+  <div class="content-box">
+      <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="col-lg-8 d-flex flex-column justify-content-center align-items-center custom-block custom-block-topics-listing bg-white shadow-lg">
+            <ul class="messages">
+              {% for message in messageRequests %}
+              {% if message.is_read == False %}
+              <li class="message message--unread">
+                {% else %}
+              <li class="message">
+                {% endif %}
+        
+                <a href="{% url 'message' message.id %}">
+                  <span class="message__author">{{message.name}}</span>
+                  <span class="message__subject">{{message.subject}}</span>
+                  <span class="message__date">{{message.created}}</span>
+                </a>
+              </li>
+              {% empty %}
+              <h4 class="text-info"><i class="bi-info-circle">No messages yet.</i></h4>
+              {% endfor %}
+            </ul>
+      </div>
+  </div>
+</section>
+
+{% endblock content %}

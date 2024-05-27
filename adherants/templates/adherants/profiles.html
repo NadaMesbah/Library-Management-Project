@@ -1,0 +1,114 @@
+{% extends 'main.html' %}
+{%load static%}
+
+{% block content %}
+<header class="hero-section site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index' %}">Homepage</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Profiles</li>
+                    </ol>
+                </nav>
+                <h2 class="text-white">Profiles des adhérants</h2>
+            </div>
+            <div class="col-lg-10 col-12">
+                <form method="GET"  action="{% url 'profiles' %}" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2" role="search">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bi-search" id="basic-addon1">
+                            
+                        </span>
+
+                        <input name="search_query" value="{{search_query}}" type="search" class="form-control" id="search_query" placeholder="Search Adherants by Name, CNE..." aria-label="Search">
+
+                        <button type="submit" class="form-control">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="section-bg py-lg-5 pb-lg-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="container d-flex flex-column justify-content-center align-items-center">
+
+        {% for profile in profiles %}
+        
+        <a href="{% url 'user-profile' profile.id %}">
+            <div class="custom-block bg-white shadow-lg d-flex justify-content-between align-items-center">
+                <div class="col-lg-6 col-12 mb-5">
+                    <img src="{{ profile.imageURL }}" class="avatar avatar--lg" alt="profile picture">
+                </div>
+                <div class="col-lg-6 col-12 mb-5 ms-auto">
+                    <div class="d-flex flex-column">
+                        <h5 class="mb-2 p-2">{{profile.username}}</h5>
+                        <p class="mb-0 p-2"><strong>Nom:</strong> {{ profile.nom }}</p>
+                        <p class="mb-0 p-2"><strong>Prénom:</strong> {{ profile.prenom }}</p>
+                        <p class="mb-0 p-2"><strong>Email:</strong> {{ profile.email }}</p>
+                        {% if profile.phonenumber %}
+                        <p class="mb-0 p-2"><strong>Phone Number:</strong> {{ profile.phonenumber }}</p>
+                        {% endif %}
+                        {% if profile.sexe %}
+                        <p class="mb-0 p-2"><strong>Sexe:</strong> {{ profile.sexe }}</p>
+                        {% endif %}
+                        {% if profile.CNI %}
+                        <p class="mb-0 p-2"><strong>CNI:</strong> {{ profile.CNI }}</p>
+                        {% endif %} {% comment %}<span class="badge bg-education align-self-end" style="height: 1.3rem;">Recommended</span> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        
+        {% empty %}
+        <div class="d-flex flex-column justify-content-center align-items-center mb-0 mb-lg-0">
+            <h4 class="text-black-50">Aucun profil d'adhérant trouvé</h4>
+            <img src="{% static 'images/sad.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem">
+        </div>
+        {% endfor %}
+
+        <div class="col-lg-12 col-12">
+            {% if profiles.has_other_pages %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center mb-0">
+                    {% if profiles.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{profiles.previous_page_number}}" aria-label="Previous">
+                            <span aria-hidden="true">Prev</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for page in custom_range %}
+
+                    {% if page == profiles.number%}
+
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                    </li>
+                    
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                    </li>
+
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if profiles.has_next %}
+
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{profiles.next_page_number}}" aria-label="Next">
+                            <span aria-hidden="true">Next</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}
