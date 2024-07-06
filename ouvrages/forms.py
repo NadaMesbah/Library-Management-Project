@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.db import transaction
 from django.utils.crypto import get_random_string
 from django.forms import ModelForm
+from django.core.exceptions import ValidationError
 from django import forms
 
 
@@ -131,8 +132,95 @@ class ReviewForm(forms.ModelForm):
         for name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control'})
 
+# class EmpruntForm(forms.ModelForm):
+#     CNE = forms.CharField(max_length=20, required=False, label='CNE', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'CNE'}))
+#     nom = forms.CharField(max_length=100, required=False, label='Nom', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}))
+#     prenom = forms.CharField(max_length=100, required=False, label='Prénom', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}))
+
+#     class Meta:
+#         model = Emprunt
+#         fields = ['CNE', 'nom', 'prenom', 'exemplaire', 'date_retour', 'automatique', 'confirmer', 'rendu']
+#         widgets = {
+#             'exemplaire': forms.Select(attrs={'class': 'form-control'}),
+#             'date_retour': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+#             'automatique': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+#             'confirmer': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+#             'rendu': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+#         }
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+        
+#         # Filter to show only available exemplaires
+#         exemplaire_qs = Exemplaire.objects.filter(etat='DISPONIBLE')
+        
+#         if self.instance and self.instance.pk:
+#             emprunteur = getattr(self.instance, 'emprunteur', None)
+#             if emprunteur:
+#                 self.fields['CNE'].initial = emprunteur.CNE
+#                 self.fields['nom'].initial = emprunteur.nom
+#                 self.fields['prenom'].initial = emprunteur.prenom
+            
+#             # Include the current exemplaire in the queryset if the instance exists and has an exemplaire
+#             exemplaire_actuel = getattr(self.instance, 'exemplaire', None)
+#             if exemplaire_actuel:
+#                 exemplaire_qs = Exemplaire.objects.filter(pk=exemplaire_actuel.pk) | exemplaire_qs
+
+#         self.fields['exemplaire'].queryset = exemplaire_qs
+
+#     def clean(self):
+#         cleaned_data = super().clean()
+#         CNE = cleaned_data.get('CNE')
+#         nom = cleaned_data.get('nom')
+#         prenom = cleaned_data.get('prenom')
+#         exemplaire = cleaned_data.get('exemplaire')
+
+#         # Search for the corresponding user by CNE
+#         if CNE:
+#             emprunteurs = Profile.objects.filter(CNE=CNE)
+#             if emprunteurs.exists():
+#                 emprunteur = emprunteurs.first()
+#             else:
+#                 self.add_error('CNE', ValidationError("Aucun utilisateur trouvé avec ce CNE."))
+#         # Search for the corresponding user by name and surname
+#         elif nom and prenom:
+#             emprunteurs = Profile.objects.filter(nom=nom, prenom=prenom)
+#             if emprunteurs.exists():
+#                 emprunteur = emprunteurs.first()
+#             else:
+#                 self.add_error('nom', ValidationError("Aucun utilisateur trouvé avec ce nom et prénom."))
+#                 self.add_error('prenom', ValidationError("Aucun utilisateur trouvé avec ce nom et prénom."))
+#         else:
+#             raise ValidationError("Veuillez fournir le CNE ou le nom et prénom.")
+
+#         # Add verification here
+#         if Emprunt.objects.filter(emprunteur=emprunteur, rendu=False).exclude(pk=self.instance.pk).exists():
+#             raise ValidationError("Cet utilisateur a déjà un emprunt non rendu.")
+
+#         cleaned_data['emprunteur'] = emprunteur
+
+#         # Verify if the exemplaire is available
+#         if exemplaire is not None:
+#             if exemplaire.etat != 'DISPONIBLE' and exemplaire != getattr(self.instance, 'exemplaire', None):
+#                 self.add_error('exemplaire', ValidationError("Cet exemplaire n'est pas disponible"))
+
+#         # Verify if the return date is defined
+#         date_retour = cleaned_data.get('date_retour')
+#         if not date_retour:
+#             cleaned_data['date_retour'] = datetime.now().date() + timedelta(days=15)
+
+#         return cleaned_data
+from django.core.exceptions import ValidationError
+
 class EmpruntForm(forms.ModelForm):
-    CNE = forms.CharField(max_length=20, required=False, label='CNE', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'CNE'}))
+    CNE = forms.ModelChoiceField(
+        queryset=Profile.objects.exclude(CNE__isnull=True).exclude(CNE=''),  # Filtrer les profils sans CNE
+        required=False,
+        label='CNE',
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        empty_label='Sélectionner le CNE',  # Ajouter l'option par défaut
+        to_field_name='CNE'  # Assurez-vous que la sélection est basée sur le CNE
+    )
     nom = forms.CharField(max_length=100, required=False, label='Nom', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}))
     prenom = forms.CharField(max_length=100, required=False, label='Prénom', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}))
 
@@ -147,9 +235,13 @@ class EmpruntForm(forms.ModelForm):
             'rendu': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def _init_(self, *args, **kwargs):
+        super()._init_(*args, **kwargs)
         
+        # Customizing the CNE field choices to display CNE instead of the default string representation
+        self.fields['CNE'].queryset = Profile.objects.exclude(CNE__isnull=True).exclude(CNE='')
+        self.fields['CNE'].label_from_instance = lambda obj: f'{obj.CNE}'  # Display CNE
+
         # Filter to show only available exemplaires
         exemplaire_qs = Exemplaire.objects.filter(etat='DISPONIBLE')
         
@@ -174,14 +266,10 @@ class EmpruntForm(forms.ModelForm):
         prenom = cleaned_data.get('prenom')
         exemplaire = cleaned_data.get('exemplaire')
 
-        # Search for the corresponding user by CNE
+        # Check if the CNE is provided
         if CNE:
-            emprunteurs = Profile.objects.filter(CNE=CNE)
-            if emprunteurs.exists():
-                emprunteur = emprunteurs.first()
-            else:
-                self.add_error('CNE', ValidationError("Aucun utilisateur trouvé avec ce CNE."))
-        # Search for the corresponding user by name and surname
+            emprunteur = CNE  # Since CNE is now a ModelChoiceField, it will return a Profile instance selected by CNE
+        # Search for the corresponding user by name and surname if CNE is not provided
         elif nom and prenom:
             emprunteurs = Profile.objects.filter(nom=nom, prenom=prenom)
             if emprunteurs.exists():

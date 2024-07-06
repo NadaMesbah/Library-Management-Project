@@ -23,6 +23,12 @@ from .forms import LoginForm, ProfileForm, UserForm, RegisterForm, UserEmailForm
 def homepage(request):
     return render(request, './templates/main.html', {'section': 'homepage'})
 
+def handling_404(request, exception):
+    return render(request, '../templates/404.html',{})
+
+def handling_500(request):
+    return render(request, '../templates/500.html',{})
+
 def register(request):
     page = 'register'
     if request.method == 'POST':
@@ -237,9 +243,9 @@ def profiles(request):
     profiles = profiles.filter(
         user__is_staff=False
     )
-    custom_range, profiles = paginateProfiles(request, profiles, 1)
-    context = {'profiles': profiles, 'search_query': search_query,
-               'custom_range': custom_range}
+    #custom_range, profiles = paginateProfiles(request, profiles, 1)
+    context = {'profiles': profiles, 'search_query': search_query}
+            #    'custom_range': custom_range
     return render(request, 'adherants/profiles.html', context)
 
 def userProfile(request, pk):
@@ -358,19 +364,21 @@ def send_confirmation_email(email, name):
     
 def contact(request):
     if request.method == 'POST':
+        sujet = request.POST.get('subject')
         nom = request.POST.get('name')
         email = request.POST.get('email')
         message = request.POST.get('message')
 
-        if nom and email and message:  # Vérifiez que toutes les valeurs sont non nulles
+        if nom and email and sujet and message:  # Vérifiez que toutes les valeurs sont non nulles
             # Créer une nouvelle réclamation
-            reclamation = Reclamation(nom=nom, email=email, message=message)
+            reclamation = Reclamation(nom=nom, email=email, sujet=sujet,message=message)
             reclamation.save()
 
             # Envoyer l'email de confirmation
             try:
                 send_confirmation_email(email, nom)
-                return render(request, 'adherants/contact_success.html')
+                messages.success(request, 'Votre réclamation a été envoyé à notre support avec succes.')
+                return render(request, 'adherants/contact.html')
             except Exception as e:
                 return render(request, 'adherants/contact.html', {'error': str(e)})
         else:

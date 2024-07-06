@@ -130,3 +130,23 @@ def pre_delete_reservation(sender, instance, **kwargs):
 post_save.connect(createProfile, sender=User)
 post_save.connect(updateUser, sender=Profile)
 post_delete.connect(deleteUser, sender=Profile)
+
+@receiver(post_save, sender=Reclamation)
+def send_email_to_admin(sender, instance, created, **kwargs):
+    if created:
+        nom_utilisateur = instance.nom
+        email_utilisateur = instance.email
+        sujet_reclamation = instance.sujet
+        message_reclamation = instance.message
+        
+        id_ouvrage = instance.ouvrage.id if instance.ouvrage else None
+
+        sujet = f"Nouvelle réclamation : {sujet_reclamation}"
+        contenu = f"Une nouvelle réclamation a été ajoutée :\n\nNom de l'utilisateur : {nom_utilisateur}\nE-mail de l'utilisateur : {email_utilisateur}\n\nSujet de la réclamation : {sujet_reclamation}\n\nContenu de la réclamation :\n{message_reclamation}\n\nID de l'ouvrage : {id_ouvrage}"
+        # Envoyer l'e-mail à l'administrateur
+        send_mail(
+            sujet,
+            contenu,
+            'email_utilisateur',  
+            ['nada.mesbah@usmba.ac.ma'], 
+            fail_silently=False,)

@@ -454,6 +454,44 @@ def liste_emprunts(request):
     return render(request, 'ouvrages/emprunt.html', {'emprunts': emprunts})
 
 
+# @user_passes_test(est_administrateur)
+# def nouvelEmprunt(request):
+#     if request.method == 'POST':
+#         form = EmpruntForm(request.POST)
+#         if form.is_valid():
+#             emprunt = form.save(commit=False)
+#             emprunteur = form.cleaned_data['emprunteur']
+#             emprunt.emprunteur = emprunteur
+#             emprunt.automatique = False
+#             emprunt.save()
+
+#             # Marquer l'exemplaire comme emprunté
+#             exemplaire = emprunt.exemplaire
+#             exemplaire.etat = 'HORS_PRET'
+#             exemplaire.save()
+
+#             # Vérifier s'il existe une réservation acceptée pour cet exemplaire
+#             reservation = Reservation.objects.filter(ouvrage=exemplaire.ouvrage, statut='acceptee').first()
+#             if reservation:
+#                 # Vérifier s'il n'existe pas déjà un emprunt automatique pour cet exemplaire
+#                 existing_automatique = Emprunt.objects.filter(exemplaire=exemplaire, automatique=True).exists()
+#                 if not existing_automatique:
+#                     # Créer un nouvel emprunt avec les détails de la réservation
+#                     Emprunt.objects.create(
+#                         emprunteur=reservation.owner,
+#                         exemplaire=exemplaire,
+#                         date_emprunt=reservation.date_reservation,
+#                         date_retour=reservation.date_retour_prevue,
+#                         automatique=True,  # Marquer comme un emprunt automatique
+#                         confirmer=False,   # L'emprunt n'est pas encore confirmé
+#                     )
+
+#             # Rediriger vers la liste des emprunts
+#             return redirect('ouvrages:emprunt')
+#     else:
+#         form = EmpruntForm()
+#     return render(request, 'ouvrages/nouvel_emprunt.html', {'form': form})
+
 @user_passes_test(est_administrateur)
 def nouvelEmprunt(request):
     if request.method == 'POST':
@@ -470,8 +508,8 @@ def nouvelEmprunt(request):
             exemplaire.etat = 'HORS_PRET'
             exemplaire.save()
 
-            # Vérifier s'il existe une réservation acceptée pour cet exemplaire
-            reservation = Reservation.objects.filter(ouvrage=exemplaire.ouvrage, statut='acceptee').first()
+            # Vérifier s'il existe une réservation acceptée pour cet exemplaire spécifique
+            reservation = Reservation.objects.filter(ouvrage=exemplaire.ouvrage, selected_copy=exemplaire, statut='acceptee').first()
             if reservation:
                 # Vérifier s'il n'existe pas déjà un emprunt automatique pour cet exemplaire
                 existing_automatique = Emprunt.objects.filter(exemplaire=exemplaire, automatique=True).exists()

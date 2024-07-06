@@ -23,8 +23,8 @@ urlpatterns = [
     
     path('contact/', login_required(views.contact), name="contact"),
     
-    path('contact_succes/', login_required(views.contact_succes), name='contact_succes'),
-    path('collect_email/',login_required( views.collect_email), name='collect_email'),
+    path('contact_succes/',views.contact_succes, name='contact_succes'),
+    path('collect_email/',views.collect_email, name='collect_email'),
     
     path('user-profile/<str:pk>/', views.userProfile, name="user-profile"),
     path('profiles/', views.profiles, name='profiles'),

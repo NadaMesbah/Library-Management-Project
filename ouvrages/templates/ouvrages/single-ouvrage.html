@@ -97,7 +97,7 @@
     </div>
 </section>
 
-{% if user.is_staff %} 
+{% comment %} {% if user.is_staff %} 
 <section class="">
     <div class="container">
         <div class="row">
@@ -177,11 +177,11 @@
                         </li>
                     </ul>
                 </nav>
-            </div>         {% endcomment %}
+            </div>         
         </div>
     </div>
 </section> 
-{% endif %}
+{% endif %} {% endcomment %}
 
 {% if not user.is_staff %}
 <section class="section-bg py-lg-5 pb-lg-3 d-flex flex-column justify-content-center align-items-center">

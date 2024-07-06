@@ -49,7 +49,7 @@
                             <thead >
                                 <tr class="th">
                                     <th class="th">CNE</th>
-                                    <th class="th">Nom de l'Étudiant</th>
+                                    <th class="th">Username de l'Étudiant</th>
                                     <th class="th">Exemplaire Emprunté</th>
                                     <th class="th">Date d'Emprunt</th>
                                     <th class="th">Date de Retour</th>
@@ -60,7 +60,7 @@
                                 {% for emprunt in emprunts %}
                                 <tr>
                                     <td>{{ emprunt.emprunteur.CNE }}</td>
-                                    <td>{{ emprunt.emprunteur.nom }}</td>
+                                    <td>{{ emprunt.emprunteur.username }}</td>
                                     <td>{{ emprunt.exemplaire.ouvrage.titre }}</td>
                                     <td>{{ emprunt.date_emprunt }}</td>
                                     <td>{{ emprunt.date_retour }}</td>

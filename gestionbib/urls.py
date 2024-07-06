@@ -5,6 +5,9 @@ from django.conf.urls.static import static
 
 from django.contrib.auth import views as auth_views
 
+handler404 = 'adherants.views.handling_404'
+handler500 = 'adherants.views.handling_500'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("",include('ouvrages.urls')),

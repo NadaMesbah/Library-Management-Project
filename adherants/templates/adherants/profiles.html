@@ -30,82 +30,113 @@
         </div>
     </div>
 </header>
-<section class="section-bg py-lg-5 pb-lg-3 d-flex flex-column justify-content-center align-items-center">
-    <div class="container d-flex flex-column justify-content-center align-items-center">
-
-        {% for profile in profiles %}
-        
-        <a href="{% url 'user-profile' profile.id %}">
-            <div class="custom-block bg-white shadow-lg d-flex justify-content-between align-items-center">
-                <div class="col-lg-6 col-12 mb-5">
-                    <img src="{{ profile.imageURL }}" class="avatar avatar--lg" alt="profile picture">
-                </div>
-                <div class="col-lg-6 col-12 mb-5 ms-auto">
-                    <div class="d-flex flex-column">
-                        <h5 class="mb-2 p-2">{{profile.username}}</h5>
-                        <p class="mb-0 p-2"><strong>Nom:</strong> {{ profile.nom }}</p>
-                        <p class="mb-0 p-2"><strong>Prénom:</strong> {{ profile.prenom }}</p>
-                        <p class="mb-0 p-2"><strong>Email:</strong> {{ profile.email }}</p>
-                        {% if profile.phonenumber %}
-                        <p class="mb-0 p-2"><strong>Phone Number:</strong> {{ profile.phonenumber }}</p>
-                        {% endif %}
-                        {% if profile.sexe %}
-                        <p class="mb-0 p-2"><strong>Sexe:</strong> {{ profile.sexe }}</p>
-                        {% endif %}
-                        {% if profile.CNI %}
-                        <p class="mb-0 p-2"><strong>CNI:</strong> {{ profile.CNI }}</p>
-                        {% endif %} {% comment %}<span class="badge bg-education align-self-end" style="height: 1.3rem;">Recommended</span> {% endcomment %}
-                    </div>
-                </div>
-            </div>
-        </a>
-        
-        {% empty %}
+{% comment %} <section class="section-bg py-lg-5 pb-lg-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        {% if profiles %}
+        <table class="table table-hover table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">CNE</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prénom</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Sexe</th>
+                    <th scope="col">CNI</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profile in profiles %}
+                <tr>
+                    <td>
+                        <a href="{% url 'user-profile' profile.id %}">
+                            {{profile.CNE}}
+                        </a>
+                    </td>
+                    <td>{{profile.username}}</td>
+                    <td>{{ profile.nom }}</td>
+                    <td>{{ profile.prenom }}</td>
+                    <td>{{ profile.email }}</td>
+                    <td>{% if profile.phonenumber %}{{ profile.phonenumber }}{% endif %}</td>
+                    <td>{% if profile.sexe %}{{ profile.sexe }}{% endif %}</td>
+                    <td>{% if profile.CNI %}{{ profile.CNI }}{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
         <div class="d-flex flex-column justify-content-center align-items-center mb-0 mb-lg-0">
             <h4 class="text-black-50">Aucun profil d'adhérant trouvé</h4>
             <img src="{% static 'images/sad.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem">
         </div>
-        {% endfor %}
+        {% endif %}
+    </div>
+</section> {% endcomment %}
 
-        <div class="col-lg-12 col-12">
-            {% if profiles.has_other_pages %}
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center mb-0">
-                    {% if profiles.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{profiles.previous_page_number}}" aria-label="Previous">
-                            <span aria-hidden="true">Prev</span>
-                        </a>
-                    </li>
-                    {% endif %}
+<section class="section-bg p-lg-3">
+    <style>
+        /* Styles spécifiques pour les éléments th */
+        .th {
+            background-color: #fafafa !important; /* Couleur d'arrière-plan */
+            color: #83b4bb; /* Couleur du texte */
+            border-radius: 5px !important; /* Bordures arrondies */
+            padding: 10px; /* Espacement interne */
+            }
+            table {
+            border-collapse: separate;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Ajouter une ombre */
+            }
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-12">
+                <div class="custom-block bg-white shadow-lg">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="section-title">Liste des Adhérants</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table ">
+                            <thead >
+                                <tr class="th">
+                                    <th class="th">CNE</th>
+                                    <th class="th">Username</th>
+                                    <th class="th">Nom</th>
+                                    <th class="th">Prénom</th>
+                                    <th class="th">Email</th>
+                                    <th class="th">Phone Number</th>
+                                    <th class="th">Sexe</th>
+                                    <th class="th">CNI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for profile in profiles %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'user-profile' profile.id %}">
+                                            {{profile.CNE}}
+                                        </a>
+                                    </td>
+                                    <td>{{profile.username}}</td>
+                                    <td>{{ profile.nom }}</td>
+                                    <td>{{ profile.prenom }}</td>
+                                    <td>{{ profile.email }}</td>
+                                    <td>{% if profile.phonenumber %}{{ profile.phonenumber }}{% endif %}</td>
+                                    <td>{% if profile.sexe %}{{ profile.sexe }}{% endif %}</td>
+                                    <td>{% if profile.CNI %}{{ profile.CNI }}{% endif %}</td>
+                                </tr>
 
-                    {% for page in custom_range %}
-
-                    {% if page == profiles.number%}
-
-                    <li class="page-item active" aria-current="page">
-                        <a class="page-link" href="?page={{page}}">{{page}}</a>
-                    </li>
-                    
-                    {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{page}}">{{page}}</a>
-                    </li>
-
-                    {% endif %}
-                    {% endfor %}
-
-                    {% if profiles.has_next %}
-
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{profiles.next_page_number}}" aria-label="Next">
-                            <span aria-hidden="true">Next</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
+                               
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="fw-semibold text-center text-warning">Aucun profil d'adhérant trouvé</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
