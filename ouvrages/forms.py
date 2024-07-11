@@ -20,16 +20,17 @@ class OuvrageForm(ModelForm):
         fields = ['titre','featured_image', 'auteurs', 'description', 'categories', 'exemplaires_total']
         #fields = '__all__'
         widgets = {
-            'categories': forms.CheckboxSelectMultiple(),
-            'auteurs': forms.CheckboxSelectMultiple(),
+            'categories': forms.SelectMultiple(),
+            'auteurs': forms.SelectMultiple(),  # Change here
         }
     def __init__(self, *args, **kwargs):
         super(OuvrageForm, self).__init__(*args, **kwargs)
         self.fields['titre'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter un titre'})
-        self.fields['description'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter une description'})
+        self.fields['description'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter une description', 'style': 'border-radius: 30px'})
         self.fields['exemplaires_total'].widget.attrs.update({'class': 'form-control'})
         self.fields['featured_image'].widget.attrs.update({'class': 'form-control'})
-        
+        self.fields['auteurs'].widget.attrs.update({'class': 'form-control', 'style': 'border-radius: 30px'})
+        self.fields['categories'].widget.attrs.update({'class': 'form-control', 'style': 'border-radius: 30px'})
 
 # class ExemplaireForm(ModelForm):
 #     quantite = forms.IntegerField(label='Quantité')
@@ -217,8 +218,7 @@ class EmpruntForm(forms.ModelForm):
         queryset=Profile.objects.exclude(CNE__isnull=True).exclude(CNE=''),  # Filtrer les profils sans CNE
         required=False,
         label='CNE',
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        empty_label='Sélectionner le CNE',  # Ajouter l'option par défaut
+        widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Sélectionner un CNE'}),
         to_field_name='CNE'  # Assurez-vous que la sélection est basée sur le CNE
     )
     nom = forms.CharField(max_length=100, required=False, label='Nom', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}))
@@ -235,11 +235,11 @@ class EmpruntForm(forms.ModelForm):
             'rendu': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
-    def _init_(self, *args, **kwargs):
-        super()._init_(*args, **kwargs)
-        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         # Customizing the CNE field choices to display CNE instead of the default string representation
-        self.fields['CNE'].queryset = Profile.objects.exclude(CNE__isnull=True).exclude(CNE='')
+        self.fields['CNE'].queryset = Profile.objects.exclude(CNE__isnull=True).exclude(CNE='')  # Exclude profiles without CNE
         self.fields['CNE'].label_from_instance = lambda obj: f'{obj.CNE}'  # Display CNE
 
         # Filter to show only available exemplaires
@@ -295,5 +295,4 @@ class EmpruntForm(forms.ModelForm):
         date_retour = cleaned_data.get('date_retour')
         if not date_retour:
             cleaned_data['date_retour'] = datetime.now().date() + timedelta(days=15)
-
         return cleaned_data

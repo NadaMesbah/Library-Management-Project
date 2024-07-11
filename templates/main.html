@@ -229,7 +229,7 @@
                 {% if message.tags == 'error' %} 
                 <script>
                     swal({
-                        title: "Erreur :(",
+                        title: "Erreur",
                         text: "{{ message|safe }}",
                         icon: "error",
                         buttons: 'ok',
@@ -256,7 +256,7 @@
                  {% else %}
                     <script>
                         swal({
-                            title: "Cool:)",
+                            title: "Succès !",
                             text: "Opération effectuée avcéc succés",
                             icon: "success",
                             buttons: 'ok',

@@ -24,7 +24,7 @@ class Profile(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
     def __str__(self):
-        return str(self.username)
+        return str(self.CNE)
 
     @property
     def imageURL(self):
@@ -67,4 +67,4 @@ class Reclamation(models.Model):
     ouvrage = models.ForeignKey('ouvrages.Ouvrage', on_delete=models.SET_NULL, null=True)
     
     def _str_(self):
-        return f'Reservation {self.nom}'
+        return f'Reservation {self.nom}'

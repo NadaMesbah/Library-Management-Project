@@ -59,5 +59,28 @@
         </div>
     </section>
 </main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var cneField = document.querySelector('select[name="CNE"]');
+        var nomField = document.querySelector('input[name="nom"]');
+        var prenomField = document.querySelector('input[name="prenom"]');
+
+        cneField.addEventListener('change', function() {
+            var selectedCNE = cneField.value;
+            if (selectedCNE) {
+                fetch(`/get-profile-info/${selectedCNE}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        nomField.value = data.nom;
+                        prenomField.value = data.prenom;
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                nomField.value = '';
+                prenomField.value = '';
+            }
+        });
+    });
+</script>
 
 {% endblock %}

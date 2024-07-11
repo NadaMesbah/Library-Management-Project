@@ -491,6 +491,17 @@ def liste_emprunts(request):
 #     else:
 #         form = EmpruntForm()
 #     return render(request, 'ouvrages/nouvel_emprunt.html', {'form': form})
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Profile
+
+def get_profile_info(request, cne):
+    profile = get_object_or_404(Profile, CNE=cne)
+    data = {
+        'nom': profile.nom,
+        'prenom': profile.prenom,
+    }
+    return JsonResponse(data)
 
 @user_passes_test(est_administrateur)
 def nouvelEmprunt(request):

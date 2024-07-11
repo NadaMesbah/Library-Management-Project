@@ -38,4 +38,5 @@ urlpatterns = [
     path('make-reservation/<str:pk>', login_required(views.makeReservation), name="make-reservation"),
     path('edit-reservation/<str:pk>', login_required(views.editReservation), name="edit-reservation"),
     path('cancel-reservation/<str:pk>',login_required( views.cancelReservation), name="cancel-reservation"),
+    path('get-profile-info/<str:cne>/', views.get_profile_info, name='get_profile_info'),
 ]

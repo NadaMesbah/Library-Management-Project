@@ -61,7 +61,7 @@
                 <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-4">
                     <div class="custom-block bg-white shadow-lg">
                         <a href="{% url 'ouvrages:exemplaire' exemplaire.id %}">
-                        <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="topics-detail-block-image img-thumbnail w-100 mb-lg-4" style="height: 22rem;" >
+                        <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="topics-detail-block-image img-thumbnail w-100 mb-lg-4" style="height: 25rem;" >
                             <div class="d-flex">
                                 <div>
                                     {%for categorie in exemplaire.ouvrage.categories.all%}
@@ -69,6 +69,7 @@
                                     <span class="tag bg-design me-1 mb-lg-3">{{categorie}}</span>
                                     {%endfor%}
                                     <h4 class="mb-2 text-black">{{exemplaire.ouvrage.titre}}</h4>
+                                    <p class="mb-0 fst-normal fw-semibold mb-2">{{exemplaire.id}}</p>
                                     {% comment %} <h5 class="text-black-50">Auteur{{ exemplaire.ouvrage.auteurs.all.count|pluralize:"s" }}:</h5>
                                     <p class="mb-0 fst-italic mb-2">
                                         {% if exemplaire.ouvrage.auteurs.all.count == 1 %}
