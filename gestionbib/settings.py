@@ -143,9 +143,15 @@ LOGOUT_URL = 'logout'
 
 # # The class to use to send e-mails
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'nada.mesbah@usmba.ac.ma'
-EMAIL_HOST_PASSWORD = 'raykod2003'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+import sys
+
+# Assuming email_config.py is in the same directory as settings.py
+# Adjust the path if necessary
+email_config_path = Path(__file__).resolve().parent / 'email_config.py'
+
+if email_config_path.exists():
+    sys.path.insert(0, str(email_config_path.parent))
+    from email_config import *
+    sys.path.pop(0)
+else:
+    raise FileNotFoundError(f"Email configuration file {email_config_path} not found.")
