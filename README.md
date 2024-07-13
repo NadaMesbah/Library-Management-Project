@@ -36,3 +36,4 @@ Django
 ### 6. Run the server
   python manage.py runserver
 ### 7. Go to localhost:8000
+![image](https://github.com/user-attachments/assets/a6a6b5fe-3637-4cfb-95ad-b87452196511)
